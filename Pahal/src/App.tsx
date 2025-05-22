@@ -1,7 +1,8 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Register from "./pages/auth/register"
 import Login from "./pages/auth/login"
 import Dashboard from "./pages/dashboard/dashboard"
+import Landing from "./pages/landing/landing"
 import StudentList from "./pages/student/studentlist"
 import Attendance from "./pages/attendance/attendance"
 import MarkAttendance from "./pages/attendance/markattendance"
@@ -17,11 +18,10 @@ import { AttendanceProvider } from "./contexts/attendanceContext"
 
 function App() {
   return (
-    <AttendanceProvider>
-      <BrowserRouter>
+    <AttendanceProvider>      <BrowserRouter>
         <div className="flex flex-col min-h-screen">
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
