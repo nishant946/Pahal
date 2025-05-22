@@ -1,4 +1,4 @@
-import React, { use, useEffect } from 'react'
+import React, {useEffect } from 'react'
 import Layout from '@/components/layout/layout';
 import DashboardCard from '@/components/card/dashboardCard';
 import axios from 'axios';

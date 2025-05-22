@@ -1,6 +1,6 @@
-import React from 'react'
+// import React from 'react'
 
-function DashboardCard({ title, content }) {
+function DashboardCard({ title, content }: { title: string; content: string }) {
   return (
     <div>
         <div className="bg-white shadow-md p-4 rounded-lg">
