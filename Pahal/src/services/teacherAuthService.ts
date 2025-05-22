@@ -1,5 +1,16 @@
 import api from './api';
 
+export interface TeacherRegistrationData {
+  name: string;
+  employeeId: string;
+  email: string;
+  password: string;
+  department: string;
+  designation: string;
+  phone: string;
+  qualification: string;
+}
+
 export interface TeacherLoginCredentials {
   employeeId: string;
   password: string;
@@ -15,6 +26,15 @@ export interface TeacherAuthResponse {
     email: string;
     designation: string;
   };
+}
+
+export async function registerTeacher(data: TeacherRegistrationData) {
+  try {
+    const response = await api.post<TeacherAuthResponse>('/auth/teacher/register', data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function loginTeacher(credentials: TeacherLoginCredentials) {

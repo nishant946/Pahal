@@ -17,7 +17,7 @@ export const API_URLS = {
 };
 
 
-const api=axios.create({
+const api = axios.create({
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
@@ -27,8 +27,8 @@ const api=axios.create({
 // Add a request interceptor
 api.interceptors.request.use(
     (config) => {
-        // Add a token to the headers if it exists
-        const token = localStorage.getItem('token');
+        // Add the teacher token to the headers if it exists
+        const token = localStorage.getItem('teacherToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -39,16 +39,19 @@ api.interceptors.request.use(
     }
 );
 
-
 // Add a response interceptor
 api.interceptors.response.use(
     (response) => {
         return response.data;
-
     },
     (error) => {
-        // Handle the error
-        if(!error.response) {
+        if (error.response?.status === 401) {
+            // Clear auth data on unauthorized
+            localStorage.removeItem('teacherToken');
+            localStorage.removeItem('teacherData');
+            window.location.href = '/login';
+        }
+        if (!error.response) {
             // Handle network error
             console.error('Network error:', error);
             return Promise.reject(new Error('Network error'));

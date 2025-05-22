@@ -1,32 +1,56 @@
-import Layout from '@/components/layout/layout'
-import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-function Login():React.ReactNode {
+function Login() {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Direct navigation to dashboard without authentication
+    navigate('/dashboard');
+  };
+
   return (
-    <Layout>
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-2xl font-bold mb-4">Login</h1>
-        <form className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border p-2 rounded"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded"
-          >
-            Login
-          </button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white p-4">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-sm">
+        <div>
+          <h1 className="text-center text-3xl font-bold">Welcome back</h1>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to access your dashboard
+          </p>
+        </div>
+        
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="employeeId">Employee ID</Label>
+              <Input
+                id="employeeId"
+                type="text"
+                placeholder="Enter your employee ID"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full">
+            Sign in
+          </Button>
         </form>
       </div>
-    </Layout>
-  )
+    </div>
+  );
 }
 
-export default Login
+export default Login;

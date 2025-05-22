@@ -4,13 +4,16 @@ import {
   logoutTeacher, 
   getCurrentTeacher, 
   isTeacherAuthenticated,
+  registerTeacher,
   type TeacherLoginCredentials,
+  type TeacherRegistrationData,
   type TeacherAuthResponse
 } from '@/services/teacherAuthService';
 
 interface TeacherAuthContextType {
   isAuthenticated: boolean;
   teacher: TeacherAuthResponse['teacher'] | null;
+  register: (data: TeacherRegistrationData) => Promise<void>;
   login: (credentials: TeacherLoginCredentials) => Promise<void>;
   logout: () => void;
   loading: boolean;
@@ -52,6 +55,18 @@ export function TeacherAuthProvider({ children }: { children: React.ReactNode })
       setLoading(false);
     }
   };
+  const register = async (data: TeacherRegistrationData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await registerTeacher(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const logout = () => {
     logoutTeacher();
@@ -64,6 +79,7 @@ export function TeacherAuthProvider({ children }: { children: React.ReactNode })
       value={{
         isAuthenticated,
         teacher,
+        register,
         login,
         logout,
         loading,
