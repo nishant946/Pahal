@@ -32,9 +32,11 @@ function Landing() {
             <p className="text-xl lg:text-2xl text-blue-100">
               A bridge between MIT volunteers and the children of Asrong MIT, 
               providing free quality education to shape tomorrow's leaders.
-            </p>            <div className="flex justify-center pt-8">              <Button
+            </p>
+            <div className="flex justify-center pt-8">
+              <Button
                 size="lg"
-                onClick={() => navigate('/teacher-login')}
+                onClick={() => navigate('/register')}
                 className="text-white border-2 border-white relative inline-flex items-center gap-3 transition-all duration-300 ease-in-out overflow-hidden group px-8 py-4 hover:scale-105 shadow-lg hover:shadow-white/20"
               >
                 <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
