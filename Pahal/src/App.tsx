@@ -12,77 +12,86 @@ import TeacherAttendance from "./pages/attendance/teacherattendance"
 import StudentReport from "./pages/attendance/studentreport"
 import TodayTeacherAttendance from "./pages/attendance/todayteacherattendance"
 import Teachers from "./pages/teacher/teachers"
+import Homework from "./pages/homework/homework"
 import { AttendanceProvider } from "./contexts/attendanceContext"
 import { TeacherAuthProvider } from "./contexts/teacherAuthContext"
+import { HomeworkProvider } from "./contexts/homeworkContext"
 import { TeacherProtectedRoute } from "./components/auth/TeacherProtectedRoute"
-
-
 
 function App() {
   return (
     <BrowserRouter>
       <TeacherAuthProvider>
         <AttendanceProvider>
-          <div className="flex flex-col min-h-screen">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />              {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <TeacherProtectedRoute>
-                  <Dashboard />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/teachers" element={
-                <TeacherProtectedRoute>
-                  <Teachers />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/view-all-students" element={
-                <TeacherProtectedRoute>
-                  <StudentList />
-                </TeacherProtectedRoute>
-              } />
+          <HomeworkProvider>
+            <div className="flex flex-col min-h-screen">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Landing />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
-              {/* Attendance Routes */}
-              <Route path="/attendance" element={
-                <TeacherProtectedRoute>
-                  <Attendance />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/markattendance" element={
-                <TeacherProtectedRoute>
-                  <MarkAttendance />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/todayattendance" element={
-                <TeacherProtectedRoute>
-                  <TodayAttendance />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/markteacherattendance" element={
-                <TeacherProtectedRoute>
-                  <MarkTeacherAttendance />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/teacherattendance" element={
-                <TeacherProtectedRoute>
-                  <TeacherAttendance />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/studentreports" element={
-                <TeacherProtectedRoute>
-                  <StudentReport />
-                </TeacherProtectedRoute>
-              } />
-              <Route path="/attendance/todayteacherattendance" element={
-                <TeacherProtectedRoute>
-                  <TodayTeacherAttendance />
-                </TeacherProtectedRoute>
-              } />
-            </Routes>
-          </div>
+                {/* Protected Routes */}
+                <Route path="/dashboard" element={
+                  <TeacherProtectedRoute>
+                    <Dashboard />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/teachers" element={
+                  <TeacherProtectedRoute>
+                    <Teachers />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/homework" element={
+                  <TeacherProtectedRoute>
+                    <Homework />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/view-all-students" element={
+                  <TeacherProtectedRoute>
+                    <StudentList />
+                  </TeacherProtectedRoute>
+                } />
+
+                {/* Attendance Routes */}
+                <Route path="/attendance" element={
+                  <TeacherProtectedRoute>
+                    <Attendance />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/markattendance" element={
+                  <TeacherProtectedRoute>
+                    <MarkAttendance />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/todayattendance" element={
+                  <TeacherProtectedRoute>
+                    <TodayAttendance />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/markteacherattendance" element={
+                  <TeacherProtectedRoute>
+                    <MarkTeacherAttendance />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/teacherattendance" element={
+                  <TeacherProtectedRoute>
+                    <TeacherAttendance />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/studentreports" element={
+                  <TeacherProtectedRoute>
+                    <StudentReport />
+                  </TeacherProtectedRoute>
+                } />
+                <Route path="/attendance/todayteacherattendance" element={
+                  <TeacherProtectedRoute>
+                    <TodayTeacherAttendance />
+                  </TeacherProtectedRoute>
+                } />
+              </Routes>
+            </div>
+          </HomeworkProvider>
         </AttendanceProvider>
       </TeacherAuthProvider>
     </BrowserRouter>

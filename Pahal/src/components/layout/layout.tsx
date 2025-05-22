@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import Navbar from "../navbar/navbar";
 import Sidebar from "../sidebar/sidebar";
 import { Button } from "../ui/button";
-import { Menu } from "lucide-react";
+// import { Menu } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
+  onMenuClick?: () => void;
 }
 
 function Layout({ children }: LayoutProps): React.ReactNode {

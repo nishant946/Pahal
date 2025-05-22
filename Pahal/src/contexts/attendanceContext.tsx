@@ -93,14 +93,119 @@ interface AttendanceContextType {
 const AttendanceContext = createContext<AttendanceContextType | undefined>(undefined);
 
 export function AttendanceProvider({ children }: { children: React.ReactNode }) {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>(
+    [
+      {
+        id: 'S001',
+        name: 'Pallavi Singh',
+        rollNumber: '2025001',
+        grade: '10',
+        group: 'A',
+        contact: '9876543210',
+        parentName: 'Rakesh Singh',
+        address: '123 Varanasi, UP',
+        joinDate: '2023-07-01'
+      },
+      {
+        id: 'S002',
+        name: 'Shivam Kumar',
+        rollNumber: '2025002',
+        grade: '10',
+        group: 'B',
+        contact: '9876543211',
+        parentName: 'Rajesh Kumar',
+        address: '456 Varanasi, UP',
+        joinDate: '2023-07-01'
+      },
+      {
+        id: 'S003',
+        name: 'Priya Verma',
+        rollNumber: '2025003',
+        grade: '10',
+        group: 'A',
+        contact: '9876543212',
+        parentName: 'Sanjay Verma',
+        address: '789 Varanasi, UP',
+        joinDate: '2023-07-01'
+      },
+      {
+        id: 'S004',
+        name: 'Rahul Sharma',
+        rollNumber: '2025004',
+        grade: '10',
+        group: 'C',
+        contact: '9876543213',
+        parentName: 'Amit Sharma',
+        address: '321 Varanasi, UP',
+        joinDate: '2023-07-01'
+      },
+      {
+        id: 'S005',
+        name: 'Kirti Patel',
+        rollNumber: '2025005',
+        grade: '10',
+        group: 'B',
+        contact: '9876543214',
+        parentName: 'Ramesh Patel',
+        address: '654 Varanasi, UP',
+        joinDate: '2023-07-01'
+      }
+    ]
+  );
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord>({
-    date: new Date().toISOString().split('T')[0],
-    presentStudents: [],
-    presentTeachers: []
-  });
-  const [attendanceHistory, setAttendanceHistory] = useState<AttendanceHistory>({});
+  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord>(
+    {
+      date: new Date().toISOString().split('T')[0],
+      presentStudents: [
+        {
+          id: 'S001',
+          name: 'Pallavi Singh',
+          rollNumber: '2025001',
+          grade: '10',
+          group: 'A',
+          timeMarked: '08:30 AM'
+        },
+        {
+          id: 'S003',
+          name: 'Priya Verma',
+          rollNumber: '2025003',
+          grade: '10',
+          group: 'A',
+          timeMarked: '08:35 AM'
+        },
+        {
+          id: 'S005',
+          name: 'Kirti Patel',
+          rollNumber: '2025005',
+          grade: '10',
+          group: 'B',
+          timeMarked: '08:40 AM'
+        }
+      ],
+      presentTeachers: []
+    }
+  );
+  const [attendanceHistory, setAttendanceHistory] = useState<AttendanceHistory>(
+    {
+      '2024-01-15': {
+        students: {
+          'S001': { status: 'present', timeMarked: '08:30 AM' },
+          'S002': { status: 'present', timeMarked: '08:35 AM' },
+          'S003': { status: 'present', timeMarked: '08:40 AM' },
+          'S004': { status: 'present', timeMarked: '08:45 AM' }
+        },
+        teachers: {}
+      },
+      '2024-01-16': {
+        students: {
+          'S001': { status: 'present', timeMarked: '08:30 AM' },
+          'S002': { status: 'present', timeMarked: '08:35 AM' },
+          'S005': { status: 'present', timeMarked: '08:40 AM' }
+        },
+        teachers: {}
+      }
+    }
+  );
 
   // Reset attendance at midnight
   useEffect(() => {

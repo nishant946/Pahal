@@ -3,7 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Bell, Sun, Moon, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-function Navbar() {
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+function Navbar({ onMenuClick }: NavbarProps) {
   const [isDark, setIsDark] = useState(false);
   const [notifications] = useState(2);
   const navigate = useNavigate();
@@ -25,11 +29,10 @@ function Navbar() {
     <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="flex h-16 items-center px-4">
         {/* Mobile menu button */}
-        <Button
-          variant="ghost"
+        <Button          variant="ghost"
           size="icon"
           className="mr-2 md:hidden"
-          onClick={() => {}}
+          onClick={onMenuClick}
         >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Open menu</span>

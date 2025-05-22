@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Book, Calendar, Home, LogOut, Settings, User, Image, Heart } from "lucide-react";
+import { Book, Calendar, Home, LogOut, Settings, User, Image, Heart, BookOpen } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import type { ReactNode } from 'react';
 
@@ -18,6 +18,7 @@ const sidebarItems: SidebarItems[] = [
     { label: "Students", icon: <User className="w-5 h-5" />, href: "/view-all-students" },
     { label: "Attendance", icon: <Calendar className="w-5 h-5" />, href: "/attendance" },
     { label: "Teachers", icon: <User className="w-5 h-5" />, href: "/teachers" },
+    { label: "Homework", icon: <BookOpen className="w-5 h-5" />, href: "/homework" },
     { label: "Gallery", icon: <Image className="w-5 h-5" />, href: "/gallery" },
     { label: "Contributors", icon: <Heart className="w-5 h-5" />, href: "/contributors" },
     { label: "Syllabus", icon: <Book className="w-5 h-5" />, href: "/syllabus" },

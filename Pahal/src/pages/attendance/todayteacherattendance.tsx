@@ -14,10 +14,9 @@ interface Teacher {
   timeIn: string;
 }
 
-const dummyPresentTeachers: Teacher[] = [
-  {
+const dummyPresentTeachers: Teacher[] = [  {
     id: '1',
-    name: 'Priya Sharma',
+    name: 'Nishant Somesh',
     employeeId: 'T001',
     department: 'Mathematics',
     batch: '2025',
@@ -25,7 +24,7 @@ const dummyPresentTeachers: Teacher[] = [
   },
   {
     id: '2',
-    name: 'Rajesh Kumar',
+    name: 'Aman',
     employeeId: 'T002',
     department: 'Science',
     batch: '2025',
@@ -33,7 +32,7 @@ const dummyPresentTeachers: Teacher[] = [
   },
   {
     id: '3',
-    name: 'Anita Desai',
+    name: 'Pratyaksh',
     employeeId: 'T003',
     department: 'English',
     batch: '2025',

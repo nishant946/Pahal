@@ -18,45 +18,44 @@ interface Teacher {
   image: string;
 }
 
-const dummyTeachers: Teacher[] = [
-  {
+const dummyTeachers: Teacher[] = [  {
     id: '1',
-    name: 'Priya Sharma',
+    name: 'Nishant',
     employeeId: 'T001',
     department: 'Mathematics',
     designation: 'Senior Teacher',
-    email: 'priya.sharma@pahal.edu',
+    email: 'nishant@pahal.edu',
     phone: '+91 98765 43210',
     subjects: ['Mathematics', 'Statistics'],
     qualification: 'M.Sc. Mathematics',
     joiningDate: '2023-01-15',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya'
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nishant'
   },
   {
     id: '2',
-    name: 'Rajesh Kumar',
+    name: 'somesh',
     employeeId: 'T002',
     department: 'Science',
     designation: 'Physics Teacher',
-    email: 'rajesh.kumar@pahal.edu',
+    email: 'somesh@pahal.edu',
     phone: '+91 98765 43211',
     subjects: ['Physics', 'Mathematics'],
     qualification: 'M.Sc. Physics',
     joiningDate: '2023-02-01',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rajesh'
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aman'
   },
   {
     id: '3',
-    name: 'Anita Desai',
+    name: 'Pratyaksh',
     employeeId: 'T003',
     department: 'English',
     designation: 'Language Teacher',
-    email: 'anita.desai@pahal.edu',
+    email: 'pratyaksh@pahal.edu',
     phone: '+91 98765 43212',
     subjects: ['English Literature', 'Grammar'],
     qualification: 'M.A. English',
     joiningDate: '2023-03-15',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anita'
+    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Pratyaksh'
   }
 ];
 

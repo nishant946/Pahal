@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import Layout from '@/components/layout/layout';
-import DashboardCard from '@/components/card/dashboardCard';
-import axios from 'axios';
-import { User, Calendar } from 'lucide-react';
+import Layout from '@/components/layout/layout'
+import DashboardCard from '@/components/card/dashboardCard'
+import { HomeworkSummary } from '@/components/homework/HomeworkSummary'
+import { User, Calendar } from 'lucide-react'
+import axios from 'axios'
 
 interface todos {
     id: number;
@@ -71,6 +72,11 @@ function Dashboard() {
                     </div>
                 </div>
 
+                {/* Homework Summary */}
+                <div className="bg-white shadow rounded-lg p-6">
+                    <HomeworkSummary />
+                </div>
+
                 {/* Tasks/Todos */}
                 <div className="bg-white shadow rounded-lg">
                     <div className="p-6">
@@ -91,4 +97,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard;
+export default Dashboard
