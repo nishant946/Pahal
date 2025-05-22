@@ -9,7 +9,7 @@ import { useAttendance } from '@/contexts/attendanceContext'
 function TodayAttendance() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('');
-  const { todayAttendance, unmarkStudentAttendance } = useAttendance();
+  const { todayAttendance } = useAttendance();
   const [currentDate] = useState(new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
