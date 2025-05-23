@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Layout from '@/components/layout/layout'
 import DashboardCard from '@/components/card/dashboardCard'
 import { HomeworkSummary } from '@/components/homework/HomeworkSummary'
+import { YesterdayHomeworkSummary } from '@/components/homework/YesterdayHomeworkSummary'
 import { User, Calendar } from 'lucide-react'
 import axios from 'axios'
 
@@ -70,16 +71,19 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
+                </div>                {/* Today's Homework Summary */}
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+                    <HomeworkSummary />
                 </div>
 
-                {/* Homework Summary */}
-                <div className="bg-white shadow rounded-lg p-6">
-                    <HomeworkSummary />
+                {/* Yesterday's Homework Summary */}
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+                    <YesterdayHomeworkSummary />
                 </div>
 
                 {/* Tasks/Todos */}
                 <div className="bg-white shadow rounded-lg">
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                         <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Tasks</h2>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             {DashboardCardContent.map((todo) => (

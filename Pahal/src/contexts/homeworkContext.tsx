@@ -16,40 +16,70 @@ interface HomeworkContextType {
   updateHomework: (id: string, homework: Partial<Homework>) => void;
   getHomeworkByGroup: (group: Homework['group']) => Homework[];
   getRecentHomework: () => Homework[];
+  getYesterdayHomework: () => Homework[];
 }
 
 const HomeworkContext = createContext<HomeworkContextType | undefined>(undefined);
 
 export function HomeworkProvider({ children }: { children: React.ReactNode }) {
-  const [homework, setHomework] = useState<Homework[]>([
-    {
-      id: '1',
-      group: 'A',
-      subject: 'Mathematics',
-      description: 'Complete exercises on addition and subtraction',
-      dueDate: '2025-05-24',
-      dateAssigned: '2025-05-23',
-      status: 'pending'
-    },
-    {
-      id: '2',
-      group: 'B',
-      subject: 'Science',
-      description: 'Read chapter on plant life cycle and answer questions',
-      dueDate: '2025-05-24',
-      dateAssigned: '2025-05-23',
-      status: 'pending'
-    },
-    {
-      id: '3',
-      group: 'C',
-      subject: 'English',
-      description: 'Write a 500-word essay on environmental conservation',
-      dueDate: '2025-05-24',
-      dateAssigned: '2025-05-23',
-      status: 'pending'
-    }
-  ]);
+  const [homework, setHomework] = useState<Homework[]>(
+    [
+      {
+        id: '1',
+        group: 'A',
+        subject: 'Mathematics',
+        description: 'Complete exercises on addition and subtraction',
+        dueDate: '2025-05-24',
+        dateAssigned: '2025-05-23',
+        status: 'pending'
+      },
+      {
+        id: '2',
+        group: 'B',
+        subject: 'Science',
+        description: 'Read chapter on plant life cycle and answer questions',
+        dueDate: '2025-05-24',
+        dateAssigned: '2025-05-23',
+        status: 'pending'
+      },
+      {
+        id: '3',
+        group: 'C',
+        subject: 'English',
+        description: 'Write a 500-word essay on environmental conservation',
+        dueDate: '2025-05-24',
+        dateAssigned: '2025-05-23',
+        status: 'pending'
+      },
+      {
+        id: '4',
+        group: 'A',
+        subject: 'Science',
+        description: 'Complete experiment report on plant growth',
+        dueDate: '2025-05-23',
+        dateAssigned: '2025-05-22',
+        status: 'completed'
+      },
+      {
+        id: '5',
+        group: 'B',
+        subject: 'English',
+        description: 'Read chapter 5 and answer comprehension questions',
+        dueDate: '2025-05-23',
+        dateAssigned: '2025-05-22',
+        status: 'completed'
+      },
+      {
+        id: '6',
+        group: 'C',
+        subject: 'Mathematics',
+        description: 'Solve geometry problems from worksheet',
+        dueDate: '2025-05-23',
+        dateAssigned: '2025-05-22',
+        status: 'completed'
+      }
+    ]
+  );
 
   const addHomework = (newHomework: Omit<Homework, 'id'>) => {
     const homework: Homework = {
@@ -74,6 +104,13 @@ export function HomeworkProvider({ children }: { children: React.ReactNode }) {
     return homework.filter(hw => hw.dateAssigned === today);
   };
 
+  const getYesterdayHomework = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    return homework.filter(hw => hw.dateAssigned === yesterdayStr);
+  };
+
   return (
     <HomeworkContext.Provider
       value={{
@@ -81,7 +118,8 @@ export function HomeworkProvider({ children }: { children: React.ReactNode }) {
         addHomework,
         updateHomework,
         getHomeworkByGroup,
-        getRecentHomework
+        getRecentHomework,
+        getYesterdayHomework
       }}
     >
       {children}

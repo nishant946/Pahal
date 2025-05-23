@@ -325,12 +325,11 @@ function StudentList() {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
+      <div className="p-6">        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Students List</h1>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
             <AddStudentDialog onAdd={addStudent} />
-            <Button variant="outline" onClick={downloadStudentsList}>
+            <Button variant="outline" onClick={downloadStudentsList} className="w-full sm:w-auto">
               <Download className="w-4 h-4 mr-2" />
               Download List
             </Button>
