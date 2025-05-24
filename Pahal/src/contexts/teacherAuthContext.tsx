@@ -1,91 +1,133 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  loginTeacher, 
-  logoutTeacher, 
-  getCurrentTeacher, 
-  isTeacherAuthenticated,
-  registerTeacher,
-  type TeacherLoginCredentials,
-  type TeacherRegistrationData,
-  type TeacherAuthResponse
-} from '@/services/teacherAuthService';
+
+interface Teacher {
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+  isVerified: boolean;
+}
 
 interface TeacherAuthContextType {
-  isAuthenticated: boolean;
-  teacher: TeacherAuthResponse['teacher'] | null;
-  register: (data: TeacherRegistrationData) => Promise<void>;
-  login: (credentials: TeacherLoginCredentials) => Promise<void>;
+  teacher: Teacher | null;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  loading: boolean;
-  error: string | null;
+  verifyTeacher: (teacherId: string) => Promise<void>;
+  rejectTeacher: (teacherId: string) => Promise<void>;
+  addTeacher: (teacherData: Omit<Teacher, 'id'>) => Promise<void>;
+  removeTeacher: (teacherId: string) => Promise<void>;
 }
 
 const TeacherAuthContext = createContext<TeacherAuthContextType | undefined>(undefined);
 
 export function TeacherAuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(isTeacherAuthenticated());
-  const [teacher, setTeacher] = useState<TeacherAuthResponse['teacher'] | null>(getCurrentTeacher());
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [teacher, setTeacher] = useState<Teacher | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication status on mount
-    const checkAuth = () => {
-      const authenticated = isTeacherAuthenticated();
-      setIsAuthenticated(authenticated);
-      if (authenticated) {
-        setTeacher(getCurrentTeacher());
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  const login = async (credentials: TeacherLoginCredentials) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await loginTeacher(credentials);
-      setIsAuthenticated(true);
-      setTeacher(response.teacher);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
-      throw err;
-    } finally {
-      setLoading(false);
+    // Check for existing session
+    const storedTeacher = localStorage.getItem('teacher');
+    if (storedTeacher) {
+      setTeacher(JSON.parse(storedTeacher));
     }
-  };
-  const register = async (data: TeacherRegistrationData) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(false);
+  }, []);
+  const login = async (email: string, password: string) => {
     try {
-      await registerTeacher(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
-      throw err;
-    } finally {
-      setLoading(false);
+      // TODO: Replace with actual API call
+      const response = await fetch('/api/auth/teacher/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      if (!response.ok) throw new Error('Login failed');
+      
+      const data = await response.json();
+      setTeacher(data.teacher);
+      localStorage.setItem('teacher', JSON.stringify(data.teacher));
+
+      // Redirect based on role
+      if (data.teacher.isAdmin) {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      throw new Error('Login failed');
     }
   };
 
   const logout = () => {
-    logoutTeacher();
-    setIsAuthenticated(false);
     setTeacher(null);
+    localStorage.removeItem('teacher');
+  };
+
+  const verifyTeacher = async (teacherId: string) => {
+    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    try {
+      // TODO: Replace with actual API call
+      await fetch(`/api/admin/teachers/${teacherId}/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      throw new Error('Failed to verify teacher');
+    }
+  };
+
+  const rejectTeacher = async (teacherId: string) => {
+    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    try {
+      // TODO: Replace with actual API call
+      await fetch(`/api/admin/teachers/${teacherId}/reject`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      throw new Error('Failed to reject teacher');
+    }
+  };
+
+  const addTeacher = async (teacherData: Omit<Teacher, 'id'>) => {
+    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    try {
+      // TODO: Replace with actual API call
+      await fetch('/api/admin/teachers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(teacherData),
+      });
+    } catch (error) {
+      throw new Error('Failed to add teacher');
+    }
+  };
+
+  const removeTeacher = async (teacherId: string) => {
+    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    try {
+      // TODO: Replace with actual API call
+      await fetch(`/api/admin/teachers/${teacherId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      throw new Error('Failed to remove teacher');
+    }
   };
 
   return (
-    <TeacherAuthContext.Provider
-      value={{
-        isAuthenticated,
-        teacher,
-        register,
-        login,
-        logout,
-        loading,
-        error
-      }}
-    >
+    <TeacherAuthContext.Provider value={{
+      teacher,
+      isLoading,
+      login,
+      logout,
+      verifyTeacher,
+      rejectTeacher,
+      addTeacher,
+      removeTeacher,
+    }}>
       {children}
     </TeacherAuthContext.Provider>
   );

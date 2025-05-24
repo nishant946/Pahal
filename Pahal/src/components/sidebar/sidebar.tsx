@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Book, Calendar, Home, LogOut, Settings, User, Image, Heart, BookOpen } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 type SidebarItems = {
     label: string;
@@ -27,6 +27,7 @@ const sidebarItems: SidebarItems[] = [
 ];
 
 const Sidebar = () => {
+    
     return (
         <div className="w-64 h-full bg-white border-r border-gray-200 flex flex-col">
             {/* Sidebar Header */}
