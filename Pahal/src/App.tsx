@@ -27,6 +27,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import TeacherManagement from "./pages/admin/TeacherManagement";
 import TeacherVerification from "./pages/admin/TeacherVerification";
 import AdminContributors from "./pages/admin/AdminContributors";
+import AttendanceOverview from "./pages/admin/attendanceoverview";
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
                   <Route path="teachers" element={<TeacherManagement />} />
                   <Route path="verify-teachers" element={<TeacherVerification />} />
                   <Route path="contributors" element={<AdminContributors/>} />
+                  <Route path="attendance" element={<AttendanceOverview/>} />
+                  
 
                   {/* More nested routes can go here */}
                 </Route>
