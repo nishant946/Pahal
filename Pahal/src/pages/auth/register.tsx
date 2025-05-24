@@ -64,7 +64,7 @@ const Register = () => {  const navigate = useNavigate();
 
     try {
       const { confirmPassword, ...registrationData } = form;
-      await register(registrationData);
+      await register({ ...registrationData, isAdmin: false, isVerified: false });
       navigate('/login', { state: { message: 'Registration successful! Please login to continue.' } });
     } catch (err) {
       // Error is handled by the context

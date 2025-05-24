@@ -23,7 +23,7 @@ const AdminLayout: React.FC = () => {
     { icon: Heart, label: 'Contributors', path: '/admin/contributors' },
     { icon: UserCheck, label: 'Teacher Verification', path: '/admin/verify-teachers' },
     { icon: Calendar, label: 'Attendance Overview', path: '/admin/attendance' },
-    { icon: Image, label: 'Gallery Management', path: '/admin/gallery' },
+    { icon: Image, label: 'Gallery Management', path: '/admin/gallary' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
     { icon: LogOut, label: 'LogOut', path: '/admin/logout' },
   ];
