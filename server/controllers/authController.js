@@ -1,8 +1,9 @@
-import User from "../models/User.js";
-import bcrypt from "bcrypt";
+import User from "../models/userModel.js";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
+  console.log("Login request received:", req.body);
   const { username, password } = req.body;
   try {
     if (!username || !password) {
@@ -35,10 +36,10 @@ const loginUser = async (req, res) => {
   }
 };
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    if (!username || !email || !password) {
+    if ([username, email, password].some(field => !field)) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const existingUser = await User.find({ email });

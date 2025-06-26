@@ -10,7 +10,7 @@ connectDB();
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.send("Server is running...");
+  res.send("Server is running...");// http://localhost:3000/api
 });
 
 app.use(express.json());
