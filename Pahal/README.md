@@ -1,54 +1,89 @@
-# React + TypeScript + Vite
+# Pahal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Pahal is an educational management system designed to streamline school administration and teacher workflows. It is built with modern web technologies to provide a responsive and user-friendly interface for managing teachers, students, attendance, homework, syllabus, and more.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 with TypeScript
+- Vite for fast development and build
+- TailwindCSS for styling
+- Radix UI components for accessible UI elements
+- React Router for client-side routing
+- Axios for API requests
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Authentication
+- User registration, login, and logout functionality
+- Protected routes for authenticated users and role-based access control
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Admin Panel
+- Dashboard with statistics on teachers, courses, students, and recent activities
+- Teacher management and verification workflow
+- Contributor management
+- Attendance overview and reports
+- Gallery management
+- Settings and configuration
+
+### Teacher Dashboard
+- View and manage homework assignments
+- Access student lists and profiles
+- Syllabus management
+- Attendance marking for students and teachers
+- Attendance reports and daily summaries
+- Access to gallery and contributors
+
+### Attendance Management
+- Mark student attendance
+- Mark teacher attendance
+- View daily attendance summaries and reports
+
+### Additional Features
+- Recent activity tracking in the admin dashboard
+- Responsive design for desktop and mobile
+- Role-based protected routes for security
+
+## Getting Started
+
+### Installation
+
+Install dependencies:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Start the development server with hot module replacement:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm run dev
 ```
+
+### Build
+
+Build the project for production:
+
+```bash
+npm run build
+```
+
+### Preview
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## Folder Structure
+
+- `src/` - Main source code including pages, components, contexts, and services
+- `server/` - Backend server code and API routes
+- `public/` - Static assets
+- `Pahal/` - Project root with configuration files
+
+## License
+
+This project is private and not publicly licensed.
