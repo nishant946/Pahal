@@ -150,6 +150,13 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
 }
 
 function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id: string, student: Omit<Student, 'id'>) => Promise<void> }) {
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    // Handles ISO or other formats
+    const d = new Date(dateStr);
+    return d.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     name: student.name,
     rollNumber: student.rollNumber,
@@ -158,7 +165,7 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
     contact: student.contact,
     parentName: student.parentName,
     address: student.address,
-    joinDate: student.joinDate
+    joinDate: formatDate(student.joinDate) 
   })
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

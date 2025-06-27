@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const AttendanceSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Student",
         required: true
     },
     date: {
@@ -15,6 +15,10 @@ const AttendanceSchema = new mongoose.Schema({
         type: String,
         enum: ["present", "absent"],
         default: "present"
+    },
+    timeMarked: {
+        type: String,
+        required: true
     }
 });
 

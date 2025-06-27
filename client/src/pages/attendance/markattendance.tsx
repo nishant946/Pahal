@@ -19,15 +19,19 @@ function MarkAttendance() {
     day: 'numeric'
   }));
 
-  const filteredStudents = students.filter(student =>
+  if (!students || !todayAttendance || !todayAttendance.presentStudents) {
+    return <div>Loading...</div>;
+  }
+
+  const filteredStudents = (students ?? []).filter(student =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.rollNumber.includes(searchQuery) ||
     student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.group.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const isPresent = (studentId: string) => 
-    todayAttendance.presentStudents.some(student => student.id === studentId);
+  const isPresent = (studentId: string) =>
+    (todayAttendance?.presentStudents ?? []).some(student => student.id === studentId);
 
   const toggleAttendance = (studentId: string) => {
     if (isPresent(studentId)) {
@@ -102,11 +106,12 @@ function MarkAttendance() {
             </div>
 
             {/* Mobile and Desktop Views */}
-            {filteredStudents.length === 0 ? (
+            {(filteredStudents ?? []).length === 0 && (
               <div className="p-4 sm:p-8 text-center text-gray-500">
-                No students found matching your search.
+                No students found.
               </div>
-            ) : (
+            )}
+            {filteredStudents.length > 0 && (
               <div className="divide-y divide-gray-200">
                 {filteredStudents.map((student) => (
                   <div 

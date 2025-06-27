@@ -1,5 +1,5 @@
 import api from '@/services/api';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, use } from 'react';
 
 interface Student {
   id: string;
@@ -75,6 +75,7 @@ interface AttendanceContextType {
   deleteTeacher: (id: string) => void;
   markStudentAttendance: (studentId: string) => void;
   markTeacherAttendance: (teacherId: string) => void;
+  getTodayAttendance: () => Promise<AttendanceRecord | undefined>;
   unmarkStudentAttendance: (studentId: string) => void;
   unmarkTeacherAttendance: (teacherId: string) => void;
   getStudentAttendanceStats: (studentId: string, startDate: string, endDate: string) => {
@@ -94,42 +95,13 @@ interface AttendanceContextType {
 const AttendanceContext = createContext<AttendanceContextType | undefined>(undefined);
 
 export function AttendanceProvider({ children }: { children: React.ReactNode }) {
-  const [students, setStudents] = useState<Student[]>(
-    []
-  );
+  const [students, setStudents] = useState<Student[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord>(
-    {
-      date: new Date().toISOString().split('T')[0],
-      presentStudents: [
-        {
-          id: 'S001',
-          name: 'Pallavi Singh',
-          rollNumber: '2025001',
-          grade: '10',
-          group: 'A',
-          timeMarked: '08:30 AM'
-        },
-        {
-          id: 'S003',
-          name: 'Priya Verma',
-          rollNumber: '2025003',
-          grade: '10',
-          group: 'A',
-          timeMarked: '08:35 AM'
-        },
-        {
-          id: 'S005',
-          name: 'Kirti Patel',
-          rollNumber: '2025005',
-          grade: '10',
-          group: 'B',
-          timeMarked: '08:40 AM'
-        }
-      ],
-      presentTeachers: []
-    }
-  );
+  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord>({
+    date: new Date().toISOString().split('T')[0],
+    presentStudents: [],
+    presentTeachers: [],
+  });
   const [attendanceHistory, setAttendanceHistory] = useState<AttendanceHistory>(
     {
       '2024-01-15': {
@@ -196,19 +168,17 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
   }, [todayAttendance.date, students, teachers]);
 
   const addStudent = async(student: Omit<Student, 'id'>) => {
-    const newStudent = {
-      ...student,
-      id: (students.length + 1).toString()
-    };
-
-    const response = await api.post('/student/add', newStudent);
-
-    if (response.status !== 201) {
-      console.error('Failed to add student:', response.data);
-      return;
+    try {
+      const response = await api.post('/student/add', student);
+      if (response.status !== 201) {
+        console.error('Failed to add student:', response.data);
+        return;
+      }
+      const newStudent = response.data.student || response.data;
+      setStudents(prev => [...prev, { ...newStudent, id: newStudent._id }]);
+    } catch (error) {
+      console.error('Error adding student:', error);
     }
-    setStudents(prev => [...prev, newStudent]);
-    
   };
 
   // get all students from database
@@ -217,7 +187,7 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
     try {
       const response = await api.get('/student/all');
       if (response.status !== 200) throw new Error('Failed to fetch students');
-      const data: Student[] = await response.data;
+      const data: Student[] = response.data.map((s: any) => ({ ...s, id: s._id }));
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -232,6 +202,11 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
   const editStudent = async (id: string, updatedStudent: Omit<Student, 'id'>) => {
     try {
       const response = await api.put(`/student/${id}`, updatedStudent);
+      console.log('Response from editStudent:', response);
+      if (response.status === 400) {
+        console.error('Failed to update student:', response.data);
+        return;
+      }
       const updated = response.data.student || response.data;
       setStudents(prev => prev.map(student => student.id === id ? { ...updated, id: updated._id || id } : student));
       setTodayAttendance(prev => ({
@@ -243,7 +218,7 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
         )
       }));
     } catch (error) {
-      console.error('Failed to update student:', error);
+      alert('Failed to update student:');
     }
   };
 
@@ -282,7 +257,7 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
     }));
   };
 
-  const markStudentAttendance = (studentId: string) => {
+  const markStudentAttendance = async (studentId: string) => {
     const student = students.find(s => s.id === studentId);
     if (!student || todayAttendance.presentStudents.some(s => s.id === studentId)) return;
 
@@ -291,6 +266,19 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
       minute: '2-digit',
       hour12: true
     });
+
+    const response = await api.post('/attendance/mark', {
+      userId: studentId,
+      date: todayAttendance.date,
+      timeMarked,
+      status: 'present'
+    });
+
+    if (response.status !== 201) {
+      console.error('Failed to mark student attendance:', response.data);
+      return;
+    }
+
 
     setTodayAttendance(prev => ({
       ...prev,
@@ -320,11 +308,22 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
     }));
   };
 
-  const unmarkStudentAttendance = (studentId: string) => {
+  const unmarkStudentAttendance = async (studentId: string) => {
     setTodayAttendance(prev => ({
       ...prev,
       presentStudents: prev.presentStudents.filter(s => s.id !== studentId)
     }));
+
+    const response = await api.post(`/attendance/unmark`, {
+      userId: studentId,
+      date: todayAttendance.date,
+      status: 'absent'
+    });
+
+    if (response.status !== 200) {
+      console.error('Failed to unmark student attendance:', response.data);
+      return;
+    }
 
     // Update attendance history
     setAttendanceHistory(prev => ({
@@ -395,6 +394,35 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
     }));
   };
 
+  // Get todays attendance stats for all students
+  const getTodayAttendance = async () => {
+    const date =
+      todayAttendance.date ||
+      new Date().toISOString().split('T')[0];
+    const response = await api.get(`/attendance/date?date=${date}`);
+    if (response.status !== 200) {
+      console.error('Failed to fetch today\'s attendance stats:', response.data);
+      return;
+    }
+    return response.data;
+  };
+
+  useEffect( () => {
+    const fetchTodayAttendance = async () => {
+      const attendance = await getTodayAttendance();
+    console.log('Fetched today\'s attendance:', attendance);
+      if (attendance) {
+        setTodayAttendance({
+          date: attendance.date || new Date().toISOString().split('T')[0],
+          presentStudents: attendance.presentStudents ?? [],
+          presentTeachers: [],
+        });
+      }
+    };
+    fetchTodayAttendance();
+    // eslint-disable-next-line
+  }, []); // Only on mount
+
   const getStudentAttendanceStats = (studentId: string, startDate: string, endDate: string) => {
     const dates = Object.keys(attendanceHistory).filter(date => 
       date >= startDate && date <= endDate
@@ -448,6 +476,7 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
         markTeacherAttendance,
         unmarkStudentAttendance,
         unmarkTeacherAttendance,
+        getTodayAttendance,
         getStudentAttendanceStats,
         getTeacherAttendanceStats
       }}

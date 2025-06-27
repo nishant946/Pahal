@@ -38,11 +38,29 @@ export const getAllStudents = async (req, res) => {
 export const updateStudent = async (req, res) => {
   try {
     const { name, rollNumber, group, parentName, address, contact } = req.body;
+    // Check if roll number is already taken by another student
+    const existingStudent = await Student.findOne({ rollNumber, _id: { $ne: req.params.id } });
+    if (existingStudent) {
+      return res.status(400).json({ message: 'Roll number already taken by another student' });
+    }
+    
+    // Validate required fields
+    if (!name || !rollNumber || !group || !parentName || !address ||
+        !contact) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    // Check if student exists
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    
     const updatedStudent = await Student.findByIdAndUpdate(
       req.params.id,
       { rollNumber , name, group, parentName, address, contact },
       { new: true }
     );
+
     if (!updatedStudent) {
       return res.status(404).json({ message: 'Student not found' });
     }
