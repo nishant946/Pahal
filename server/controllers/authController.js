@@ -4,31 +4,47 @@ import jwt from "jsonwebtoken";
 
 export const loginUser = async (req, res) => {
   console.log("Login request received:", req.body);
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ message: "Username and password are required" });
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
     }
-    const user = await User.find({ username }).select("+password");
-    if (!user || user.length === 0) {
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const isMatch = await bcrypt.compare(password, user[0].password);
+    
+    // Add this check
+    if (!user.password) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const token = jwt.sign({ id: user[0]._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    
+    // Generate JWT token (optional but recommended)
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin || false,
+      department: user.department,
+      rollNumber: user.rollNumber,
+      mobile: user.mobile
+    };
+    
     res.status(200).json({
-      token,
-      user: {
-        id: user[0]._id,
-        username: user[0].username,
-        email: user[0].email,
-      },
+      message: "Login successful",
+      user: userData,
+      token // Include the token in response
     });
   } catch (error) {
     console.error("Login error:", error);

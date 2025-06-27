@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Book, Calendar, Home, LogOut, Settings, User, Image, Heart, BookOpen } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { type ReactNode } from 'react';
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 
 type SidebarItems = {
     label: string;
@@ -27,6 +28,9 @@ const sidebarItems: SidebarItems[] = [
 ];
 
 const Sidebar = () => {
+
+    const {teacher}=useTeacherAuth();
+    console.log(teacher);
     
     return (
         <div className="w-64 h-full bg-white border-r border-gray-200 flex flex-col">
@@ -62,11 +66,11 @@ const Sidebar = () => {
             <div className="border-t border-gray-200 p-4">
                 <div className="flex items-center gap-3 rounded-lg px-3 py-2">
                     <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                        <span className="text-white font-medium text-sm">JD</span>
+                        <span className="text-white font-medium text-sm">{teacher?.username.charAt(0)}</span>
                     </div>
                     <div>
-                        <p className="text-sm font-medium text-gray-900">John Doe</p>
-                        <p className="text-xs text-gray-500">Teacher</p>
+                        <p className="text-sm font-medium text-gray-900">{teacher?.username}</p>
+                        <p className="text-xs text-gray-500">{teacher?.isAdmin?"Admin":"Teacher"}</p>
                     </div>
                 </div>
             </div>

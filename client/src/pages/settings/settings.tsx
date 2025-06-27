@@ -6,15 +6,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Moon, Sun, User } from 'lucide-react';
+import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 
 export default function Settings() {
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
+  const {teacher}=useTeacherAuth();
   const [profile, setProfile] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+91 9876543210'
+    name: teacher?.username,
+    email: teacher?.email ,
+    phone: teacher?.mobile 
   });
 
   const handleProfileUpdate = (e: React.FormEvent) => {

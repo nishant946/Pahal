@@ -3,7 +3,7 @@ import api from '@/services/api';
 
 interface Teacher {
   id: string;
-  name: string;
+  username: string;
   email: string;
   department: string;
   mobile: string;
@@ -28,7 +28,7 @@ interface TeacherAuthContextType {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (teacherData: Omit<Teacher, 'id'> & { password: string }) => Promise<void>;
+  register: (registrationData: registrationData) => Promise<void>;
   verifyTeacher: (teacherId: string) => Promise<void>;
   rejectTeacher: (teacherId: string) => Promise<void>;
   addTeacher: (teacherData: Omit<Teacher, 'id'>) => Promise<void>;
@@ -50,47 +50,58 @@ export function TeacherAuthProvider({ children }: { children: React.ReactNode })
     }
     setIsLoading(false);
   }, []);
+const login = async (email: string, password: string) => {
+  setLoading(true);
+  setError(null);
+  try {
+    const response = await api.post('/auth/login', { email, password });
+    
+    // ✅ Now `response` is the full Axios response
+    console.log("Status:", response.status);
+    console.log("Data:", response.data); // Contains user, token, etc.
 
-  const login = async (email: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post('/auth/login', { email, password });
-
-      if (response.status !== 200) throw new Error('Login failed');
-
-      const data = response.data;
-      setTeacher(data.teacher);
-      localStorage.setItem('teacher', JSON.stringify(data.teacher));
-
-      window.location.href = data.teacher.isAdmin ? '/admin' : '/dashboard';
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
-    } finally {
-      setLoading(false);
+    if (![200, 201].includes(response.status)) {
+      throw new Error('Login failed');
     }
-  
-  };
 
-  const register = async (registrationData:registrationData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post('/auth/register', registrationData);
+    const user = response.data.user;
+    if (!user) throw new Error('Invalid response from server');
 
-      if (response.status !== 200) throw new Error('Registration failed');
+    setTeacher(user);
+    localStorage.setItem('teacher', JSON.stringify(user));
+    localStorage.setItem('teacherToken', response.data.token); // Store token
 
-      const data = response.data;
-      setTeacher(data.teacher);
-      localStorage.setItem('teacher', JSON.stringify(data.teacher));
+    window.location.href = user.isAdmin ? '/admin' : '/dashboard';
+  } catch (err) {
+    setError('Login failed');
+  } finally {
+    setLoading(false);
+  }
+};
 
-      window.location.href = data.teacher.isAdmin ? '/admin' : '/dashboard';
-    } catch (err: any) {
-      setError(err.message || 'Registration failed');
-    } finally {
-      setLoading(false);
-    }
-  };
+const register = async (registrationData: registrationData) => {
+  setLoading(true);
+  setError(null);
+  try {
+    const response = await api.post('/auth/register', registrationData);
+
+    if (response.status !== 201) throw new Error('Registration failed');
+
+    const user = response.data.user;
+    setTeacher(user);
+    localStorage.setItem('teacher', JSON.stringify(user));
+
+    window.location.href = user.isAdmin ? '/admin' : '/dashboard';
+  } catch (err: any) {
+    setError(
+      err.response?.data?.message ||
+      err.message ||
+      'Registration failed'
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const logout = () => {
     setTeacher(null);

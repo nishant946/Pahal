@@ -4,10 +4,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useNavigate } from 'react-router-dom';
+import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 
 function Login() {
   
-  // const { login } = useTeacherAuth();
+  const { login } = useTeacherAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,20 +30,12 @@ function Login() {
     setIsLoading(true);
 
     try {
-      if(formData.password==="12345"){
-        if(formData.email==="admin@pahal.com"){
-          navigate("/admin")
-        }
-
-        else navigate("/dashboard")
-        
+      
+      if (!formData.email || !formData.password) {
+        setError('Email and password are required');
+        return;
       }
-      // await login(formData.email, formData.password);
-
-      // The navigation will be handled by the auth context based on user role
-      // Admin users will be redirected to /admin
-      // Regular teachers will be redirected to /dashboard
-
+      await login(formData.email, formData.password);
       
     } catch (err) {
       setError('Invalid email or password');
@@ -97,7 +90,7 @@ function Login() {
 
           <Button 
             type="submit" 
-            className="w-full"
+            className="w-full cursor-pointer"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
