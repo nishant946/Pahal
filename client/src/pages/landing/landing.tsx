@@ -13,7 +13,7 @@ function Landing() {
             <Button
               variant="outline"
               onClick={() => navigate('/login')}
-              className="text-white border-white relative inline-flex items-center gap-2 transition-all duration-300 ease-in-out overflow-hidden group"
+              className="text-black cursor-pointer border-white relative inline-flex items-center gap-2 transition-all duration-300 ease-in-out overflow-hidden group"
             >
               <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 relative z-10 group-hover:text-red-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">

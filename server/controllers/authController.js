@@ -37,9 +37,10 @@ export const loginUser = async (req, res) => {
 };
 
 export const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  console.log("Registration request received:", req.body);
+  const { name, email, password,  department, rollNumber, mobile } = req.body;
   try {
-    if ([username, email, password].some(field => !field)) {
+    if ([name, email, password, department, rollNumber, mobile].some(field => !field)) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const existingUser = await User.find({ email });
@@ -47,9 +48,12 @@ export const registerUser = async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
     const newUser = await User.create({
-      username,
+      username: name,
       email,
       password: password,
+      department,
+      rollNumber,
+      mobile
     });
     res.status(201).json({
       message: "User registered successfully",
@@ -57,6 +61,9 @@ export const registerUser = async (req, res) => {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
+        department: newUser.department,
+        rollNumber: newUser.rollNumber,
+        mobile: newUser.mobile
       },
     });
   } catch (error) {

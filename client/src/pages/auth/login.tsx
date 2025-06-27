@@ -102,6 +102,15 @@ function Login() {
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
           </Button>
+
+          <div className="mt-6">
+            <p className="text-center text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <button onClick={() => navigate('/register')} className="text-blue-500 cursor-pointer font-bold hover:underline">
+                Sign up
+              </button>
+            </p>
+          </div>
         </form>
       </div>
     </div>

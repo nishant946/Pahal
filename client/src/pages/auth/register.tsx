@@ -1,37 +1,40 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 
 interface FormState {
   name: string;
-  employeeId: string;
   email: string;
   department: string;
-  designation: string;
   password: string;
   confirmPassword: string;
-  phone: string;
-  qualification: string;
+  mobile: string;
+  rollNumber: string;
+  isAdmin?: boolean; // Optional, default to false for regular users
 }
 
-const Register = () => {  const navigate = useNavigate();
+const Register = () => {
+  const navigate = useNavigate();
   const { register, loading, error } = useTeacherAuth();
   const [form, setForm] = useState<FormState>({
     name: "",
-    employeeId: "",
     email: "",
     department: "",
-    designation: "",
     password: "",
     confirmPassword: "",
-    phone: "",
-    qualification: "",
+    mobile: "",
+    rollNumber: "",
+    isAdmin: false, // Assuming default is false for regular users
   });
+
+
+
+
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +44,8 @@ const Register = () => {  const navigate = useNavigate();
   };
 
   const validateForm = () => {
-    if (!form.name || !form.employeeId || !form.email || !form.password || !form.confirmPassword) {      setValidationError("All fields marked with * are required");
+    if (!form.name || !form.email || !form.password || !form.confirmPassword || !form.mobile || !form.rollNumber) {
+      setValidationError("All fields marked with * are required");
       return false;
     }
     if (form.password.length < 8) {
@@ -64,10 +68,11 @@ const Register = () => {  const navigate = useNavigate();
 
     try {
       const { confirmPassword, ...registrationData } = form;
-      await register({ ...registrationData, isAdmin: false, isVerified: false });
+      await register({ ...registrationData });
       navigate('/login', { state: { message: 'Registration successful! Please login to continue.' } });
     } catch (err) {
       // Error is handled by the context
+      console.error("Registration error:", err);
     }
   };
 
@@ -84,9 +89,9 @@ const Register = () => {  const navigate = useNavigate();
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1  gap-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name *</Label>
+              <Label htmlFor="name">Full Name<span className="text-red-500">*</span></Label>
               <Input
                 id="name"
                 name="name"
@@ -99,20 +104,20 @@ const Register = () => {  const navigate = useNavigate();
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="employeeId">Employee ID *</Label>
+              <Label htmlFor="mobile">Mobile <span className="text-red-500">*</span></Label>
               <Input
-                id="employeeId"
-                name="employeeId"
+                id="mobile"
+                name="mobile"
                 type="text"
                 required
-                value={form.employeeId}
+                value={form.mobile}
                 onChange={handleChange}
                 className="w-full"
-                placeholder="Enter your employee ID"
+                placeholder="Enter your mobile number"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
               <Input
                 id="email"
                 name="email"
@@ -125,19 +130,7 @@ const Register = () => {  const navigate = useNavigate();
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={form.phone}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Enter your phone number"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="department">Department</Label>
+              <Label htmlFor="department">Department <span className="text-red-500">*</span></Label>
               <Input
                 id="department"
                 name="department"
@@ -145,35 +138,23 @@ const Register = () => {  const navigate = useNavigate();
                 value={form.department}
                 onChange={handleChange}
                 className="w-full"
-                placeholder="E.g., Mathematics"
+                placeholder="Information Technology, Civil Engineering, etc."
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="designation">Designation</Label>
+              <Label htmlFor="rollNumber">Roll Number <span className="text-red-500">*</span></Label>
               <Input
-                id="designation"
-                name="designation"
+                id="rollNumber"
+                name="rollNumber"
                 type="text"
-                value={form.designation}
+                value={form.rollNumber}
                 onChange={handleChange}
                 className="w-full"
-                placeholder="E.g., Senior Teacher"
+                placeholder="Enter your roll number"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="qualification">Qualification</Label>
-              <Input
-                id="qualification"
-                name="qualification"
-                type="text"
-                value={form.qualification}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="E.g., M.Sc. Mathematics"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password *</Label>
+              <Label htmlFor="password">Password  <span className="text-red-500">*</span></Label>
               <Input
                 id="password"
                 name="password"
@@ -186,7 +167,7 @@ const Register = () => {  const navigate = useNavigate();
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password *</Label>
+              <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -207,7 +188,7 @@ const Register = () => {  const navigate = useNavigate();
           )}
 
           <div>
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading} className="w-full cursor-pointer">
               {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
               {loading ? 'Creating account...' : 'Create account'}
             </Button>
@@ -225,3 +206,4 @@ const Register = () => {  const navigate = useNavigate();
 };
 
 export default Register;
+
