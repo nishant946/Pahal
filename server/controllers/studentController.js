@@ -27,7 +27,8 @@ export const addStudent = async (req, res) => {
 export const getAllStudents = async (req, res) => {
   try {
     const students = await Student.find();
-    res.status(200).json(students);
+    // Map _id to id for frontend compatibility
+    res.status(200).json(students.map(s => ({ ...s.toObject(), id: s._id })));
   } catch (error) {
     res.status(500).json({ message: 'Error fetching students', error: error.message });
   }
@@ -53,13 +54,12 @@ export const updateStudent = async (req, res) => {
 // delete student 
 export const deleteStudent = async (req, res) => {
   try {
-    const deletedStudent = await Student.findByIdAndDelete(req.params.id);
-    if (!deletedStudent) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-    res.status(200).json({ message: 'Student deleted successfully' });
+    const { id } = req.params;
+    const deleted = await Student.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: "Student not found" });
+    res.json({ message: "Student deleted" });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting student', error: error.message });
+    res.status(500).json({ message: "Error deleting student", error: error.message });
   }
-};  
+};
 

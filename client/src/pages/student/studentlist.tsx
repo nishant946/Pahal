@@ -149,7 +149,7 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
   );
 }
 
-function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id: string, student: Omit<Student, 'id'>) => void }) {
+function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id: string, student: Omit<Student, 'id'>) => Promise<void> }) {
   const [formData, setFormData] = useState({
     name: student.name,
     rollNumber: student.rollNumber,
@@ -160,14 +160,19 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
     address: student.address,
     joinDate: student.joinDate
   })
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onEdit(student.id, formData)
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await onEdit(student.id, formData);
+    setLoading(false);
+    setOpen(false); // Close dialog after update
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon">
           <Edit className="w-4 h-4" />
@@ -258,16 +263,26 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               />
             </div>
           </div>
-          <Button type="submit" className="w-full">Save Changes</Button>
+          <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</Button>
         </form>
       </DialogContent>
     </Dialog>
   )
 }
 
-function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete: (id: string) => void }) {
+function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete: (id: string) => Promise<void> }) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = async () => {
+    setLoading(true);
+    await onDelete(student.id);
+    setLoading(false);
+    setOpen(false); // Close dialog after delete
+  };
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon">
           <Trash2 className="w-4 h-4 text-red-500" />
@@ -282,8 +297,8 @@ function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => onDelete(student.id)} className="bg-red-500 hover:bg-red-600">
-            Delete
+          <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600" disabled={loading}>
+            {loading ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -294,6 +309,14 @@ function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete
 function StudentList() {
   const [searchQuery, setSearchQuery] = useState('')
   const { students, addStudent, editStudent, deleteStudent } = useAttendance()
+
+  // Wrap edit and delete to return Promise for dialog closing
+  const handleEditStudent = async (id: string, data: Omit<Student, 'id'>) => {
+    await editStudent(id, data);
+  };
+  const handleDeleteStudent = async (id: string) => {
+    await deleteStudent(id);
+  };
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -357,8 +380,8 @@ function StudentList() {
                 <div className="flex justify-between items-start">
                   <h3 className="text-lg font-semibold">{student.name}</h3>
                   <div className="flex gap-1">
-                    <EditStudentDialog student={student} onEdit={editStudent} />
-                    <DeleteStudentDialog student={student} onDelete={deleteStudent} />
+                    <EditStudentDialog student={student} onEdit={handleEditStudent} />
+                    <DeleteStudentDialog student={student} onDelete={handleDeleteStudent} />
                   </div>
                 </div>
                 <div className="mt-2 space-y-1">

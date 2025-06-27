@@ -66,4 +66,8 @@ api.interceptors.response.use(
 
 export default api;
 
+export const deleteStudent = async (id: string) => {
+    await api.delete(`/student/${id}`);
+};
+
 

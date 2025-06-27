@@ -5,7 +5,7 @@ const studentRouter = express.Router();
 
 studentRouter.post('/add', addStudent);
 studentRouter.get('/all', getAllStudents);
-studentRouter.put('/:id', updateStudent);
-studentRouter.delete('/:id', deleteStudent);
+studentRouter.put('/:id', updateStudent); // singular: /student/:id in main route
+studentRouter.delete('/:id', deleteStudent); // singular: /student/:id in main route
 
 export default studentRouter;

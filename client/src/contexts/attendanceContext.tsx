@@ -229,37 +229,38 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
 
-  const editStudent = (id: string, updatedStudent: Omit<Student, 'id'>) => {
-    setStudents(prev => prev.map(student => 
-      student.id === id ? { ...updatedStudent, id } : student
-    ));
-    
-    // Update today's attendance if student is present
-    setTodayAttendance(prev => ({
-      ...prev,
-      presentStudents: prev.presentStudents.map(student =>
-        student.id === id
-          ? {
-              ...student,
-              name: updatedStudent.name,
-              rollNumber: updatedStudent.rollNumber,
-              grade: updatedStudent.grade,
-              group: updatedStudent.group
-            }
+  const editStudent = async (id: string, updatedStudent: Omit<Student, 'id'>) => {
+    try {
+      const response = await api.put(`/student/${id}`, updatedStudent);
+      const updated = response.data.student || response.data;
+      setStudents(prev => prev.map(student => student.id === id ? { ...updated, id: updated._id || id } : student));
+      setTodayAttendance(prev => ({
+        ...prev,
+        presentStudents: prev.presentStudents.map(student =>
+          student.id === id
+          ? { ...student, ...updated }
           : student
-      )
-    }));
+        )
+      }));
+    } catch (error) {
+      console.error('Failed to update student:', error);
+    }
   };
 
-  const deleteStudent = (id: string) => {
+  const deleteStudent = async (id: string) => {
+  try {
+    await api.delete(`/students/${id}`); // Make sure your backend route matches this
     setStudents(prev => prev.filter(student => student.id !== id));
     setTodayAttendance(prev => ({
       ...prev,
       presentStudents: prev.presentStudents.filter(student => student.id !== id)
     }));
-  };
+  } catch (error) {
+    console.error('Failed to delete student:', error);
+  }
+};
 
-  const addTeacher = (teacher: Omit<Teacher, 'id'>) => {
+  const addTeacher = async (teacher: Omit<Teacher, 'id'>) => {
     const newTeacher = {
       ...teacher,
       id: (teachers.length + 1).toString()
