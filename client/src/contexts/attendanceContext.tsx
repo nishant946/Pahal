@@ -1,3 +1,4 @@
+import api from '@/services/api';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface Student {
@@ -94,63 +95,7 @@ const AttendanceContext = createContext<AttendanceContextType | undefined>(undef
 
 export function AttendanceProvider({ children }: { children: React.ReactNode }) {
   const [students, setStudents] = useState<Student[]>(
-    [
-      {
-        id: 'S001',
-        name: 'Pallavi Singh',
-        rollNumber: '2025001',
-        grade: '10',
-        group: 'A',
-        contact: '9876543210',
-        parentName: 'Rakesh Singh',
-        address: '123 Varanasi, UP',
-        joinDate: '2023-07-01'
-      },
-      {
-        id: 'S002',
-        name: 'Shivam Kumar',
-        rollNumber: '2025002',
-        grade: '10',
-        group: 'B',
-        contact: '9876543211',
-        parentName: 'Rajesh Kumar',
-        address: '456 Varanasi, UP',
-        joinDate: '2023-07-01'
-      },
-      {
-        id: 'S003',
-        name: 'Priya Verma',
-        rollNumber: '2025003',
-        grade: '10',
-        group: 'A',
-        contact: '9876543212',
-        parentName: 'Sanjay Verma',
-        address: '789 Varanasi, UP',
-        joinDate: '2023-07-01'
-      },
-      {
-        id: 'S004',
-        name: 'Rahul Sharma',
-        rollNumber: '2025004',
-        grade: '10',
-        group: 'C',
-        contact: '9876543213',
-        parentName: 'Amit Sharma',
-        address: '321 Varanasi, UP',
-        joinDate: '2023-07-01'
-      },
-      {
-        id: 'S005',
-        name: 'Kirti Patel',
-        rollNumber: '2025005',
-        grade: '10',
-        group: 'B',
-        contact: '9876543214',
-        parentName: 'Ramesh Patel',
-        address: '654 Varanasi, UP',
-        joinDate: '2023-07-01'
-      }
-    ]
+    []
   );
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord>(
@@ -250,13 +195,39 @@ export function AttendanceProvider({ children }: { children: React.ReactNode }) 
     return () => clearInterval(intervalId);
   }, [todayAttendance.date, students, teachers]);
 
-  const addStudent = (student: Omit<Student, 'id'>) => {
+  const addStudent = async(student: Omit<Student, 'id'>) => {
     const newStudent = {
       ...student,
       id: (students.length + 1).toString()
     };
+
+    const response = await api.post('/student/add', newStudent);
+
+    if (response.status !== 201) {
+      console.error('Failed to add student:', response.data);
+      return;
+    }
     setStudents(prev => [...prev, newStudent]);
+    
   };
+
+  // get all students from database
+
+  const getAllStudents = async () => {
+    try {
+      const response = await api.get('/student/all');
+      if (response.status !== 200) throw new Error('Failed to fetch students');
+      const data: Student[] = await response.data;
+      setStudents(data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
+
+  useEffect(() => {
+    getAllStudents();
+  }, []);
+
 
   const editStudent = (id: string, updatedStudent: Omit<Student, 'id'>) => {
     setStudents(prev => prev.map(student => 

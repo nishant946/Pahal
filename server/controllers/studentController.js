@@ -5,6 +5,8 @@ import Student from '../models/studentModel.js';
 export const addStudent = async (req, res) => {
   try {
     const { name, joinDate, grade, rollNumber, group, parentName, address, contact } = req.body;
+
+    console.log("Adding student with details:", req.body);  
     // Validate required fields
     if (!name || !joinDate || !grade || !rollNumber || !group || !parentName || !address || !contact) {
       return res.status(400).json({ message: 'All fields are required' });

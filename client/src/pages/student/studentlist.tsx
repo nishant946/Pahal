@@ -40,15 +40,17 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
     parentName: '',
     address: '',
     joinDate: new Date().toISOString().split('T')[0]
-  })
+  });
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onAdd(formData)
-  }
+    e.preventDefault();
+    onAdd(formData);
+    setOpen(false); // Close dialog after adding
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
@@ -144,7 +146,7 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id: string, student: Omit<Student, 'id'>) => void }) {
@@ -379,7 +381,7 @@ function StudentList() {
                     <span className="text-gray-600">Address:</span> {student.address}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Join Date:</span> {student.joinDate}
+                    <span className="text-gray-600">Join Date:</span> {(new Date(student.joinDate)).toLocaleDateString()}
                   </p>
                 </div>
               </div>
