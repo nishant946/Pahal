@@ -245,7 +245,7 @@ export function AttendanceProvider({
   ) => {
     try {
       const response = await api.put(`/student/${id}`, updatedStudent);
-      console.log("Response from editStudent:", response);
+      // console.log("Response from editStudent:", response);
       if (response.status === 400) {
         console.error("Failed to update student:", response.data);
         return;
@@ -471,7 +471,7 @@ export function AttendanceProvider({
   useEffect(() => {
     const fetchTodayAttendance = async () => {
       const attendance = await getTodayAttendance();
-      console.log("Fetched today's attendance:", attendance);
+      // console.log("Fetched today's attendance:", attendance);
       if (attendance) {
         setTodayAttendance({
           date: attendance.date || new Date().toISOString().split("T")[0],
@@ -494,7 +494,12 @@ export function AttendanceProvider({
         `/attendance/student/${studentId}?startDate=${startDate}&endDate=${endDate}`
       );
       if (response.status !== 200) {
-        return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+        return {
+          totalDays: 0,
+          presentDays: 0,
+          absentDays: 0,
+          attendancePercentage: 0,
+        };
       }
       const data = response.data || {};
 
@@ -508,15 +513,27 @@ export function AttendanceProvider({
           totalDays: data.total,
           presentDays: data.present,
           absentDays: data.absent,
-          attendancePercentage: data.total ? (data.present / data.total) * 100 : 0,
+          attendancePercentage: data.total
+            ? (data.present / data.total) * 100
+            : 0,
         };
       }
 
       // ...fallback to old logic if needed (for backward compatibility)
       // (your old code here)
-      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+      return {
+        totalDays: 0,
+        presentDays: 0,
+        absentDays: 0,
+        attendancePercentage: 0,
+      };
     } catch (error) {
-      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+      return {
+        totalDays: 0,
+        presentDays: 0,
+        absentDays: 0,
+        attendancePercentage: 0,
+      };
     }
   };
 
@@ -530,7 +547,12 @@ export function AttendanceProvider({
         `/teacher-attendance/stats/${teacherId}?startDate=${startDate}&endDate=${endDate}`
       );
       if (response.status !== 200) {
-        return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+        return {
+          totalDays: 0,
+          presentDays: 0,
+          absentDays: 0,
+          attendancePercentage: 0,
+        };
       }
       const data = response.data || {};
 
@@ -542,7 +564,12 @@ export function AttendanceProvider({
       };
     } catch (error) {
       console.error("Error fetching teacher attendance stats:", error);
-      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+      return {
+        totalDays: 0,
+        presentDays: 0,
+        absentDays: 0,
+        attendancePercentage: 0,
+      };
     }
   };
 
