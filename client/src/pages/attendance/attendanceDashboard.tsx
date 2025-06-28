@@ -32,7 +32,7 @@ interface DashboardStats {
 
 function AttendanceDashboard() {
   const navigate = useNavigate()
-  const { students } = useAttendance()
+  const { students, todayAttendance } = useAttendance()
   const [teachers, setTeachers] = useState<Teacher[]>([])
   const [stats, setStats] = useState<DashboardStats>({
     totalStudents: 0,
@@ -49,7 +49,7 @@ function AttendanceDashboard() {
 
   useEffect(() => {
     fetchDashboardData()
-  }, [])
+  }, [students, todayAttendance])
 
   const fetchDashboardData = async () => {
     try {
@@ -59,20 +59,9 @@ function AttendanceDashboard() {
       const teachersData = await teacherService.getAllTeachers()
       setTeachers(teachersData)
 
-      // Get today's attendance for students
+      // Get today's attendance for teachers
       const todayDate = new Date().toISOString().split('T')[0]
-      let presentStudents = 0
       let presentTeachers = 0
-
-      try {
-        const studentAttendance = await fetch(`/api/v1/attendance/date?date=${todayDate}`)
-        if (studentAttendance.ok) {
-          const data = await studentAttendance.json()
-          presentStudents = data.presentStudents?.length || 0
-        }
-      } catch (error) {
-        console.error('Error fetching student attendance:', error)
-      }
 
       try {
         const teacherAttendance = await fetch(`/api/v1/teacher-attendance/date?date=${todayDate}`)
@@ -84,6 +73,8 @@ function AttendanceDashboard() {
         console.error('Error fetching teacher attendance:', error)
       }
 
+      // Use todayAttendance from context for present students
+      const presentStudents = todayAttendance.presentStudents.length
       const totalStudents = students.length
       const totalTeachers = teachersData.length
       const absentStudents = totalStudents - presentStudents
@@ -312,10 +303,12 @@ function AttendanceDashboard() {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full text-xs sm:text-sm"
-                  onClick={() => navigate('/attendance/teacherattendance')}
+                  className="w-full text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
+                  onClick={() => {}}
+                  title="Coming soon"
                 >
                   View Teacher Report
+                  <span className="ml-2 text-xs text-gray-400">(Coming soon)</span>
                 </Button>
               </div>
             </CardContent>
@@ -343,11 +336,13 @@ function AttendanceDashboard() {
               
               <Button 
                 variant="outline" 
-                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
-                onClick={() => navigate('/attendance/markteacherattendance')}
+                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
+                onClick={() => {}}
+                title="Coming soon"
               >
                 <Clock className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Mark Teacher Attendance</span>
+                <span className="text-xs text-gray-400">(Coming soon)</span>
               </Button>
               
               <Button 
@@ -361,11 +356,13 @@ function AttendanceDashboard() {
               
               <Button 
                 variant="outline" 
-                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
-                onClick={() => navigate('/attendance/teacherattendance')}
+                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
+                onClick={() => {}}
+                title="Coming soon"
               >
                 <BarChart3 className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Teacher Reports</span>
+                <span className="text-xs text-gray-400">(Coming soon)</span>
               </Button>
             </div>
           </CardContent>

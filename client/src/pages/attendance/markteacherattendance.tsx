@@ -128,9 +128,10 @@ function MarkTeacherAttendance() {
   if (loading) {
     return (
       <Layout>
-        <div className="p-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg">Loading teachers...</div>
+        <div className="p-6 relative">
+          <div className="absolute inset-0 bg-gray-100 bg-opacity-80 z-10 flex flex-col items-center justify-center" style={{ pointerEvents: 'auto' }}>
+            <div className="text-2xl font-bold text-gray-500 mb-2">Coming soon</div>
+            <div className="text-sm text-gray-400">This feature will be available in a future update.</div>
           </div>
         </div>
       </Layout>

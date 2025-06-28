@@ -79,74 +79,80 @@ function TodayTeacherAttendance() {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate('/attendance')}>
-              Back
+      <div className="p-6 relative">
+        <div className="absolute inset-0 bg-gray-100 bg-opacity-80 z-10 flex flex-col items-center justify-center" style={{ pointerEvents: 'auto' }}>
+          <div className="text-2xl font-bold text-gray-500 mb-2">Coming soon</div>
+          <div className="text-sm text-gray-400">This feature will be available in a future update.</div>
+        </div>
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" onClick={() => navigate('/attendance')}>
+                Back
+              </Button>
+              <h1 className="text-2xl font-bold">Today's Teacher Attendance</h1>
+            </div>
+            <div className="text-gray-600">
+              {currentDate}
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow mb-6">
+            <div className="text-lg font-semibold mb-2">Summary</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-600">Present Teachers</div>
+                <div className="text-2xl font-bold text-green-600">{presentTeachers.length}</div>
+              </div>
+              <div className="bg-red-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-600">Absent Teachers</div>
+                <div className="text-2xl font-bold text-red-600">2</div>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-600">Total Teachers</div>
+                <div className="text-2xl font-bold text-blue-600">{presentTeachers.length + 2}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center mb-4">
+            <Input
+              type="text"
+              placeholder="Search by name, ID, or department..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-sm"
+            />
+            <Button onClick={downloadCSV}>
+              <Download className="w-4 h-4 mr-2" />
+              Download Today's Report
             </Button>
-            <h1 className="text-2xl font-bold">Today's Teacher Attendance</h1>
           </div>
-          <div className="text-gray-600">
-            {currentDate}
-          </div>
-        </div>
 
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="text-lg font-semibold mb-2">Summary</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Present Teachers</div>
-              <div className="text-2xl font-bold text-green-600">{presentTeachers.length}</div>
-            </div>
-            <div className="bg-red-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Absent Teachers</div>
-              <div className="text-2xl font-bold text-red-600">2</div>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600">Total Teachers</div>
-              <div className="text-2xl font-bold text-blue-600">{presentTeachers.length + 2}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-between items-center mb-4">
-          <Input
-            type="text"
-            placeholder="Search by name, ID, or department..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-sm"
-          />
-          <Button onClick={downloadCSV}>
-            <Download className="w-4 h-4 mr-2" />
-            Download Today's Report
-          </Button>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border rounded-lg">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time In</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredTeachers.map(teacher => (
-                <tr key={teacher.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{teacher.employeeId}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{teacher.department}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{teacher.batch}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-green-600">{teacher.timeIn}</td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time In</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredTeachers.map(teacher => (
+                  <tr key={teacher.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{teacher.employeeId}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{teacher.department}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{teacher.batch}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-green-600">{teacher.timeIn}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </Layout>

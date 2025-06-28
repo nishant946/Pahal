@@ -133,8 +133,10 @@ const sidebarItems: SidebarItems[] = [
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
         <div className="space-y-1 px-2 sm:px-3">
-          {filteredItems.map((item, i) => (
-            item.href === "/admin" || item.href === "/logout" ? (
+          {filteredItems.map((item, i) => {
+            // Dim these features for teachers
+            const dimmed = ["/gallery", "/contributors", "/syllabus", "/settings"].includes(item.href);
+            return item.href === "/admin" || item.href === "/logout" ? (
               <Link
                 key={i}
                 to={item.href}
@@ -152,15 +154,21 @@ const sidebarItems: SidebarItems[] = [
                   "flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm transition-all hover:bg-gray-100",
                   isActive
                     ? "bg-gray-100 text-primary font-medium"
-                    : "text-gray-700 hover:text-gray-900"
+                    : "text-gray-700 hover:text-gray-900",
+                  dimmed ? "opacity-50 pointer-events-none cursor-not-allowed" : ""
                 )
               }
+              tabIndex={dimmed ? -1 : 0}
+              title={dimmed ? "Coming soon" : undefined}
             >
               <div className="flex-shrink-0">{item.icon}</div>
               <span className="truncate">{item.label}</span>
+              {dimmed && (
+                <span className="ml-2 text-xs text-gray-400">(Coming soon)</span>
+              )}
             </NavLink>
             )
-          ))}
+          })}
         </div>
       </nav>
 

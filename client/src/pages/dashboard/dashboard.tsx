@@ -296,11 +296,13 @@ function Dashboard() {
                   Mark Attendance
                 </Button>
                 <Button
-                  onClick={() => navigate("/attendance/dashboard")}
-                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
+                  onClick={() => {}}
+                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
+                  title="Coming soon"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                  View Reports
+                  View Teacher Report
+                  <span className="text-xs text-gray-400">(Coming soon)</span>
                 </Button>
                 <Button
                   onClick={() => navigate("/homework")}
@@ -310,11 +312,13 @@ function Dashboard() {
                   Manage Homework
                 </Button>
                 <Button
-                  onClick={() => navigate("/teachers")}
-                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
+                  onClick={() => {}}
+                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
+                  title="Coming soon"
                 >
                   <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                  View Teachers
+                  Mark Teacher Attendance
+                  <span className="text-xs text-gray-400">(Coming soon)</span>
                 </Button>
               </div>
             </div>
