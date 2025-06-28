@@ -32,12 +32,10 @@ const TeacherSchema = new mongoose.Schema({
   },
   preferredDays: [{
     type: String,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    required: true
+    trim: true
   }],
   subjectChoices: [{
     type: String,
-    required: true,
     trim: true
   }],
   designation: {
@@ -58,6 +56,10 @@ const TeacherSchema = new mongoose.Schema({
     required: true
   },
   isVerified: {
+    type: Boolean,
+    default: false
+  },
+  isAdmin: {
     type: Boolean,
     default: false
   },

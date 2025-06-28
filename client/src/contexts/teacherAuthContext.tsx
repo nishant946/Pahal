@@ -1,13 +1,23 @@
-import React, { createContext,  useState, useEffect } from 'react';
-import api from '@/services/api';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 interface Teacher {
-  id: string;
-  username: string;
+  _id: string;
+  rollNo: string;
+  name: string;
+  mobileNo: string;
   email: string;
   department: string;
-  mobile: string;
-  isAdmin?: boolean;
+  preferredDays: string[];
+  subjectChoices: string[];
+  designation: string;
+  qualification?: string;
+  joiningDate: string;
+  isVerified: boolean;
+  isAdmin: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface registrationData {
@@ -15,10 +25,10 @@ interface registrationData {
   email: string;
   department: string;
   password: string;
-  confirmPassword: string;
   mobile: string;
   rollNumber: string;
-  isAdmin?: boolean; // Optional, default to false for regular users
+  preferredDays: string[];
+  subjectChoices: string[];
 }
 
 interface TeacherAuthContextType {
@@ -26,13 +36,11 @@ interface TeacherAuthContextType {
   isLoading: boolean;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<Teacher>;
   logout: () => void;
-  register: (registrationData: registrationData) => Promise<void>;
+  register: (registrationData: registrationData) => Promise<any>;
   verifyTeacher: (teacherId: string) => Promise<void>;
-  rejectTeacher: (teacherId: string) => Promise<void>;
-  addTeacher: (teacherData: Omit<Teacher, 'id'>) => Promise<void>;
-  removeTeacher: (teacherId: string) => Promise<void>;
+  getUnverifiedTeachers: () => Promise<Teacher[]>;
 }
 
 const TeacherAuthContext = createContext<TeacherAuthContextType | undefined>(undefined);
@@ -45,35 +53,48 @@ export function TeacherAuthProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const storedTeacher = localStorage.getItem('teacher');
+    console.log('Initializing teacher auth context, stored teacher:', storedTeacher);
     if (storedTeacher) {
-      setTeacher(JSON.parse(storedTeacher));
+      try {
+        const teacherData = JSON.parse(storedTeacher);
+        setTeacher(teacherData);
+        console.log('Loaded teacher from storage:', teacherData);
+      } catch (error) {
+        console.error('Error parsing stored teacher:', error);
+        localStorage.removeItem('teacher');
+      }
     }
     setIsLoading(false);
   }, []);
+
 const login = async (email: string, password: string) => {
   setLoading(true);
   setError(null);
   try {
+      console.log('Making login request to:', '/auth/login');
     const response = await api.post('/auth/login', { email, password });
     
-    // ✅ Now `response` is the full Axios response
     console.log("Status:", response.status);
-    console.log("Data:", response.data); // Contains user, token, etc.
+      console.log("Data:", response.data);
 
     if (![200, 201].includes(response.status)) {
       throw new Error('Login failed');
     }
 
-    const user = response.data.user;
-    if (!user) throw new Error('Invalid response from server');
+      const teacherData = response.data.teacher;
+      if (!teacherData) throw new Error('Invalid response from server');
 
-    setTeacher(user);
-    localStorage.setItem('teacher', JSON.stringify(user));
-    localStorage.setItem('teacherToken', response.data.token); // Store token
+      setTeacher(teacherData);
+      localStorage.setItem('teacher', JSON.stringify(teacherData));
+      localStorage.setItem('teacherToken', response.data.token);
 
-    window.location.href = user.isAdmin ? '/admin' : '/dashboard';
-  } catch (err) {
-    setError('Login failed');
+      // Return the teacher data for the component to handle redirection
+      return teacherData;
+    } catch (err: any) {
+      console.error('Login error in context:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed';
+      setError(errorMessage);
+      throw err;
   } finally {
     setLoading(false);
   }
@@ -85,19 +106,17 @@ const register = async (registrationData: registrationData) => {
   try {
     const response = await api.post('/auth/register', registrationData);
 
-    if (response.status !== 201) throw new Error('Registration failed');
-
-    const user = response.data.user;
-    setTeacher(user);
-    localStorage.setItem('teacher', JSON.stringify(user));
-
-    window.location.href = user.isAdmin ? '/admin' : '/dashboard';
-  } catch (err: any) {
-    setError(
-      err.response?.data?.message ||
-      err.message ||
-      'Registration failed'
-    );
+      if (response.status === 201) {
+        // Registration successful, don't redirect automatically
+        // Let the component handle the redirect
+        return response.data;
+      } else {
+        throw new Error('Registration failed');
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Registration failed';
+      setError(errorMessage);
+      throw error;
   } finally {
     setLoading(false);
   }
@@ -106,47 +125,31 @@ const register = async (registrationData: registrationData) => {
   const logout = () => {
     setTeacher(null);
     localStorage.removeItem('teacher');
+    localStorage.removeItem('teacherToken');
+    window.location.href = '/login';
   };
 
   const verifyTeacher = async (teacherId: string) => {
     if (!teacher?.isAdmin) throw new Error('Unauthorized');
     try {
-      await api.post(`/admin/teachers/${teacherId}/verify`);
+      await api.patch(`/admin/teachers/${teacherId}/verify`);
     } catch {
       throw new Error('Failed to verify teacher');
     }
   };
 
-  const rejectTeacher = async (teacherId: string) => {
+  const getUnverifiedTeachers = async (): Promise<Teacher[]> => {
     if (!teacher?.isAdmin) throw new Error('Unauthorized');
     try {
-      await api.post(`/admin/teachers/${teacherId}/reject`);
+      const response = await api.get('/admin/teachers/unverified');
+      return response.data.teachers;
     } catch {
-      throw new Error('Failed to reject teacher');
-    }
-  };
-
-  const addTeacher = async (teacherData: Omit<Teacher, 'id'>) => {
-    if (!teacher?.isAdmin) throw new Error('Unauthorized');
-    try {
-      await api.post('/admin/teachers', teacherData);
-    } catch {
-      throw new Error('Failed to add teacher');
-    }
-  };
-
-  const removeTeacher = async (teacherId: string) => {
-    if (!teacher?.isAdmin) throw new Error('Unauthorized');
-    try {
-      await api.delete(`/admin/teachers/${teacherId}`);
-    } catch {
-      throw new Error('Failed to remove teacher');
+      throw new Error('Failed to fetch unverified teachers');
     }
   };
 
   return (
-    <TeacherAuthContext.Provider
-      value={{
+    <TeacherAuthContext.Provider value={{
         teacher,
         isLoading,
         loading,
@@ -155,19 +158,16 @@ const register = async (registrationData: registrationData) => {
         logout,
         register,
         verifyTeacher,
-        rejectTeacher,
-        addTeacher,
-        removeTeacher,
-      }}
-    >
+      getUnverifiedTeachers
+    }}>
       {children}
     </TeacherAuthContext.Provider>
   );
 }
 
 export const useTeacherAuth = () => {
-  const context = React.useContext(TeacherAuthContext);
-  if (!context) {
+  const context = useContext(TeacherAuthContext);
+  if (context === undefined) {
     throw new Error('useTeacherAuth must be used within a TeacherAuthProvider');
   }
   return context;

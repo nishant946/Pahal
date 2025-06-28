@@ -1,7 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Logout from "./pages/auth/logout";
+import PendingVerification from "./pages/auth/pending-verification";
 import Dashboard from "./pages/dashboard/dashboard";
 import Landing from "./pages/landing/landing";
 import StudentList from "./pages/student/studentlist";
@@ -22,6 +23,7 @@ import { AttendanceProvider } from "./contexts/attendanceContext";
 import { TeacherAuthProvider } from "./contexts/teacherAuthContext";
 import { HomeworkProvider } from "./contexts/homeworkContext";
 import { TeacherProtectedRoute } from "./components/auth/TeacherProtectedRoute";
+import VerifiedTeacherProtectedRoute from "./components/auth/VerifiedTeacherProtectedRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import TeacherManagement from "./pages/admin/TeacherManagement";
@@ -47,6 +49,7 @@ function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/pending-verification" element={<PendingVerification />} />
                 {/* Protected Routes */}
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />
@@ -64,66 +67,66 @@ function App() {
                 <Route
                   path="/dashboard"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Dashboard />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/teachers"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Teachers />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/homework"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Homework />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />{" "}
                 <Route
                   path="/view-all-students"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <StudentList />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 {/* Settings & Logout Routes */}{" "}
                 <Route
                   path="/settings"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Settings />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/gallery"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Gallery />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />{" "}
                 <Route
                   path="/contributors"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Contributors />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/syllabus"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Syllabus />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route path="/logout" element={<Logout />} />
@@ -131,81 +134,81 @@ function App() {
                 <Route
                   path="/attendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <Attendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/dashboard"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <AttendanceDashboard />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/markattendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <MarkAttendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/todayattendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <TodayAttendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/markteacherattendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <MarkTeacherAttendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/teacherattendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <TeacherAttendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/studentreport"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <StudentReport />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/student/:studentId/report"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <IndividualStudentReport />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/teacher/:teacherId/report"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <IndividualTeacherReport />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
                 <Route
                   path="/attendance/todayteacherattendance"
                   element={
-                    <TeacherProtectedRoute>
+                    <VerifiedTeacherProtectedRoute>
                       <TodayTeacherAttendance />
-                    </TeacherProtectedRoute>
+                    </VerifiedTeacherProtectedRoute>
                   }
                 />
               </Routes>

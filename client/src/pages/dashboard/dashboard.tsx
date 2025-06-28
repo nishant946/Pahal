@@ -7,6 +7,7 @@ import {
   BookOpen,
   GraduationCap,
   UserCheck,
+  Phone,
 } from "lucide-react";
 import dashboardService from "@/services/dashboardService";
 import teacherService from "@/services/teacherService";
@@ -35,6 +36,16 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const { todayAttendance, students } = useAttendance();
+
+  const handleCallTeacher = (teacher: Teacher) => {
+    if (teacher.mobileNo) {
+      // Create a tel: link to initiate the call
+      const phoneNumber = teacher.mobileNo.replace(/\s+/g, ''); // Remove spaces
+      window.open(`tel:${phoneNumber}`, '_self');
+    } else {
+      alert('No phone number available for this teacher');
+    }
+  };
 
   useEffect(() => {
     const fetchDashboardStats = async () => {
@@ -71,9 +82,16 @@ function Dashboard() {
         }
         // Teachers with today as preferred day
         const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-        setPreferredTodayTeachers(
-          teachersData.filter((t) => t.preferredDays.includes(dayName))
-        );
+        console.log("Today's day:", dayName);
+        console.log("All teachers and their preferred days:");
+        teachersData.forEach(teacher => {
+          console.log(`${teacher.name}: ${teacher.preferredDays.join(', ')}`);
+        });
+        
+        const teachersWithTodayPreferred = teachersData.filter((t) => t.preferredDays.includes(dayName));
+        console.log("Teachers preferring today:", teachersWithTodayPreferred.map(t => t.name));
+        
+        setPreferredTodayTeachers(teachersWithTodayPreferred);
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
       } finally {
@@ -176,28 +194,90 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
+
+        
             </div>
 
             {/* Teachers with today as preferred day */}
             <div className="bg-white shadow rounded-lg p-4 sm:p-6">
               <h2 className="text-sm sm:text-lg font-semibold mb-2">
-                Teachers Preferring Today (
-                {new Date().toLocaleDateString("en-US", { weekday: "long" })})
+                Teachers and Their Preferred Days
               </h2>
-              {preferredTodayTeachers.length > 0 ? (
-                <ul className="list-disc pl-4 sm:pl-5 space-y-1">
-                  {preferredTodayTeachers.map((t) => (
-                    <li key={t.id} className="text-xs sm:text-sm">
-                      {t.name}{" "}
-                      <span className="text-xs text-gray-500">
-                        ({t.department})
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              
+              {/* Special section for teachers preferring today */}
+              {preferredTodayTeachers.length > 0 && (
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <h3 className="text-sm font-medium text-green-800 mb-2">
+                    Teachers Preferring Today ({new Date().toLocaleDateString("en-US", { weekday: "long" })})
+                  </h3>
+                  <div className="space-y-2">
+                    {preferredTodayTeachers.map((t) => (
+                      <div key={t.id} className="flex justify-between items-center p-2 bg-white rounded border">
+                        <div>
+                          <span className="text-sm font-medium">{t.name}</span>
+                          <span className="text-xs text-gray-500 ml-2">({t.department})</span>
+                        </div>
+                        {t.mobileNo && (
+                          <button
+                            onClick={() => handleCallTeacher(t)}
+                            className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors text-xs"
+                            title={`Call ${t.name}`}
+                          >
+                            <Phone className="h-3 w-3" />
+                            Call
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {teachers.length > 0 ? (
+                <div className="space-y-2">
+                  {teachers.map((t) => {
+                    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+                    const prefersToday = t.preferredDays.includes(today);
+                    return (
+                      <div key={t.id} className={`p-2 rounded ${prefersToday ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs sm:text-sm font-medium">
+                                {t.name}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                ({t.department})
+                              </span>
+                              {prefersToday && (
+                                <span className="text-xs text-green-600 font-medium">
+                                  ← Today
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-gray-600 mt-1">
+                              {t.preferredDays.join(', ')}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {t.mobileNo && (
+                              <button
+                                onClick={() => handleCallTeacher(t)}
+                                className="p-1.5 rounded-full bg-blue-100 hover:bg-blue-200 transition-colors"
+                                title={`Call ${t.name}`}
+                              >
+                                <Phone className="h-3 w-3 text-blue-600" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               ) : (
                 <div className="text-xs sm:text-sm text-gray-500">
-                  No teachers have today as a preferred day.
+                  No teachers found.
                 </div>
               )}
             </div>
@@ -234,7 +314,7 @@ function Dashboard() {
                   className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
                 >
                   <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                  Manage Teachers
+                  View Teachers
                 </Button>
               </div>
             </div>

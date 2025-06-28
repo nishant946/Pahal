@@ -370,7 +370,6 @@ export function AttendanceProvider({
 
   const unmarkStudentAttendance = async (studentId: string) => {
     const todayDate = new Date().toISOString().split("T")[0];
-
     const response = await api.put(`/attendance/unmark`, {
       userId: studentId,
       date: todayDate,
@@ -503,7 +502,6 @@ export function AttendanceProvider({
       }
       const data = response.data || {};
 
-      // If API returns summary, use it directly
       if (
         typeof data.total === "number" &&
         typeof data.present === "number" &&
@@ -516,6 +514,17 @@ export function AttendanceProvider({
           attendancePercentage: data.total
             ? (data.present / data.total) * 100
             : 0,
+        };
+      } else if (
+        typeof data.totalDays === "number" &&
+        typeof data.presentDays === "number" &&
+        typeof data.absentDays === "number"
+      ) {
+        return {
+          totalDays: data.totalDays,
+          presentDays: data.presentDays,
+          absentDays: data.absentDays,
+          attendancePercentage: data.attendancePercentage || 0,
         };
       }
 

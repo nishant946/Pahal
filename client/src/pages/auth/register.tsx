@@ -12,10 +12,10 @@ interface FormState {
   email: string;
   department: string;
   password: string;
-  confirmPassword: string;
   mobile: string;
   rollNumber: string;
-  isAdmin?: boolean; // Optional, default to false for regular users
+  preferredDays: string[];
+  subjectChoices: string[];
 }
 
 const Register = () => {
@@ -26,50 +26,72 @@ const Register = () => {
     email: "",
     department: "",
     password: "",
-    confirmPassword: "",
     mobile: "",
     rollNumber: "",
-    isAdmin: false, // Assuming default is false for regular users
+    preferredDays: [],
+    subjectChoices: [],
   });
-
-
-
 
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    
+    if (name === 'preferredDays') {
+      // Convert comma-separated string to array
+      const daysArray = value.split(',').map(day => day.trim()).filter(day => day.length > 0);
+      setForm((prev) => ({ ...prev, [name]: daysArray }));
+    } else if (name === 'subjectChoices') {
+      // Convert comma-separated string to array
+      const subjectsArray = value.split(',').map(subject => subject.trim()).filter(subject => subject.length > 0);
+      setForm((prev) => ({ ...prev, [name]: subjectsArray }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+    
     setValidationError(null);
   };
 
   const validateForm = () => {
-    if (!form.name || !form.email || !form.password || !form.confirmPassword || !form.mobile || !form.rollNumber) {
-      setValidationError("All fields marked with * are required");
+    if (!form.name || !form.email || !form.password || !form.mobile || !form.rollNumber || !form.department) {
+      setValidationError("All fields are required");
       return false;
     }
     if (form.password.length < 8) {
       setValidationError("Password must be at least 8 characters long");
       return false;
     }
-    if (form.password !== form.confirmPassword) {
-      setValidationError("Passwords do not match");
-      return false;
-    }
     if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setValidationError("Please enter a valid email address");
       return false;
     }
+    if (!form.mobile.match(/^[0-9]{10,15}$/)) {
+      setValidationError("Please enter a valid mobile number (10-15 digits)");
+      return false;
+    }
+    if (form.preferredDays.length === 0) {
+      setValidationError("Please enter at least one preferred day");
+      return false;
+    }
+    if (form.subjectChoices.length === 0) {
+      setValidationError("Please enter at least one subject choice");
+      return false;
+    }
     return true;
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     try {
-      const { confirmPassword, ...registrationData } = form;
-      await register({ ...registrationData });
-      navigate('/login', { state: { message: 'Registration successful! Please login to continue.' } });
+      await register(form);
+      // Registration successful, redirect to login with success message
+      navigate('/login', { 
+        state: { 
+          message: 'Registration successful! Please wait for admin verification before logging in.' 
+        } 
+      });
     } catch (err) {
       // Error is handled by the context
       console.error("Registration error:", err);
@@ -81,7 +103,7 @@ const Register = () => {
       <div className="max-w-2xl w-full space-y-8 bg-white p-8 rounded-lg shadow-sm">
         <div>
           <h1 className="mt-2 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create your account
+            Create your teacher account
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600">
             Join us and help shape young minds
@@ -89,7 +111,7 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="grid grid-cols-1  gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name<span className="text-red-500">*</span></Label>
               <Input
@@ -167,19 +189,34 @@ const Register = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+              <Label htmlFor="preferredDays">Preferred Days <span className="text-red-500">*</span></Label>
               <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={form.confirmPassword}
+                id="preferredDays"
+                name="preferredDays"
+                type="text"
+                value={form.preferredDays.join(', ')}
                 onChange={handleChange}
                 className="w-full"
-                placeholder="Confirm your password"
+                placeholder="Monday, Tuesday, Wednesday, Thursday, Friday"
               />
+              <p className="text-xs text-gray-500">Enter days separated by commas (e.g., Monday, Tuesday, Wednesday)</p>
             </div>
-          </div>          {(validationError || error) && (
+            <div className="space-y-2">
+              <Label htmlFor="subjectChoices">Subject Choices <span className="text-red-500">*</span></Label>
+              <Input
+                id="subjectChoices"
+                name="subjectChoices"
+                type="text"
+                value={form.subjectChoices.join(', ')}
+                onChange={handleChange}
+                className="w-full"
+                placeholder="Mathematics, Physics, Chemistry"
+              />
+              <p className="text-xs text-gray-500">Enter subjects separated by commas (e.g., Mathematics, Physics)</p>
+            </div>
+          </div>
+
+          {(validationError || error) && (
             <Alert variant="destructive">
               <AlertDescription>
                 {validationError || error}

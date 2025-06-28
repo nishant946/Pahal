@@ -12,12 +12,15 @@ export const markAttendance = async (req, res) => {
   const attendanceDate = new Date(date);
   attendanceDate.setHours(0, 0, 0, 0);
 
+  const nextDay = new Date(attendanceDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+
   // Check if attendance for the user on the given date already exists
   const existingAttendance = await Attendance.findOne({
     student: userId,
     date: {
       $gte: attendanceDate,
-      $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000),
+      $lt: nextDay,
     },
   });
   console.log("Checking for existing attendance:", existingAttendance);
@@ -95,28 +98,33 @@ export const getPresentStudentsByDate = async (req, res) => {
 };
 
 export const unmarkAttendance = async (req, res) => {
-  console.log("Unmark attendance request received:", req.body);
-  const { userId, date } = req.body;
-
-  // Convert date string to Date object and set to start of day
-  const attendanceDate = new Date(date);
-  attendanceDate.setHours(0, 0, 0, 0);
-
   try {
-    const attendanceRecord = await Attendance.findOneAndDelete({
-      user: userId,
+    const { userId, date } = req.body;
+    if (!userId || !date) {
+      return res.status(400).json({ message: "userId and date are required" });
+    }
+    // Find the attendance record for the student and date
+    const attendanceDate = new Date(date);
+    attendanceDate.setHours(0, 0, 0, 0);
+
+    const nextDay = new Date(attendanceDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const attendance = await Attendance.findOne({
+      student: userId,
       date: {
         $gte: attendanceDate,
-        $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000),
+        $lt: nextDay,
       },
     });
-    if (!attendanceRecord) {
+    if (!attendance) {
       return res.status(404).json({ message: "Attendance record not found" });
     }
-    res.status(200).json({ message: "Attendance record deleted successfully" });
+    // Remove the attendance record
+    await Attendance.deleteOne({ _id: attendance._id });
+    res.json({ message: "Attendance unmarked", attendance });
   } catch (error) {
-    console.error("Error unmarking attendance:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -148,22 +156,42 @@ export const getStudentAttendanceStats = async (req, res) => {
   }
 
   try {
+    const today = new Date(); // local time
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
     const attendanceRecords = await Attendance.find({
-      user: studentId,
-      date: { $gte: new Date(startDate), $lte: new Date(endDate) },
+      student: studentId,
+      date: {
+        $gte: start,
+        $lte: end,
+      },
     });
 
     const stats = attendanceRecords.reduce(
       (acc, record) => {
-        acc.total++;
-        if (record.status === "present") acc.present++;
-        else if (record.status === "absent") acc.absent++;
+        acc.totalDays++;
+        if (record.status === "present") acc.presentDays++;
+        else if (record.status === "absent") acc.absentDays++;
         return acc;
       },
-      { total: 0, present: 0, absent: 0 }
+      {
+        totalDays: 0,
+        presentDays: 0,
+        absentDays: 0,
+      }
     );
 
-    res.status(200).json(stats);
+    const attendancePercentage =
+      stats.totalDays > 0 ? (stats.presentDays / stats.totalDays) * 100 : 0;
+
+    res.status(200).json({
+      ...stats,
+      attendancePercentage: parseFloat(attendancePercentage.toFixed(2)),
+    });
   } catch (error) {
     console.error("Error fetching student attendance stats:", error);
     res.status(500).json({ message: "Server error" });

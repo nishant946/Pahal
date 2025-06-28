@@ -6,26 +6,36 @@ import jwt from "jsonwebtoken";
 export const registerTeacher = async (req, res) => {
   try {
     const { 
-      rollNo, 
       name, 
-      mobileNo, 
       email, 
+      password, 
       department, 
+      rollNumber, 
+      mobile, 
       preferredDays, 
-      subjectChoices, 
-      designation, 
-      qualification, 
-      password 
+      subjectChoices 
     } = req.body;
 
     // Validate required fields
-    if (!rollNo || !name || !mobileNo || !email || !department || !preferredDays || !subjectChoices || !password) {
+    if (!name || !email || !password || !department || !rollNumber || !mobile || !preferredDays || !subjectChoices) {
       return res.status(400).json({ message: "All required fields must be provided" });
+    }
+
+    // Ensure arrays are properly formatted
+    const preferredDaysArray = Array.isArray(preferredDays) ? preferredDays : [];
+    const subjectChoicesArray = Array.isArray(subjectChoices) ? subjectChoices : [];
+
+    if (preferredDaysArray.length === 0) {
+      return res.status(400).json({ message: "At least one preferred day must be provided" });
+    }
+
+    if (subjectChoicesArray.length === 0) {
+      return res.status(400).json({ message: "At least one subject choice must be provided" });
     }
 
     // Check if teacher already exists
     const existingTeacher = await Teacher.findOne({ 
-      $or: [{ email }, { rollNo }] 
+      $or: [{ email }, { rollNo: rollNumber }] 
     });
 
     if (existingTeacher) {
@@ -34,18 +44,20 @@ export const registerTeacher = async (req, res) => {
       });
     }
 
-    // Create new teacher
+    // Create new teacher with default values
     const teacher = new Teacher({
-      rollNo,
+      rollNo: rollNumber,
       name,
-      mobileNo,
+      mobileNo: mobile,
       email,
       department,
-      preferredDays,
-      subjectChoices,
-      designation: designation || 'Teacher',
-      qualification,
-      password
+      preferredDays: preferredDaysArray,
+      subjectChoices: subjectChoicesArray,
+      designation: 'Teacher',
+      password,
+      isVerified: false, // Default to unverified
+      isAdmin: false, // Default to regular teacher
+      isActive: true
     });
 
     await teacher.save();
@@ -55,12 +67,20 @@ export const registerTeacher = async (req, res) => {
     delete teacherResponse.password;
 
     res.status(201).json({
-      message: "Teacher registered successfully",
+      message: "Teacher registered successfully. Please wait for admin verification.",
       teacher: teacherResponse
     });
   } catch (error) {
     console.error("Teacher registration error:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({ 
+      message: "Server error", 
+      details: error.message 
+    });
   }
 };
 
@@ -68,6 +88,8 @@ export const registerTeacher = async (req, res) => {
 export const loginTeacher = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    console.log("Login attempt with email:", email);
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
@@ -78,11 +100,6 @@ export const loginTeacher = async (req, res) => {
     
     if (!teacher) {
       return res.status(404).json({ message: "Teacher not found" });
-    }
-
-    // Check if teacher is verified
-    if (!teacher.isVerified) {
-      return res.status(401).json({ message: "Teacher account not verified" });
     }
 
     // Check if teacher is active
@@ -102,7 +119,9 @@ export const loginTeacher = async (req, res) => {
         id: teacher._id, 
         rollNo: teacher.rollNo,
         email: teacher.email,
-        isTeacher: true 
+        isTeacher: true,
+        isAdmin: teacher.isAdmin,
+        isVerified: teacher.isVerified
       },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
@@ -113,7 +132,11 @@ export const loginTeacher = async (req, res) => {
     delete teacherResponse.password;
 
     res.status(200).json({
-      message: "Login successful",
+      message: teacher.isAdmin 
+        ? "Admin login successful" 
+        : teacher.isVerified 
+          ? "Login successful" 
+          : "Login successful. Account pending verification.",
       teacher: teacherResponse,
       token
     });
@@ -276,4 +299,47 @@ export const getTeacherStats = async (req, res) => {
     console.error("Error fetching teacher stats:", error);
     res.status(500).json({ message: "Server error" });
   }
-}; 
+};
+
+// Get unverified teachers
+export const getUnverifiedTeachers = async (req, res) => {
+  try {
+    const teachers = await Teacher.find({ 
+      isVerified: false, 
+      isActive: true 
+    }).select('-password').sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Unverified teachers retrieved successfully",
+      teachers
+    });
+  } catch (error) {
+    console.error("Error fetching unverified teachers:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Deactivate teacher (soft delete)
+export const deactivateTeacher = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const teacher = await Teacher.findByIdAndUpdate(
+      id,
+      { isActive: false },
+      { new: true }
+    ).select('-password');
+
+    if (!teacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+
+    res.status(200).json({
+      message: "Teacher deactivated successfully",
+      teacher
+    });
+  } catch (error) {
+    console.error("Error deactivating teacher:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
