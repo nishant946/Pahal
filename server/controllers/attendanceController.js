@@ -7,18 +7,18 @@ export const markAttendance = async (req, res) => {
   if (!userId || !date || !status || !timeMarked) {
     return res.status(400).json({ message: "All fields are required" });
   }
-  
+
   // Convert date string to Date object and set to start of day
   const attendanceDate = new Date(date);
   attendanceDate.setHours(0, 0, 0, 0);
-  
+
   // Check if attendance for the user on the given date already exists
-  const existingAttendance = await Attendance.findOne({ 
-    user: userId, 
+  const existingAttendance = await Attendance.findOne({
+    student: userId,
     date: {
       $gte: attendanceDate,
-      $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
-    }
+      $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000),
+    },
   });
   console.log("Checking for existing attendance:", existingAttendance);
   if (existingAttendance) {
@@ -29,7 +29,7 @@ export const markAttendance = async (req, res) => {
 
   try {
     const attendance = await Attendance.create({
-      user: userId,
+      student: userId,
       date: attendanceDate,
       status,
       timeMarked,
@@ -70,17 +70,17 @@ export const getPresentStudentsByDate = async (req, res) => {
     const attendanceRecords = await Attendance.find({
       date: { $gte: dayStart, $lte: dayEnd },
       status: "present",
-    }).populate("user", "name rollNumber grade group");
+    }).populate("student", "name rollNumber grade group");
 
     // Map to frontend format
     const presentStudents = attendanceRecords
-      .filter((record) => record.user)
+      .filter((record) => record.student)
       .map((record) => ({
-        id: record.user._id,
-        name: record.user.name,
-        rollNumber: record.user.rollNumber,
-        grade: record.user.grade,
-        group: record.user.group,
+        id: record.student._id,
+        name: record.student.name,
+        rollNumber: record.student.rollNumber,
+        grade: record.student.grade,
+        group: record.student.group,
         timeMarked: record.timeMarked,
       }));
 
@@ -97,18 +97,18 @@ export const getPresentStudentsByDate = async (req, res) => {
 export const unmarkAttendance = async (req, res) => {
   console.log("Unmark attendance request received:", req.body);
   const { userId, date } = req.body;
-  
+
   // Convert date string to Date object and set to start of day
   const attendanceDate = new Date(date);
   attendanceDate.setHours(0, 0, 0, 0);
-  
+
   try {
     const attendanceRecord = await Attendance.findOneAndDelete({
       user: userId,
       date: {
         $gte: attendanceDate,
-        $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
-      }
+        $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000),
+      },
     });
     if (!attendanceRecord) {
       return res.status(404).json({ message: "Attendance record not found" });
