@@ -7,8 +7,19 @@ export const markAttendance = async (req, res) => {
   if (!userId || !date || !status || !timeMarked) {
     return res.status(400).json({ message: "All fields are required" });
   }
+  
+  // Convert date string to Date object and set to start of day
+  const attendanceDate = new Date(date);
+  attendanceDate.setHours(0, 0, 0, 0);
+  
   // Check if attendance for the user on the given date already exists
-  const existingAttendance = await Attendance.findOne({ user: userId, date });
+  const existingAttendance = await Attendance.findOne({ 
+    user: userId, 
+    date: {
+      $gte: attendanceDate,
+      $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
+    }
+  });
   console.log("Checking for existing attendance:", existingAttendance);
   if (existingAttendance) {
     return res
@@ -19,7 +30,7 @@ export const markAttendance = async (req, res) => {
   try {
     const attendance = await Attendance.create({
       user: userId,
-      date,
+      date: attendanceDate,
       status,
       timeMarked,
     });
@@ -86,10 +97,18 @@ export const getPresentStudentsByDate = async (req, res) => {
 export const unmarkAttendance = async (req, res) => {
   console.log("Unmark attendance request received:", req.body);
   const { userId, date } = req.body;
+  
+  // Convert date string to Date object and set to start of day
+  const attendanceDate = new Date(date);
+  attendanceDate.setHours(0, 0, 0, 0);
+  
   try {
     const attendanceRecord = await Attendance.findOneAndDelete({
       user: userId,
-      date,
+      date: {
+        $gte: attendanceDate,
+        $lt: new Date(attendanceDate.getTime() + 24 * 60 * 60 * 1000)
+      }
     });
     if (!attendanceRecord) {
       return res.status(404).json({ message: "Attendance record not found" });
@@ -116,6 +135,37 @@ export const updateAttendance = async (req, res) => {
     res.status(200).json(updatedAttendance);
   } catch (error) {
     console.error("Error updating attendance:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getStudentAttendanceStats = async (req, res) => {
+  const { studentId } = req.params;
+  const { startDate, endDate } = req.query;
+
+  if (!studentId || !startDate || !endDate) {
+    return res.status(400).json({ message: "Missing required parameters" });
+  }
+
+  try {
+    const attendanceRecords = await Attendance.find({
+      user: studentId,
+      date: { $gte: new Date(startDate), $lte: new Date(endDate) },
+    });
+
+    const stats = attendanceRecords.reduce(
+      (acc, record) => {
+        acc.total++;
+        if (record.status === "present") acc.present++;
+        else if (record.status === "absent") acc.absent++;
+        return acc;
+      },
+      { total: 0, present: 0, absent: 0 }
+    );
+
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching student attendance stats:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

@@ -1,6 +1,7 @@
 import Layout from '@/components/layout/layout'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { BarChart3, Users, GraduationCap } from 'lucide-react'
 
 function Attendance() {
   return (
@@ -9,9 +10,37 @@ function Attendance() {
         <h1 className="text-2xl font-bold mb-6">Attendance Management</h1>
         
         <div className="space-y-6">
+          {/* Dashboard Section */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              Dashboard & Overview
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link to="/attendance/dashboard">
+                <Card className="hover:bg-gray-50 transition-colors cursor-pointer border-blue-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-blue-600" />
+                      Attendance Dashboard
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">
+                      View comprehensive attendance overview and statistics
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          </div>
+
           {/* Student Attendance Section */}
           <div>
-            <h2 className="text-xl font-semibold mb-4">Student Attendance</h2>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <GraduationCap className="w-5 h-5" />
+              Student Attendance
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/attendance/markattendance">
                 <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
@@ -39,7 +68,7 @@ function Attendance() {
                 </Card>
               </Link>
 
-              <Link to="/attendance/studentreports">
+              <Link to="/attendance/studentreport">
                 <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Student Reports</CardTitle>
@@ -56,7 +85,10 @@ function Attendance() {
 
           {/* Teacher Attendance Section */}
           <div>
-            <h2 className="text-xl font-semibold mb-4">Teacher Attendance</h2>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Teacher Attendance
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/attendance/markteacherattendance">
                 <Card className="hover:bg-gray-50 transition-colors cursor-pointer">

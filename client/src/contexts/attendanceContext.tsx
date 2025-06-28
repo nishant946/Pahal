@@ -88,22 +88,22 @@ interface AttendanceContextType {
     studentId: string,
     startDate: string,
     endDate: string
-  ) => {
+  ) => Promise<{
     totalDays: number;
     presentDays: number;
     absentDays: number;
     attendancePercentage: number;
-  };
+  }>;
   getTeacherAttendanceStats: (
     teacherId: string,
     startDate: string,
     endDate: string
-  ) => {
+  ) => Promise<{
     totalDays: number;
     presentDays: number;
     absentDays: number;
     attendancePercentage: number;
-  };
+  }>;
 }
 
 const AttendanceContext = createContext<AttendanceContextType | undefined>(
@@ -308,6 +308,22 @@ export function AttendanceProvider({
     }));
   };
 
+  const fetchTodayAttendance = async () => {
+    const todayDate = new Date().toISOString().split("T")[0];
+    try {
+      const response = await api.get(`/attendance/date?date=${todayDate}`);
+      if (response.status === 200) {
+        setTodayAttendance({
+          date: response.data.date || todayDate,
+          presentStudents: response.data.presentStudents || [],
+          presentTeachers: [],
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching today's attendance:", error);
+    }
+  };
+
   const markStudentAttendance = async (studentId: string) => {
     const student = students.find((s) => s.id === studentId);
     if (
@@ -322,9 +338,11 @@ export function AttendanceProvider({
       hour12: true,
     });
 
+    const todayDate = new Date().toISOString().split("T")[0];
+
     const response = await api.post("/attendance/mark", {
       userId: studentId,
-      date: todayAttendance.date,
+      date: todayDate,
       timeMarked,
       status: "present",
     });
@@ -334,20 +352,8 @@ export function AttendanceProvider({
       return;
     }
 
-    setTodayAttendance((prev) => ({
-      ...prev,
-      presentStudents: [
-        ...prev.presentStudents,
-        {
-          id: student.id,
-          name: student.name,
-          rollNumber: student.rollNumber,
-          grade: student.grade,
-          group: student.group,
-          timeMarked,
-        },
-      ],
-    }));
+    // Re-fetch today's attendance from backend to ensure sync
+    await fetchTodayAttendance();
 
     // Update attendance history
     setAttendanceHistory((prev) => ({
@@ -363,21 +369,20 @@ export function AttendanceProvider({
   };
 
   const unmarkStudentAttendance = async (studentId: string) => {
-    setTodayAttendance((prev) => ({
-      ...prev,
-      presentStudents: prev.presentStudents.filter((s) => s.id !== studentId),
-    }));
+    const todayDate = new Date().toISOString().split("T")[0];
 
     const response = await api.put(`/attendance/unmark`, {
       userId: studentId,
-      date: todayAttendance.date,
-      status: "absent",
+      date: todayDate,
     });
 
     if (response.status !== 200) {
       console.error("Failed to unmark student attendance:", response.data);
       return;
     }
+
+    // Re-fetch today's attendance from backend to ensure sync
+    await fetchTodayAttendance();
 
     // Update attendance history
     setAttendanceHistory((prev) => ({
@@ -454,8 +459,8 @@ export function AttendanceProvider({
 
   // Get todays attendance stats for all students
   const getTodayAttendance = async () => {
-    const date = todayAttendance.date || new Date().toISOString().split("T")[0];
-    const response = await api.get(`/attendance/date?date=${date}`);
+    const todayDate = new Date().toISOString().split("T")[0];
+    const response = await api.get(`/attendance/date?date=${todayDate}`);
     if (response.status !== 200) {
       console.error("Failed to fetch today's attendance stats:", response.data);
       return;
@@ -479,50 +484,66 @@ export function AttendanceProvider({
     // eslint-disable-next-line
   }, []); // Only on mount
 
-  const getStudentAttendanceStats = (
+  const getStudentAttendanceStats = async (
     studentId: string,
     startDate: string,
     endDate: string
   ) => {
-    const dates = Object.keys(attendanceHistory).filter(
-      (date) => date >= startDate && date <= endDate
-    );
+    try {
+      const response = await api.get(
+        `/attendance/student/${studentId}?startDate=${startDate}&endDate=${endDate}`
+      );
+      if (response.status !== 200) {
+        return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+      }
+      const data = response.data || {};
 
-    const totalDays = dates.length;
-    const presentDays = dates.filter(
-      (date) =>
-        attendanceHistory[date]?.students[studentId]?.status === "present"
-    ).length;
+      // If API returns summary, use it directly
+      if (
+        typeof data.total === "number" &&
+        typeof data.present === "number" &&
+        typeof data.absent === "number"
+      ) {
+        return {
+          totalDays: data.total,
+          presentDays: data.present,
+          absentDays: data.absent,
+          attendancePercentage: data.total ? (data.present / data.total) * 100 : 0,
+        };
+      }
 
-    return {
-      totalDays,
-      presentDays,
-      absentDays: totalDays - presentDays,
-      attendancePercentage: totalDays ? (presentDays / totalDays) * 100 : 0,
-    };
+      // ...fallback to old logic if needed (for backward compatibility)
+      // (your old code here)
+      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+    } catch (error) {
+      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+    }
   };
 
-  const getTeacherAttendanceStats = (
+  const getTeacherAttendanceStats = async (
     teacherId: string,
     startDate: string,
     endDate: string
   ) => {
-    const dates = Object.keys(attendanceHistory).filter(
-      (date) => date >= startDate && date <= endDate
-    );
+    try {
+      const response = await api.get(
+        `/teacher-attendance/stats/${teacherId}?startDate=${startDate}&endDate=${endDate}`
+      );
+      if (response.status !== 200) {
+        return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+      }
+      const data = response.data || {};
 
-    const totalDays = dates.length;
-    const presentDays = dates.filter(
-      (date) =>
-        attendanceHistory[date]?.teachers[teacherId]?.status === "present"
-    ).length;
-
-    return {
-      totalDays,
-      presentDays,
-      absentDays: totalDays - presentDays,
-      attendancePercentage: totalDays ? (presentDays / totalDays) * 100 : 0,
-    };
+      return {
+        totalDays: data.total || 0,
+        presentDays: data.present || 0,
+        absentDays: data.absent || 0,
+        attendancePercentage: data.attendancePercentage || 0,
+      };
+    } catch (error) {
+      console.error("Error fetching teacher attendance stats:", error);
+      return { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+    }
   };
 
   return (

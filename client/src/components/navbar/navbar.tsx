@@ -27,38 +27,39 @@ function Navbar({ onMenuClick }: NavbarProps) {
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="flex h-16 items-center px-4">
+      <nav className="flex h-14 sm:h-16 items-center px-2 sm:px-4">
         {/* Mobile menu button */}
-        <Button          variant="ghost"
+        <Button
+          variant="ghost"
           size="icon"
-          className="mr-2 md:hidden"
+          className="mr-2 md:hidden h-8 w-8 sm:h-9 sm:w-9"
           onClick={onMenuClick}
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="sr-only">Open menu</span>
         </Button>
 
         {/* Pahal Logo & Title */}
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-xl">P</span>
+        <div className="flex items-center gap-1 sm:gap-2">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
+            <span className="text-white font-bold text-sm sm:text-xl">P</span>
           </div>
-          <span className="text-xl font-bold">Pahal</span>
+          <span className="text-lg sm:text-xl font-bold">Pahal</span>
         </div>
 
         {/* Right side items */}
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="flex flex-1 items-center justify-end space-x-2 sm:space-x-4">
           {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="w-9 h-9 px-0"
+            className="w-8 h-8 sm:w-9 sm:h-9 px-0"
           >
             {isDark ? (
-              <Sun className="h-5 w-5" />
+              <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
             ) : (
-              <Moon className="h-5 w-5" />
+              <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
             )}
           </Button>
 
@@ -66,12 +67,12 @@ function Navbar({ onMenuClick }: NavbarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="w-9 h-9 px-0 relative"
+            className="w-8 h-8 sm:w-9 sm:h-9 px-0 relative"
             onClick={() => navigate("/notifications")}
           >
-            <Bell className="h-5 w-5" />
+            <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
             {notifications > 0 && (
-              <span className="absolute top-1 right-1 h-4 w-4 text-xs bg-red-500 text-white rounded-full flex items-center justify-center">
+              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 h-3 w-3 sm:h-4 sm:w-4 text-xs bg-red-500 text-white rounded-full flex items-center justify-center">
                 {notifications}
               </span>
             )}
@@ -81,10 +82,10 @@ function Navbar({ onMenuClick }: NavbarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="w-9 h-9 px-0"
+            className="w-8 h-8 sm:w-9 sm:h-9 px-0"
             onClick={() => navigate("/profile")}
           >
-            <User className="h-5 w-5" />
+            <User className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
         </div>
       </nav>

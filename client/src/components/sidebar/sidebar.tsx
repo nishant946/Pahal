@@ -35,42 +35,44 @@ const Sidebar = () => {
     return (
         <div className="w-64 h-full bg-white border-r border-gray-200 flex flex-col">
             {/* Sidebar Header */}
-            <div className="p-6">
-                <h2 className="text-lg font-semibold text-gray-800">Menu</h2>
+            <div className="p-4 sm:p-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800">Menu</h2>
             </div>
 
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto">
-                <div className="space-y-1 px-3">
+                <div className="space-y-1 px-2 sm:px-3">
                     {sidebarItems.map((item, i) => (
                         <NavLink
                             key={i}
                             to={item.href}
                             className={({ isActive }) =>
                                 cn(
-                                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-gray-100",
+                                    "flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm transition-all hover:bg-gray-100",
                                     isActive 
                                         ? "bg-gray-100 text-primary font-medium" 
                                         : "text-gray-700 hover:text-gray-900"
                                 )
                             }
                         >
-                            {item.icon}
-                            <span>{item.label}</span>
+                            <div className="flex-shrink-0">
+                                {item.icon}
+                            </div>
+                            <span className="truncate">{item.label}</span>
                         </NavLink>
                     ))}
                 </div>
             </nav>
 
             {/* User Section */}
-            <div className="border-t border-gray-200 p-4">
-                <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-                    <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                        <span className="text-white font-medium text-sm">{teacher?.username.charAt(0)}</span>
+            <div className="border-t border-gray-200 p-3 sm:p-4">
+                <div className="flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2">
+                    <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-medium text-xs sm:text-sm">{teacher?.username.charAt(0)}</span>
                     </div>
-                    <div>
-                        <p className="text-sm font-medium text-gray-900">{teacher?.username}</p>
-                        <p className="text-xs text-gray-500">{teacher?.isAdmin?"Admin":"Teacher"}</p>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{teacher?.username}</p>
+                        <p className="text-xs text-gray-500 truncate">{teacher?.isAdmin?"Admin":"Teacher"}</p>
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '@/components/layout/layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Download } from 'lucide-react'
+import { Download, Eye } from 'lucide-react'
 import { useAttendance } from '@/contexts/attendanceContext'
 
 function StudentReport() {
@@ -11,21 +11,18 @@ function StudentReport() {
   const [searchQuery, setSearchQuery] = useState('')
   const [dateRange, setDateRange] = useState<'daily' | 'weekly' | 'monthly'>('daily')
   const { students, getStudentAttendanceStats } = useAttendance()
+  const [studentStats, setStudentStats] = useState<{ [id: string]: any }>({});
+  const [loadingStats, setLoadingStats] = useState(false);
 
   // Calculate date range
   const getDateRange = () => {
     const end = new Date();
     const start = new Date();
-    
-    switch (dateRange) {
-      case 'weekly':
-        start.setDate(end.getDate() - 7);
-        break;
-      case 'monthly':
-        start.setMonth(end.getMonth() - 1);
-        break;
-      default: // daily
-        start.setDate(end.getDate() - 1);
+
+    if (dateRange === 'weekly') {
+      start.setDate(end.getDate() - 7);
+    } else if (dateRange === 'monthly') {
+      start.setMonth(end.getMonth() - 1);
     }
 
     return {
@@ -36,21 +33,28 @@ function StudentReport() {
 
   const { startDate, endDate } = getDateRange();
 
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.group.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = useMemo(() =>
+    students.filter(student =>
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.group.toLowerCase().includes(searchQuery.toLowerCase())
+    ),
+    [students, searchQuery]
   );
 
   const getAttendanceData = (student: typeof students[0]) => {
     return getStudentAttendanceStats(student.id, startDate, endDate);
   };
 
-  const downloadReport = () => {
+  const downloadReport = async () => {
     const headers = ['Name', 'Roll Number', 'Grade', 'Group', 'Total Days', 'Present Days', 'Absent Days', 'Attendance %'];
-    const csvData = filteredStudents.map(student => {
-      const stats = getAttendanceData(student);
+    // Fetch all stats in parallel
+    const statsArray = await Promise.all(filteredStudents.map(student =>
+      getStudentAttendanceStats(student.id, startDate, endDate)
+    ));
+    const csvData = filteredStudents.map((student, i) => {
+      const stats = statsArray[i] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
       return [
         student.name,
         student.rollNumber,
@@ -72,6 +76,32 @@ function StudentReport() {
     a.click();
   };
 
+  const viewIndividualReport = (studentId: string) => {
+    navigate(`/attendance/student/${studentId}/report`);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchStats = async () => {
+      setLoadingStats(true);
+      const statsArr = await Promise.all(
+        filteredStudents.map(student =>
+          getStudentAttendanceStats(student.id, startDate, endDate)
+        )
+      );
+      if (isMounted) {
+        const statsObj: { [id: string]: any } = {};
+        filteredStudents.forEach((student, i) => {
+          statsObj[student.id] = statsArr[i] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+        });
+        setStudentStats(statsObj);
+        setLoadingStats(false);
+      }
+    };
+    fetchStats();
+    return () => { isMounted = false; };
+  }, [students, searchQuery, startDate, endDate]);
+
   return (
     <Layout>
       <div className="p-6">
@@ -83,12 +113,7 @@ function StudentReport() {
             <h1 className="text-2xl font-bold">Student Attendance Report</h1>
           </div>
           <div className="flex gap-2">
-            <Button
-              variant={dateRange === 'daily' ? 'default' : 'outline'}
-              onClick={() => setDateRange('daily')}
-            >
-              Daily
-            </Button>
+            {/* Remove Daily button */}
             <Button
               variant={dateRange === 'weekly' ? 'default' : 'outline'}
               onClick={() => setDateRange('weekly')}
@@ -130,11 +155,12 @@ function StudentReport() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Present</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Absent</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance %</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredStudents.map(student => {
-                const stats = getAttendanceData(student);
+                const stats = studentStats[student.id] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
                 return (
                   <tr key={student.id}>
                     <td className="px-6 py-4 whitespace-nowrap">{student.name}</td>
@@ -150,6 +176,17 @@ function StudentReport() {
                       }`}>
                         {stats.attendancePercentage.toFixed(2)}%
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => viewIndividualReport(student.id)}
+                        className="flex items-center gap-1"
+                      >
+                        <Eye className="w-3 h-3" />
+                        View Details
+                      </Button>
                     </td>
                   </tr>
                 );

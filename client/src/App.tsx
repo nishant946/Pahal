@@ -30,6 +30,9 @@ import AdminContributors from "./pages/admin/AdminContributors";
 import AttendanceOverview from "./pages/admin/attendanceoverview";
 import GalleryManagement from "./pages/admin/gallary";
 import AdminSettings from "./pages/admin/settings";
+import AttendanceDashboard from "./pages/attendance/attendanceDashboard";
+import IndividualStudentReport from "./pages/attendance/individualStudentReport";
+import IndividualTeacherReport from "./pages/attendance/individualTeacherReport";
 
 
 function App() {
@@ -134,6 +137,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/attendance/dashboard"
+                  element={
+                    <TeacherProtectedRoute>
+                      <AttendanceDashboard />
+                    </TeacherProtectedRoute>
+                  }
+                />
+                <Route
                   path="/attendance/markattendance"
                   element={
                     <TeacherProtectedRoute>
@@ -166,10 +177,26 @@ function App() {
                   }
                 />
                 <Route
-                  path="/attendance/studentreports"
+                  path="/attendance/studentreport"
                   element={
                     <TeacherProtectedRoute>
                       <StudentReport />
+                    </TeacherProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/attendance/student/:studentId/report"
+                  element={
+                    <TeacherProtectedRoute>
+                      <IndividualStudentReport />
+                    </TeacherProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/attendance/teacher/:teacherId/report"
+                  element={
+                    <TeacherProtectedRoute>
+                      <IndividualTeacherReport />
                     </TeacherProtectedRoute>
                   }
                 />

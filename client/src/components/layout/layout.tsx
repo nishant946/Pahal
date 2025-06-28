@@ -57,8 +57,8 @@ function Layout({ children }: LayoutProps): React.ReactNode {
         <div className="sticky top-0 z-10">
           <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
         </div>
-        <main className="flex-1 overflow-y-auto bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">{children}</div>
+        <main className="flex-1 overflow-y-auto bg-gray-50 px-2 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
+          <div className="mx-auto w-full max-w-7xl">{children}</div>
         </main>
       </div>
     </div>

@@ -1,98 +1,78 @@
-import React, { createContext, useContext, useState } from 'react';
-
-interface Homework {
-  id: string;
-  group: 'A' | 'B' | 'C';
-  subject: string;
-  description: string;
-  dueDate: string;
-  dateAssigned: string;
-  status: 'pending' | 'completed';
-}
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import homeworkService from '@/services/homeworkService';
+import type { Homework } from '@/services/homeworkService';
+import { useTeacherAuth } from './teacherAuthContext';
 
 interface HomeworkContextType {
   homework: Homework[];
-  addHomework: (homework: Omit<Homework, 'id'>) => void;
-  updateHomework: (id: string, homework: Partial<Homework>) => void;
+  loading: boolean;
+  addHomework: (homework: Omit<Homework, 'id' | 'assignedBy' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateHomework: (id: string, homework: Partial<Homework>) => Promise<void>;
+  deleteHomework: (id: string) => Promise<void>;
   getHomeworkByGroup: (group: Homework['group']) => Homework[];
   getRecentHomework: () => Homework[];
   getYesterdayHomework: () => Homework[];
+  refreshHomework: () => Promise<void>;
 }
 
 const HomeworkContext = createContext<HomeworkContextType | undefined>(undefined);
 
 export function HomeworkProvider({ children }: { children: React.ReactNode }) {
-  const [homework, setHomework] = useState<Homework[]>(
-    [
-      {
-        id: '1',
-        group: 'A',
-        subject: 'Mathematics',
-        description: 'Complete exercises on addition and subtraction',
-        dueDate: '2025-05-24',
-        dateAssigned: '2025-05-23',
-        status: 'pending'
-      },
-      {
-        id: '2',
-        group: 'B',
-        subject: 'Science',
-        description: 'Read chapter on plant life cycle and answer questions',
-        dueDate: '2025-05-24',
-        dateAssigned: '2025-05-23',
-        status: 'pending'
-      },
-      {
-        id: '3',
-        group: 'C',
-        subject: 'English',
-        description: 'Write a 500-word essay on environmental conservation',
-        dueDate: '2025-05-24',
-        dateAssigned: '2025-05-23',
-        status: 'pending'
-      },
-      {
-        id: '4',
-        group: 'A',
-        subject: 'Science',
-        description: 'Complete experiment report on plant growth',
-        dueDate: '2025-05-23',
-        dateAssigned: '2025-05-22',
-        status: 'completed'
-      },
-      {
-        id: '5',
-        group: 'B',
-        subject: 'English',
-        description: 'Read chapter 5 and answer comprehension questions',
-        dueDate: '2025-05-23',
-        dateAssigned: '2025-05-22',
-        status: 'completed'
-      },
-      {
-        id: '6',
-        group: 'C',
-        subject: 'Mathematics',
-        description: 'Solve geometry problems from worksheet',
-        dueDate: '2025-05-23',
-        dateAssigned: '2025-05-22',
-        status: 'completed'
-      }
-    ]
-  );
+  const [homework, setHomework] = useState<Homework[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { teacher } = useTeacherAuth();
 
-  const addHomework = (newHomework: Omit<Homework, 'id'>) => {
-    const homework: Homework = {
-      ...newHomework,
-      id: Date.now().toString()
-    };
-    setHomework(prev => [...prev, homework]);
+  const fetchHomework = async () => {
+    try {
+      setLoading(true);
+      const data = await homeworkService.getAllHomework();
+      setHomework(data);
+    } catch (error) {
+      console.error('Error fetching homework:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateHomework = (id: string, updatedHomework: Partial<Homework>) => {
-    setHomework(prev => prev.map(hw => 
-      hw.id === id ? { ...hw, ...updatedHomework } : hw
-    ));
+  useEffect(() => {
+    fetchHomework();
+  }, []);
+
+  const addHomework = async (newHomework: Omit<Homework, 'id' | 'assignedBy' | 'createdAt' | 'updatedAt'>) => {
+    if (!teacher) {
+      throw new Error('Teacher not authenticated');
+    }
+
+    try {
+      const homework = await homeworkService.createHomework({
+        ...newHomework,
+        assignedBy: teacher.id
+      });
+      setHomework(prev => [homework, ...prev]);
+    } catch (error) {
+      console.error('Error adding homework:', error);
+      throw error;
+    }
+  };
+
+  const updateHomework = async (id: string, updatedHomework: Partial<Homework>) => {
+    try {
+      const homework = await homeworkService.updateHomework(id, updatedHomework);
+      setHomework(prev => prev.map(hw => hw.id === id ? homework : hw));
+    } catch (error) {
+      console.error('Error updating homework:', error);
+      throw error;
+    }
+  };
+
+  const deleteHomework = async (id: string) => {
+    try {
+      await homeworkService.deleteHomework(id);
+      setHomework(prev => prev.filter(hw => hw.id !== id));
+    } catch (error) {
+      console.error('Error deleting homework:', error);
+      throw error;
+    }
   };
 
   const getHomeworkByGroup = (group: Homework['group']) => {
@@ -111,15 +91,22 @@ export function HomeworkProvider({ children }: { children: React.ReactNode }) {
     return homework.filter(hw => hw.dateAssigned === yesterdayStr);
   };
 
+  const refreshHomework = async () => {
+    await fetchHomework();
+  };
+
   return (
     <HomeworkContext.Provider
       value={{
         homework,
+        loading,
         addHomework,
         updateHomework,
+        deleteHomework,
         getHomeworkByGroup,
         getRecentHomework,
-        getYesterdayHomework
+        getYesterdayHomework,
+        refreshHomework
       }}
     >
       {children}
