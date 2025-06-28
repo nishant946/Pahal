@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import { LogOut, Shield, Users, Calendar, Settings, Heart, Image } from "lucide-react";

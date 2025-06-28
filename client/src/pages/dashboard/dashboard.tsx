@@ -19,15 +19,12 @@ import { BarChart3 } from "lucide-react";
 
 import { useAttendance } from "@/contexts/attendanceContext";
 
-interface PresentPerson {
-  id: string;
-  name: string;
-}
+
 
 function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [presentStudents, setPresentStudents] = useState<PresentPerson[]>([]);
-  const [presentTeachers, setPresentTeachers] = useState<PresentPerson[]>([]);
+  // const [presentStudents, setPresentStudents] = useState<PresentPerson[]>([]);
+  // const [presentTeachers, setPresentTeachers] = useState<PresentPerson[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [preferredTodayTeachers, setPreferredTodayTeachers] = useState<
     Teacher[]
@@ -69,16 +66,16 @@ function Dashboard() {
           `/api/v1/attendance/date?date=${todayStr}`
         );
         if (studentRes.ok) {
-          const data = await studentRes.json();
-          setPresentStudents(data.presentStudents || []);
+          // const data = await studentRes.json();
+          // setPresentStudents(data.presentStudents || []);
         }
         // Fetch present teachers
         const teacherRes = await fetch(
           `/api/v1/teacher-attendance/date?date=${todayStr}`
         );
         if (teacherRes.ok) {
-          const data = await teacherRes.json();
-          setPresentTeachers(data.presentTeachers || []);
+          // const data = await teacherRes.json();
+          // setPresentTeachers(data.presentTeachers || []);
         }
         // Teachers with today as preferred day
         const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
@@ -302,7 +299,7 @@ function Dashboard() {
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   View Teacher Report
-                  <span className="text-xs text-gray-400">(Coming soon)</span>
+                 
                 </Button>
                 <Button
                   onClick={() => navigate("/homework")}
@@ -318,7 +315,7 @@ function Dashboard() {
                 >
                   <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Mark Teacher Attendance
-                  <span className="text-xs text-gray-400">(Coming soon)</span>
+              
                 </Button>
               </div>
             </div>

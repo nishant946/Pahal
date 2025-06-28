@@ -12,7 +12,7 @@ function StudentReport() {
   const [dateRange, setDateRange] = useState<'daily' | 'weekly' | 'monthly'>('daily')
   const { students, getStudentAttendanceStats } = useAttendance()
   const [studentStats, setStudentStats] = useState<{ [id: string]: any }>({});
-  const [loadingStats, setLoadingStats] = useState(false);
+  // const [loadingStats, setLoadingStats] = useState(false);
 
   // Calculate date range
   const getDateRange = () => {
@@ -43,9 +43,9 @@ function StudentReport() {
     [students, searchQuery]
   );
 
-  const getAttendanceData = (student: typeof students[0]) => {
-    return getStudentAttendanceStats(student.id, startDate, endDate);
-  };
+  // const getAttendanceData = (student: typeof students[0]) => {
+  //   return getStudentAttendanceStats(student.id, startDate, endDate);
+  // };
 
   const downloadReport = async () => {
     const headers = ['Name', 'Roll Number', 'Grade', 'Group', 'Total Days', 'Present Days', 'Absent Days', 'Attendance %'];
@@ -83,7 +83,7 @@ function StudentReport() {
   useEffect(() => {
     let isMounted = true;
     const fetchStats = async () => {
-      setLoadingStats(true);
+      // setLoadingStats(true);
       const statsArr = await Promise.all(
         filteredStudents.map(student =>
           getStudentAttendanceStats(student.id, startDate, endDate)
@@ -95,7 +95,7 @@ function StudentReport() {
           statsObj[student.id] = statsArr[i] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
         });
         setStudentStats(statsObj);
-        setLoadingStats(false);
+        // setLoadingStats(false);
       }
     };
     fetchStats();

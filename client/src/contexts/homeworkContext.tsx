@@ -46,7 +46,7 @@ export function HomeworkProvider({ children }: { children: React.ReactNode }) {
     try {
       const homework = await homeworkService.createHomework({
         ...newHomework,
-        assignedBy: teacher.id
+        assignedBy: teacher._id
       });
       setHomework(prev => [homework, ...prev]);
     } catch (error) {

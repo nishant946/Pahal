@@ -4,7 +4,6 @@ import React, {
   useContext,
   useState,
   useEffect,
-  use,
 } from "react";
 
 interface Student {

@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Save, Bell, Shield, Database } from "lucide-react";
+import { Save,  Shield, Database } from "lucide-react";
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 
 const AdminSettings: React.FC = () => {

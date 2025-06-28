@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, BookOpen, School, AlertCircle, TrendingUp, TrendingDown } from "lucide-react";
+import { Users, BookOpen, School, AlertCircle } from "lucide-react";
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import api from '@/services/api';
 

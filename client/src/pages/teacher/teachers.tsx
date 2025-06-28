@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Layout from '@/components/layout/layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Mail, Phone, Search, Download, RefreshCw, User, Calendar, BookOpen, BadgeCheck, Clock } from 'lucide-react'
+import { Mail, Phone, Search, Download, RefreshCw, User,  BadgeCheck, } from 'lucide-react'
 import teacherService from '@/services/teacherService'
 import type { Teacher } from '@/services/teacherService'
 

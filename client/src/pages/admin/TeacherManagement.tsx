@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, XCircle, UserPlus, Edit, Trash2, Search, Filter } from "lucide-react";
+import { CheckCircle2, UserPlus,Trash2, Search } from "lucide-react";
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import api from '@/services/api';
 

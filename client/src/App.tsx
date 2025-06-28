@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Logout from "./pages/auth/logout";
@@ -22,7 +22,7 @@ import Homework from "./pages/homework/homework";
 import { AttendanceProvider } from "./contexts/attendanceContext";
 import { TeacherAuthProvider } from "./contexts/teacherAuthContext";
 import { HomeworkProvider } from "./contexts/homeworkContext";
-import { TeacherProtectedRoute } from "./components/auth/TeacherProtectedRoute";
+// import { TeacherProtectedRoute } from "./components/auth/TeacherProtectedRoute";
 import VerifiedTeacherProtectedRoute from "./components/auth/VerifiedTeacherProtectedRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";

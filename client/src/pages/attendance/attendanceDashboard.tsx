@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import { useAttendance } from '@/contexts/attendanceContext'
 import teacherService from '@/services/teacherService'
-import type { Teacher } from '@/services/teacherService'
+
 
 interface DashboardStats {
   totalStudents: number;
@@ -33,7 +33,6 @@ interface DashboardStats {
 function AttendanceDashboard() {
   const navigate = useNavigate()
   const { students, todayAttendance } = useAttendance()
-  const [teachers, setTeachers] = useState<Teacher[]>([])
   const [stats, setStats] = useState<DashboardStats>({
     totalStudents: 0,
     totalTeachers: 0,
@@ -57,7 +56,6 @@ function AttendanceDashboard() {
       
       // Fetch teachers
       const teachersData = await teacherService.getAllTeachers()
-      setTeachers(teachersData)
 
       // Get today's attendance for teachers
       const todayDate = new Date().toISOString().split('T')[0]

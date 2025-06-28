@@ -7,12 +7,12 @@ import { Download, Eye } from 'lucide-react'
 import teacherService from '@/services/teacherService'
 import type { Teacher, TeacherAttendanceStats } from '@/services/teacherService'
 
-interface TeacherWithStats extends Teacher {
-  totalDays: number;
-  presentDays: number;
-  absentDays: number;
-  attendancePercentage: number;
-}
+// interface TeacherWithStats extends Teacher {
+//   totalDays: number;
+//   presentDays: number;
+//   absentDays: number;
+//   attendancePercentage: number;
+// }
 
 function TeacherAttendance() {
   const navigate = useNavigate()
@@ -45,7 +45,7 @@ function TeacherAttendance() {
   const filteredTeachers = useMemo(() =>
     teachers.filter(teacher =>
       teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.employeeId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       teacher.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
       teacher.designation.toLowerCase().includes(searchQuery.toLowerCase())
     ),
@@ -116,7 +116,7 @@ function TeacherAttendance() {
       const stats = statsArray[i] || { total: 0, present: 0, absent: 0, attendancePercentage: 0 };
       return [
         teacher.name,
-        teacher.employeeId,
+        teacher.rollNo,
         teacher.department,
         teacher.designation,
         stats.total,
@@ -213,7 +213,7 @@ function TeacherAttendance() {
                 return (
                   <tr key={teacher.id}>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{teacher.employeeId}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{teacher.rollNo}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.department}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.designation}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{stats.total}</td>

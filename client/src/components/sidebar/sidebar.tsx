@@ -164,7 +164,7 @@ const sidebarItems: SidebarItems[] = [
               <div className="flex-shrink-0">{item.icon}</div>
               <span className="truncate">{item.label}</span>
               {dimmed && (
-                <span className="ml-2 text-xs text-gray-400">(Coming soon)</span>
+                <span className="ml-2 text-xs text-gray-400"></span>
               )}
             </NavLink>
             )

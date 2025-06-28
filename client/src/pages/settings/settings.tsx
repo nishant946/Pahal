@@ -14,9 +14,9 @@ export default function Settings() {
   const [pushNotifications, setPushNotifications] = useState(true);
   const {teacher}=useTeacherAuth();
   const [profile, setProfile] = useState({
-    name: teacher?.username,
+    name: teacher?.name,
     email: teacher?.email ,
-    phone: teacher?.mobile 
+    phone: teacher?.mobileNo 
   });
 
   const handleProfileUpdate = (e: React.FormEvent) => {
