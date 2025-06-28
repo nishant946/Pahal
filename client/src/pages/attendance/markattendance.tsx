@@ -1,42 +1,54 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Layout from '@/components/layout/layout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
-import { Search, Calendar } from 'lucide-react'
-import { useAttendance } from '@/contexts/attendanceContext'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "@/components/layout/layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Search, Calendar } from "lucide-react";
+import { useAttendance } from "@/contexts/attendanceContext";
 
 function MarkAttendance() {
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('');
-  const { students, todayAttendance, markStudentAttendance, unmarkStudentAttendance } = useAttendance();
-  const [currentDate] = useState(new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }));
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const {
+    students,
+    todayAttendance,
+    markStudentAttendance,
+    unmarkStudentAttendance,
+  } = useAttendance();
+  const [currentDate] = useState(
+    new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  );
 
   if (!students || !todayAttendance || !todayAttendance.presentStudents) {
     return <div>Loading...</div>;
   }
 
-  const filteredStudents = (students ?? []).filter(student =>
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.rollNumber.includes(searchQuery) ||
-    student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.group.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = (students ?? []).filter(
+    (student) =>
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.rollNumber.includes(searchQuery) ||
+      student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.group.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const isPresent = (studentId: string) =>
-    (todayAttendance?.presentStudents ?? []).some(student => student.id === studentId);
+    (todayAttendance?.presentStudents ?? []).some(
+      (student) => String(student.id) === String(studentId)
+    );
 
   const toggleAttendance = (studentId: string) => {
     if (isPresent(studentId)) {
+      console.log("Unmarking attendance for student:", studentId);
       unmarkStudentAttendance(studentId);
     } else {
+      console.log("Marking attendance for student:", studentId);
       markStudentAttendance(studentId);
     }
   };
@@ -46,7 +58,7 @@ function MarkAttendance() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate('/attendance')}>
+            <Button variant="outline" onClick={() => navigate("/attendance")}>
               Back
             </Button>
             <h1 className="text-2xl font-bold">Mark Student Attendance</h1>
@@ -77,17 +89,25 @@ function MarkAttendance() {
           {/* Stats Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="text-blue-700 font-semibold text-sm sm:text-base">Total Students</h3>
-              <p className="text-xl sm:text-2xl font-bold text-blue-900">{students.length}</p>
+              <h3 className="text-blue-700 font-semibold text-sm sm:text-base">
+                Total Students
+              </h3>
+              <p className="text-xl sm:text-2xl font-bold text-blue-900">
+                {students.length}
+              </p>
             </div>
             <div className="bg-green-50 rounded-lg p-4">
-              <h3 className="text-green-700 font-semibold text-sm sm:text-base">Present</h3>
+              <h3 className="text-green-700 font-semibold text-sm sm:text-base">
+                Present
+              </h3>
               <p className="text-xl sm:text-2xl font-bold text-green-900">
                 {todayAttendance.presentStudents.length}
               </p>
             </div>
             <div className="bg-red-50 rounded-lg p-4">
-              <h3 className="text-red-700 font-semibold text-sm sm:text-base">Absent</h3>
+              <h3 className="text-red-700 font-semibold text-sm sm:text-base">
+                Absent
+              </h3>
               <p className="text-xl sm:text-2xl font-bold text-red-900">
                 {students.length - todayAttendance.presentStudents.length}
               </p>
@@ -114,10 +134,10 @@ function MarkAttendance() {
             {filteredStudents.length > 0 && (
               <div className="divide-y divide-gray-200">
                 {filteredStudents.map((student) => (
-                  <div 
-                    key={student.id} 
+                  <div
+                    key={student.id}
                     className={`p-4 transition-colors ${
-                      isPresent(student.id) ? 'bg-green-50/50' : ''
+                      isPresent(student.id) ? "bg-green-50/50" : ""
                     }`}
                   >
                     {/* Mobile View */}
@@ -125,9 +145,15 @@ function MarkAttendance() {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-medium">{student.name}</p>
-                          <p className="text-sm text-gray-600">Roll No: {student.rollNumber}</p>
-                          <p className="text-sm text-gray-600">Grade: {student.grade}</p>
-                          <p className="text-sm text-gray-600">Group: {student.group}</p>
+                          <p className="text-sm text-gray-600">
+                            Roll No: {student.rollNumber}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Grade: {student.grade}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Group: {student.group}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Switch
@@ -135,13 +161,15 @@ function MarkAttendance() {
                             onCheckedChange={() => toggleAttendance(student.id)}
                             id={`attendance-mobile-${student.id}`}
                           />
-                          <Label 
-                            htmlFor={`attendance-mobile-${student.id}`} 
+                          <Label
+                            htmlFor={`attendance-mobile-${student.id}`}
                             className={`text-sm font-medium ${
-                              isPresent(student.id) ? 'text-green-600' : 'text-gray-600'
+                              isPresent(student.id)
+                                ? "text-green-600"
+                                : "text-gray-600"
                             }`}
                           >
-                            {isPresent(student.id) ? 'Present' : 'Absent'}
+                            {isPresent(student.id) ? "Present" : "Absent"}
                           </Label>
                         </div>
                       </div>
@@ -149,7 +177,9 @@ function MarkAttendance() {
 
                     {/* Desktop View */}
                     <div className="hidden sm:grid grid-cols-12 gap-4 items-center">
-                      <div className="col-span-2 font-medium text-gray-600">{student.rollNumber}</div>
+                      <div className="col-span-2 font-medium text-gray-600">
+                        {student.rollNumber}
+                      </div>
                       <div className="col-span-3">{student.name}</div>
                       <div className="col-span-2">{student.grade}</div>
                       <div className="col-span-3">{student.group}</div>
@@ -159,13 +189,15 @@ function MarkAttendance() {
                           onCheckedChange={() => toggleAttendance(student.id)}
                           id={`attendance-${student.id}`}
                         />
-                        <Label 
-                          htmlFor={`attendance-${student.id}`} 
+                        <Label
+                          htmlFor={`attendance-${student.id}`}
                           className={`text-sm font-medium ${
-                            isPresent(student.id) ? 'text-green-600' : 'text-gray-600'
+                            isPresent(student.id)
+                              ? "text-green-600"
+                              : "text-gray-600"
                           }`}
                         >
-                          {isPresent(student.id) ? 'Present' : 'Absent'}
+                          {isPresent(student.id) ? "Present" : "Absent"}
                         </Label>
                       </div>
                     </div>
