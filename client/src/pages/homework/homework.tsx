@@ -167,8 +167,8 @@ function HomeworkCard({ group }: { group: Group }) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {homeworkList.map(hw => (
-            <div key={hw.id} className="p-4 bg-gray-50 rounded-lg">
+          {homeworkList.map((hw, idx) => (
+            <div key={hw.id || hw.subject + hw.dueDate + idx} className="p-4 bg-gray-50 rounded-lg">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -231,11 +231,11 @@ export default function Homework() {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Homework Management</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={refreshHomework} disabled={loading}>
+      <div className="p-2 sm:p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold">Homework Management</h1>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <Button variant="outline" onClick={refreshHomework} disabled={loading} className="w-full sm:w-auto">
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
@@ -243,7 +243,7 @@ export default function Homework() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <HomeworkCard group="A" />
           <HomeworkCard group="B" />
           <HomeworkCard group="C" />
