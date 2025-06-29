@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Logout from "./pages/auth/logout";
@@ -36,7 +36,6 @@ import AttendanceDashboard from "./pages/attendance/attendanceDashboard";
 import IndividualStudentReport from "./pages/attendance/individualStudentReport";
 import IndividualTeacherReport from "./pages/attendance/individualTeacherReport";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -49,18 +48,22 @@ function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/pending-verification" element={<PendingVerification />} />
+                <Route
+                  path="/pending-verification"
+                  element={<PendingVerification />}
+                />
                 {/* Protected Routes */}
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="teachers" element={<TeacherManagement />} />
-                  <Route path="verify-teachers" element={<TeacherVerification />} />
-                  <Route path="contributors" element={<AdminContributors/>} />
-                  <Route path="attendance" element={<AttendanceOverview/>} />
-                   <Route path="gallary" element={<GalleryManagement/>} />
-                   <Route path="settings" element={<AdminSettings/>} />
-
-                  
+                  <Route
+                    path="verify-teachers"
+                    element={<TeacherVerification />}
+                  />
+                  <Route path="contributors" element={<AdminContributors />} />
+                  <Route path="attendance" element={<AttendanceOverview />} />
+                  <Route path="gallary" element={<GalleryManagement />} />
+                  <Route path="settings" element={<AdminSettings />} />
 
                   {/* More nested routes can go here */}
                 </Route>
@@ -98,7 +101,7 @@ function App() {
                 />
                 {/* Settings & Logout Routes */}{" "}
                 <Route
-                  path="/settings"
+                  path="/profile"
                   element={
                     <VerifiedTeacherProtectedRoute>
                       <Settings />

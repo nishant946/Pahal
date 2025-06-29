@@ -1,22 +1,19 @@
-import { useState } from 'react';
-import Layout from '@/components/layout/layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Moon, Sun, User } from 'lucide-react';
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
+import { useState } from "react";
+import Layout from "@/components/layout/layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import { User } from "lucide-react";
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 
 export default function Settings() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const {teacher}=useTeacherAuth();
+  const { teacher } = useTeacherAuth();
   const [profile, setProfile] = useState({
     name: teacher?.name,
-    email: teacher?.email ,
-    phone: teacher?.mobileNo 
+    email: teacher?.email,
+    phone: teacher?.mobileNo,
   });
 
   const handleProfileUpdate = (e: React.FormEvent) => {
@@ -28,8 +25,12 @@ export default function Settings() {
     <Layout>
       <div className="space-y-6 p-4 sm:p-6 lg:p-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Settings</h1>
-          <p className="mt-2 text-sm text-gray-700">Manage your account settings and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+            Profile
+          </h1>
+          <p className="mt-2 text-sm text-gray-700">
+            Manage your account settings and preferences
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -48,7 +49,9 @@ export default function Settings() {
                   <Input
                     id="name"
                     value={profile.name}
-                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                    onChange={(e) =>
+                      setProfile({ ...profile, name: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -57,7 +60,9 @@ export default function Settings() {
                     id="email"
                     type="email"
                     value={profile.email}
-                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    onChange={(e) =>
+                      setProfile({ ...profile, email: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -65,7 +70,9 @@ export default function Settings() {
                   <Input
                     id="phone"
                     value={profile.phone}
-                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    onChange={(e) =>
+                      setProfile({ ...profile, phone: e.target.value })
+                    }
                   />
                 </div>
                 <Button type="submit">Save Changes</Button>
@@ -74,7 +81,7 @@ export default function Settings() {
           </Card>
 
           {/* Preferences */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Preferences</CardTitle>
             </CardHeader>
@@ -82,14 +89,20 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Theme</Label>
-                  <p className="text-sm text-gray-500">Toggle between light and dark mode</p>
+                  <p className="text-sm text-gray-500">
+                    Toggle between light and dark mode
+                  </p>
                 </div>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => setDarkMode(!darkMode)}
                 >
-                  {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {darkMode ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
                 </Button>
               </div>
 
@@ -98,7 +111,9 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">Email Notifications</p>
-                    <p className="text-sm text-gray-500">Receive email updates</p>
+                    <p className="text-sm text-gray-500">
+                      Receive email updates
+                    </p>
                   </div>
                   <Switch
                     checked={emailNotifications}
@@ -108,7 +123,9 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">Push Notifications</p>
-                    <p className="text-sm text-gray-500">Receive push notifications</p>
+                    <p className="text-sm text-gray-500">
+                      Receive push notifications
+                    </p>
                   </div>
                   <Switch
                     checked={pushNotifications}
@@ -117,7 +134,7 @@ export default function Settings() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </Layout>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Bell, Sun, Moon, User, Menu } from "lucide-react";
+import { Sun, Moon, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface NavbarProps {
@@ -9,7 +9,7 @@ interface NavbarProps {
 
 function Navbar({ onMenuClick }: NavbarProps) {
   const [isDark, setIsDark] = useState(false);
-  const [notifications] = useState(2);
+  // const [notifications] = useState(2);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -64,7 +64,7 @@ function Navbar({ onMenuClick }: NavbarProps) {
           </Button>
 
           {/* Notifications */}
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="w-8 h-8 sm:w-9 sm:h-9 px-0 relative"
@@ -76,7 +76,7 @@ function Navbar({ onMenuClick }: NavbarProps) {
                 {notifications}
               </span>
             )}
-          </Button>
+          </Button> */}
 
           {/* Profile */}
           <Button
