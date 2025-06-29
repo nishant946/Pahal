@@ -81,7 +81,7 @@ const createSampleData = async () => {
   try {
     // Connect to MongoDB
     await mongoose.connect(
-      "mongodb+srv://nishantkumarsingh946:D6PncmqVRjMQuzC0@cluster0.6rhmemq.mongodb.net/pahal?retryWrites=true&w=majority"
+      "mongodb://localhost:27017/pahal" // Replace with your MongoDB URI
     );
     console.log("Connected to MongoDB");
 
