@@ -16,14 +16,14 @@ function Landing() {
       {/* Hero Section with Animated Background */}
       <div className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white overflow-hidden">
         {/* Animated Background Elements */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
         </div>
 
         {/* Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
@@ -38,7 +38,7 @@ function Landing() {
           ))}
         </div>
 
-        <nav className="absolute top-0 left-0 right-0 z-10 px-6 py-4 flex justify-between items-center backdrop-blur-sm bg-black/10">
+        <nav className="absolute top-0 left-0 right-0 z-20 px-6 py-4 flex justify-between items-center backdrop-blur-sm bg-black/10">
           <h1
             className={`text-3xl font-bold transition-all duration-1000 ${
               isVisible
@@ -68,7 +68,7 @@ function Landing() {
             <Button
               variant="outline"
               onClick={() => navigate("/login")}
-              className="text-black border-white/50 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+              className="text-black border-white/50 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +219,7 @@ function Landing() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               More than education nurturing young minds with knowledge, skills,
-              and values for life. Pahal’s programs are thoughtfully designed to
+              and values for life. Pahal's programs are thoughtfully designed to
               offer holistic development. From academic support to life skills,
               we ensure every child grows with confidence, curiosity, and care.
             </p>
@@ -231,7 +231,7 @@ function Landing() {
               description="Strengthening school foundations through personalized and curriculum-aligned learning."
               icon="📚"
               features={[
-                "One-on-one attention based on each child’s pace and understanding",
+                "One-on-one attention based on each child's pace and understanding",
                 "Core subject guidance: Mathematics, Science, and Languages",
                 "Regular progress tracking and feedback",
                 "Many students have excelled in board exams and earned scholarships",
@@ -305,10 +305,10 @@ function Landing() {
             Community
           </h2>
           <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-            One hour a week. A lifetime of impact. At Pahal, you don’t need to
+            One hour a week. A lifetime of impact. At Pahal, you don't need to
             be a professional teacher just a passionate MITian with the heart to
             help. With just one hour a week, you can light up the path of a
-            child who’s eager to learn but can’t afford a classroom. Join a
+            child who's eager to learn but can't afford a classroom. Join a
             growing family of 40+ MIT volunteers who are not only teaching
             lessons, but shaping futures one student, one smile, one
             breakthrough at a time.
@@ -357,7 +357,7 @@ function Landing() {
                 Our goal is not just to teach, but to show them what education
                 can truly do how it can open doors, build dreams, and
                 transform lives. Because education isn't just a
-                subject it’s a spark that can change everything.
+                subject it's a spark that can change everything.
               </p>
             </div>
             <div>
