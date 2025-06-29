@@ -189,7 +189,7 @@ const Register = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="preferredDays">Preferred Days <span className="text-red-500">*</span></Label>
+              <Label htmlFor="preferredDays">Preferred Day <span className="text-red-500">*</span></Label>
               <Input
                 id="preferredDays"
                 name="preferredDays"
@@ -199,10 +199,10 @@ const Register = () => {
                 className="w-full"
                 placeholder="Monday, Tuesday, Wednesday, Thursday, Friday"
               />
-              <p className="text-xs text-gray-500">Enter days separated by commas (e.g., Monday, Tuesday, Wednesday)</p>
+              <p className="text-xs text-gray-500">Enter your preferred day (e.g., Monday, Tuesday, Wednesday)</p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="subjectChoices">Subject Choices <span className="text-red-500">*</span></Label>
+              <Label htmlFor="subjectChoices">Subject Choice <span className="text-red-500">*</span></Label>
               <Input
                 id="subjectChoices"
                 name="subjectChoices"
@@ -212,7 +212,7 @@ const Register = () => {
                 className="w-full"
                 placeholder="Mathematics, Physics, Chemistry"
               />
-              <p className="text-xs text-gray-500">Enter subjects separated by commas (e.g., Mathematics, Physics)</p>
+              <p className="text-xs text-gray-500">Enter subjects</p>
             </div>
           </div>
 
