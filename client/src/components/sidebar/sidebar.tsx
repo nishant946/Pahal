@@ -116,14 +116,12 @@ const sidebarItems: SidebarItems[] = [
   });
 
   return (
-    <div className="w-64 h-full bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-48 sm:w-56 md:w-64 lg:w-72 h-full bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-2xl flex flex-col rounded-r-2xl overflow-hidden transition-all duration-300">
       {/* Sidebar Header */}
-      <div className="p-4 sm:p-6">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-800">
-          Menu
-        </h2>
+      <div className="p-4 md:p-6">
+        <h2 className="text-lg font-bold text-gray-900 tracking-wide mb-2">Menu</h2>
         {teacher && !teacher.isVerified && (
-          <div className="mt-2 flex items-center gap-2 text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded">
+          <div className="mt-2 flex items-center gap-2 text-xs text-yellow-700 bg-yellow-100 px-2 py-1 rounded-lg">
             <Clock className="w-3 h-3" />
             <span>Pending Verification</span>
           </div>
@@ -132,7 +130,7 @@ const sidebarItems: SidebarItems[] = [
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
-        <div className="space-y-1 px-2 sm:px-3">
+        <div className="space-y-1 px-2 md:px-4">
           {filteredItems.map((item, i) => {
             // Dim these features for teachers
             const dimmed = ["/gallery", "/contributors", "/syllabus", "/settings"].includes(item.href);
@@ -140,54 +138,54 @@ const sidebarItems: SidebarItems[] = [
               <Link
                 key={i}
                 to={item.href}
-                className="flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm transition-all hover:bg-gray-100 text-gray-700 hover:text-gray-900"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 text-gray-700"
               >
                 <div className="flex-shrink-0">{item.icon}</div>
                 <span className="truncate">{item.label}</span>
               </Link>
             ) : (
-            <NavLink
-              key={i}
-              to={item.href}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm transition-all hover:bg-gray-100",
-                  isActive
-                    ? "bg-gray-100 text-primary font-medium"
-                    : "text-gray-700 hover:text-gray-900",
-                  dimmed ? "opacity-50 pointer-events-none cursor-not-allowed" : ""
-                )
-              }
-              tabIndex={dimmed ? -1 : 0}
-              title={dimmed ? "Coming soon" : undefined}
-            >
-              <div className="flex-shrink-0">{item.icon}</div>
-              <span className="truncate">{item.label}</span>
-              {dimmed && (
-                <span className="ml-2 text-xs text-gray-400"></span>
-              )}
-            </NavLink>
+              <NavLink
+                key={i}
+                to={item.href}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-primary/20 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+                    isActive
+                      ? "bg-gradient-to-r from-primary/20 to-primary/5 text-primary font-bold shadow-md"
+                      : "text-gray-700 hover:text-primary",
+                    dimmed ? "opacity-50 pointer-events-none cursor-not-allowed" : ""
+                  )
+                }
+                tabIndex={dimmed ? -1 : 0}
+                title={dimmed ? "Coming soon" : undefined}
+              >
+                <div className="flex-shrink-0">{item.icon}</div>
+                <span className="truncate">{item.label}</span>
+                {dimmed && (
+                  <span className="ml-2 text-xs text-gray-400"></span>
+                )}
+              </NavLink>
             )
           })}
         </div>
       </nav>
 
       {/* User Section */}
-      <div className="border-t border-gray-200 p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3 rounded-lg px-2 sm:px-3 py-2">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-medium text-xs sm:text-sm">
+      <div className="border-t border-gray-200 p-5 bg-white/60 backdrop-blur-md">
+        <div className="flex items-center gap-3 rounded-xl px-2 py-2">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center flex-shrink-0 shadow-md">
+            <span className="text-white font-bold text-xl">
               {teacher?.name.charAt(0)}
             </span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+            <p className="text-base font-semibold text-gray-900 truncate">
               {teacher?.name}
             </p>
             <div className="flex items-center gap-1">
-            <p className="text-xs text-gray-500 truncate">
-              {teacher?.isAdmin ? "Admin" : "Teacher"}
-            </p>
+              <p className="text-xs text-gray-500 truncate">
+                {teacher?.isAdmin ? "Admin" : "Teacher"}
+              </p>
               {teacher?.isVerified && (
                 <Shield className="w-3 h-3 text-green-500" />
               )}

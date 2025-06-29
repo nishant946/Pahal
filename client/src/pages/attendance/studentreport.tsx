@@ -104,58 +104,93 @@ function StudentReport() {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate('/attendance')}>
-              Back
-            </Button>
-            <h1 className="text-2xl font-bold">Student Attendance Report</h1>
-          </div>
-          <div className="flex gap-2">
-            {/* Remove Daily button */}
+      <div className="p-2 sm:p-4 md:p-6">
+        {/* Header area: Back button and title */}
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="outline" onClick={() => navigate('/attendance')} className="inline-flex px-4 py-2">
+            Back
+          </Button>
+          <h1 className="text-lg sm:text-2xl font-bold">Student Attendance Report</h1>
+        </div>
+
+        <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:justify-between sm:items-center">
+          <Input
+            type="text"
+            placeholder="Search by name, roll number, grade, or group..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full max-w-xs"
+          />
+          <div className="flex flex-col md:flex-row gap-2 mb-4 md:justify-end">
             <Button
               variant={dateRange === 'weekly' ? 'default' : 'outline'}
               onClick={() => setDateRange('weekly')}
+              className="w-full md:w-auto"
             >
               Weekly
             </Button>
             <Button
               variant={dateRange === 'monthly' ? 'default' : 'outline'}
               onClick={() => setDateRange('monthly')}
+              className="w-full md:w-auto"
             >
               Monthly
+            </Button>
+            <Button onClick={downloadReport} className="w-full md:w-auto">
+              <Download className="w-4 h-4 mr-2" />
+              Download Report
             </Button>
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-4">
-          <Input
-            type="text"
-            placeholder="Search by name, roll number, grade, or group..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-sm"
-          />
-          <Button onClick={downloadReport}>
-            <Download className="w-4 h-4 mr-2" />
-            Download Report
-          </Button>
+        {/* Card/List view for mobile and tablet */}
+        <div className="md:hidden flex flex-col gap-4">
+          {filteredStudents.map(student => {
+            const stats = studentStats[student.id] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
+            return (
+              <div key={student.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="mb-2 font-semibold text-base">{student.name}</div>
+                <div className="text-sm text-gray-600 mb-1"><span className="font-medium">Roll Number:</span> {student.rollNumber}</div>
+                <div className="text-sm text-gray-600 mb-1"><span className="font-medium">Grade:</span> {student.grade}</div>
+                <div className="text-sm text-gray-600 mb-1"><span className="font-medium">Group:</span> {student.group}</div>
+                <div className="text-sm text-gray-600 mb-1"><span className="font-medium">Total Days:</span> {stats.totalDays}</div>
+                <div className="text-sm text-green-600 mb-1"><span className="font-medium">Present:</span> {stats.presentDays}</div>
+                <div className="text-sm text-red-600 mb-1"><span className="font-medium">Absent:</span> {stats.absentDays}</div>
+                <div className="text-sm mb-2">
+                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    stats.attendancePercentage >= 75 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {stats.attendancePercentage.toFixed(2)}%
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => viewIndividualReport(student.id)}
+                  className="flex items-center gap-1 w-full"
+                >
+                  <Eye className="w-3 h-3" />
+                  View Details
+                </Button>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="min-w-full">
+        {/* Table view for desktop only */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto hidden md:block">
+          <table className="min-w-full text-xs sm:text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Group</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Days</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Present</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Absent</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance %</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Group</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Total Days</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Present</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Absent</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Attendance %</th>
+                <th className="px-2 sm:px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -163,21 +198,21 @@ function StudentReport() {
                 const stats = studentStats[student.id] || { totalDays: 0, presentDays: 0, absentDays: 0, attendancePercentage: 0 };
                 return (
                   <tr key={student.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{student.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{student.rollNumber}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{student.grade}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{student.group}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{stats.totalDays}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-green-600">{stats.presentDays}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-600">{stats.absentDays}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">{student.name}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">{student.rollNumber}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">{student.grade}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">{student.group}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">{stats.totalDays}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-green-600">{stats.presentDays}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-red-600">{stats.absentDays}</td>
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         stats.attendancePercentage >= 75 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                       }`}>
                         {stats.attendancePercentage.toFixed(2)}%
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <Button
                         variant="outline"
                         size="sm"
