@@ -45,10 +45,10 @@ function MarkAttendance() {
 
   const toggleAttendance = (studentId: string) => {
     if (isPresent(studentId)) {
-      console.log("Unmarking attendance for student:", studentId);
+      // console.log("Unmarking attendance for student:", studentId);
       unmarkStudentAttendance(studentId);
     } else {
-      console.log("Marking attendance for student:", studentId);
+      // console.log("Marking attendance for student:", studentId);
       markStudentAttendance(studentId);
     }
   };
@@ -58,10 +58,16 @@ function MarkAttendance() {
       <div className="p-2 sm:p-4 lg:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
           <div className="flex items-center gap-2 sm:gap-4">
-            <Button variant="outline" onClick={() => navigate("/attendance")} className="text-xs sm:text-sm">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/attendance")}
+              className="text-xs sm:text-sm"
+            >
               Back
             </Button>
-            <h1 className="text-xl sm:text-2xl font-bold">Mark Student Attendance</h1>
+            <h1 className="text-xl sm:text-2xl font-bold">
+              Mark Student Attendance
+            </h1>
           </div>
           <div className="text-gray-600 text-sm sm:text-base">
             <Calendar className="w-4 h-4 inline-block mr-1" />
@@ -144,7 +150,9 @@ function MarkAttendance() {
                     <div className="sm:hidden space-y-2">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <p className="font-medium text-sm sm:text-base">{student.name}</p>
+                          <p className="font-medium text-sm sm:text-base">
+                            {student.name}
+                          </p>
                           <p className="text-xs sm:text-sm text-gray-600">
                             Roll No: {student.rollNumber}
                           </p>
@@ -180,9 +188,15 @@ function MarkAttendance() {
                       <div className="col-span-2 font-medium text-gray-600 text-xs sm:text-sm">
                         {student.rollNumber}
                       </div>
-                      <div className="col-span-3 text-xs sm:text-sm">{student.name}</div>
-                      <div className="col-span-2 text-xs sm:text-sm">{student.grade}</div>
-                      <div className="col-span-3 text-xs sm:text-sm">{student.group}</div>
+                      <div className="col-span-3 text-xs sm:text-sm">
+                        {student.name}
+                      </div>
+                      <div className="col-span-2 text-xs sm:text-sm">
+                        {student.grade}
+                      </div>
+                      <div className="col-span-3 text-xs sm:text-sm">
+                        {student.group}
+                      </div>
                       <div className="col-span-2 flex items-center gap-2">
                         <Switch
                           checked={isPresent(student.id)}

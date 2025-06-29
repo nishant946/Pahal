@@ -35,8 +35,8 @@ function MarkTeacherAttendance() {
           
           const teachersWithAttendance = teachersData.map(teacher => ({
             ...teacher,
-            isPresent: presentTeacherIds.has(teacher.id),
-            timeMarked: todayAttendance.presentTeachers.find(t => t.id === teacher.id)?.timeMarked
+            isPresent: presentTeacherIds.has(teacher._id),
+            timeMarked: todayAttendance.presentTeachers.find(t => t.id === teacher._id)?.timeMarked
           }))
           
           setTeachers(teachersWithAttendance)
@@ -84,14 +84,14 @@ function MarkTeacherAttendance() {
         })
         
         setTeachers(prev => prev.map(teacher => 
-          teacher.id === teacherId 
+          teacher._id === teacherId 
             ? { ...teacher, isPresent: true, timeMarked }
             : teacher
         ))
       } else {
         // For absent, we don't create a record, just update the UI
         setTeachers(prev => prev.map(teacher => 
-          teacher.id === teacherId 
+          teacher._id === teacherId 
             ? { ...teacher, isPresent: false, timeMarked: undefined }
             : teacher
         ))
@@ -110,7 +110,7 @@ function MarkTeacherAttendance() {
       await teacherService.unmarkTeacherAttendance(teacherId, todayDate)
       
       setTeachers(prev => prev.map(teacher => 
-        teacher.id === teacherId 
+        teacher._id === teacherId 
           ? { ...teacher, isPresent: false, timeMarked: undefined }
           : teacher
       ))
@@ -193,7 +193,7 @@ function MarkTeacherAttendance() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredTeachers.map(teacher => (
-            <Card key={teacher.id} className={`${teacher.isPresent ? 'border-green-200 bg-green-50' : 'border-gray-200'}`}>
+            <Card key={teacher._id} className={`${teacher.isPresent ? 'border-green-200 bg-green-50' : 'border-gray-200'}`}>
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
                   <div>
@@ -225,7 +225,7 @@ function MarkTeacherAttendance() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => unmarkAttendance(teacher.id)}
+                      onClick={() => teacher._id && unmarkAttendance(teacher._id)}
                       disabled={markingAttendance}
                       className="flex-1"
                     >
@@ -235,7 +235,7 @@ function MarkTeacherAttendance() {
                   ) : (
                     <Button
                       size="sm"
-                      onClick={() => markAttendance(teacher.id, 'present')}
+                      onClick={() => teacher._id && markAttendance(teacher._id, 'present')}
                       disabled={markingAttendance}
                       className="flex-1"
                     >

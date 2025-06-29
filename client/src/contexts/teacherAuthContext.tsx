@@ -53,12 +53,10 @@ export function TeacherAuthProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const storedTeacher = localStorage.getItem('teacher');
-    console.log('Initializing teacher auth context, stored teacher:', storedTeacher);
     if (storedTeacher) {
       try {
         const teacherData = JSON.parse(storedTeacher);
         setTeacher(teacherData);
-        console.log('Loaded teacher from storage:', teacherData);
       } catch (error) {
         console.error('Error parsing stored teacher:', error);
         localStorage.removeItem('teacher');
@@ -71,11 +69,7 @@ const login = async (email: string, password: string) => {
   setLoading(true);
   setError(null);
   try {
-      console.log('Making login request to:', '/auth/login');
     const response = await api.post('/auth/login', { email, password });
-    
-    console.log("Status:", response.status);
-      console.log("Data:", response.data);
 
     if (![200, 201].includes(response.status)) {
       throw new Error('Login failed');

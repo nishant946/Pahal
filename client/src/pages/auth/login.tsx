@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 
 function Login() {
-  
   const { login } = useTeacherAuth();
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,9 +28,9 @@ function Login() {
   }, [location, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     }));
   };
 
@@ -42,29 +41,31 @@ function Login() {
 
     try {
       if (!formData.email || !formData.password) {
-        setError('Email and password are required');
+        setError("Email and password are required");
         return;
       }
-      
-      console.log('Attempting login with:', formData.email);
+
+      // console.log('Attempting login with:', formData.email);
       const teacherData = await login(formData.email, formData.password);
-      console.log('Login successful:', teacherData);
-      
+      // console.log('Login successful:', teacherData);
+
       // Handle redirection based on user role and verification status
       if (teacherData.isAdmin) {
         // Admin users go directly to admin panel
-        navigate('/admin');
+        navigate("/admin");
       } else if (teacherData.isVerified) {
         // Verified teachers go to dashboard
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
         // Unverified teachers go to pending verification page
-        navigate('/pending-verification');
+        navigate("/pending-verification");
       }
-      
     } catch (err: any) {
-      console.error('Login error:', err);
-      const errorMessage = err.response?.data?.message || err.message || 'Login failed. Please check your credentials.';
+      console.error("Login error:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed. Please check your credentials.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -75,18 +76,22 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="max-w-md w-full space-y-8 bg-card p-8 rounded-lg shadow-sm">
         <div>
-          <h1 className="text-center text-3xl font-bold text-foreground">Welcome back</h1>
+          <h1 className="text-center text-3xl font-bold text-foreground">
+            Welcome back
+          </h1>
           <p className="mt-2 text-center text-sm text-muted-foreground">
             Sign in to access your dashboard
           </p>
         </div>
-        
+
         {successMessage && (
           <Alert>
-            <AlertDescription className="text-green-800">{successMessage}</AlertDescription>
+            <AlertDescription className="text-green-800">
+              {successMessage}
+            </AlertDescription>
           </Alert>
         )}
-        
+
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
@@ -121,18 +126,21 @@ function Login() {
             </div>
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full cursor-pointer"
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
 
           <div className="mt-6">
             <p className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <button onClick={() => navigate('/register')} className="text-blue-500 cursor-pointer font-bold hover:underline">
+              Don't have an account?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-blue-500 cursor-pointer font-bold hover:underline"
+              >
                 Sign up
               </button>
             </p>

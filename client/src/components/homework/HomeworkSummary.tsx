@@ -7,7 +7,7 @@ export function HomeworkSummary() {
   return (
     <div className="space-y-4">
       <h2 className="text-lg sm:text-xl font-semibold">Today's Homework Summary</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {recentHomework.map(hw => (
           <Card key={hw.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
@@ -18,8 +18,8 @@ export function HomeworkSummary() {
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 text-sm line-clamp-2 mb-2">{hw.description}</p>
+            <CardContent className="pt-0">
+              <p className="text-gray-600 text-sm line-clamp-2 mb-3">{hw.description}</p>
               <div className="text-sm text-gray-500">
                 Due: {new Date(hw.dueDate).toLocaleDateString()}
               </div>
@@ -28,9 +28,11 @@ export function HomeworkSummary() {
         ))}
 
         {recentHomework.length === 0 && (
-          <p className="text-gray-500 col-span-3 text-center py-4">
-            No homework assigned today
-          </p>
+          <div className="col-span-full text-center py-8">
+            <p className="text-gray-500 text-sm">
+              No homework assigned today
+            </p>
+          </div>
         )}
       </div>
     </div>

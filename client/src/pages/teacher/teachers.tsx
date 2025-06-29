@@ -71,7 +71,7 @@ function Teachers() {
   if (loading) {
     return (
       <Layout>
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           <div className="flex justify-center items-center h-64">
             <RefreshCw className="w-8 h-8 animate-spin" />
           </div>
@@ -82,36 +82,46 @@ function Teachers() {
 
   return (
     <Layout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Teacher Profiles</h1>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={fetchTeachers} disabled={loading}>
+      <div className="p-3 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold">Teacher Profiles</h1>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <Button 
+              variant="outline" 
+              onClick={fetchTeachers} 
+              disabled={loading}
+              className="w-full sm:w-auto h-10"
+            >
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
-            <Button variant="outline" onClick={downloadTeachersList}>
+            <Button 
+              variant="outline" 
+              onClick={downloadTeachersList}
+              className="w-full sm:w-auto h-10"
+            >
               <Download className="w-4 h-4 mr-2" />
-              Download List
+              <span className="hidden sm:inline">Download List</span>
+              <span className="sm:hidden">Download</span>
             </Button>
           </div>
         </div>
 
         <div className="mb-6 space-y-4">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by name, roll no, department, or subjects..."
+                placeholder="Search teachers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
+                className="pl-10 h-10 text-base"
               />
             </div>
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2"
+              className="border border-gray-300 rounded-md px-3 py-2 h-10 text-base"
             >
               <option value="all">All Departments</option>
               {departments.map(dept => (
@@ -124,78 +134,92 @@ function Teachers() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {filteredTeachers.map(teacher => (
-            <div key={teacher.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div key={teacher._id || teacher.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
               <div className="p-4">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center">
-                    <User className="h-8 w-8 text-gray-500" />
+                <div className="flex items-start space-x-3 mb-4">
+                  <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <User className="h-6 w-6 sm:h-8 sm:w-8 text-gray-500" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold">{teacher.name}</h3>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-base sm:text-lg font-semibold truncate">{teacher.name}</h3>
                       {teacher.isVerified && (
-                        <BadgeCheck className="w-4 h-4 text-green-500" />
+                        <BadgeCheck className="w-4 h-4 text-green-500 flex-shrink-0" />
                       )}
                     </div>
-                    <p className="text-sm text-gray-600">{teacher.designation}</p>
+                    <p className="text-sm text-gray-600 mb-1">{teacher.designation}</p>
                     <p className="text-xs text-gray-500">Roll No: {teacher.rollNo}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex items-center text-sm">
-                    <span className="text-gray-600 w-20">Department:</span>
-                    <span className="font-medium">{teacher.department}</span>
+                    <span className="text-gray-600 w-20 flex-shrink-0">Department:</span>
+                    <span className="font-medium truncate">{teacher.department}</span>
                   </div>
                   
                   <div className="flex items-center text-sm">
-                    <span className="text-gray-600 w-20">Mobile:</span>
-                    <span>{teacher.mobileNo}</span>
+                    <span className="text-gray-600 w-20 flex-shrink-0">Mobile:</span>
+                    <span className="truncate">{teacher.mobileNo}</span>
                   </div>
 
                   <div className="flex items-center text-sm">
-                    <span className="text-gray-600 w-20">Email:</span>
+                    <span className="text-gray-600 w-20 flex-shrink-0">Email:</span>
                     <span className="truncate">{teacher.email}</span>
                   </div>
 
-                  <div className="flex items-start text-sm">
-                    <span className="text-gray-600 w-20">Subjects:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {teacher.subjectChoices.map((subject, index) => (
-                        <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-                          {subject}
-                        </span>
-                      ))}
+                  <div className="space-y-2">
+                    <div className="flex items-start text-sm">
+                      <span className="text-gray-600 w-20 flex-shrink-0">Subjects:</span>
+                      <div className="flex flex-wrap gap-1 flex-1">
+                        {teacher.subjectChoices.slice(0, 3).map((subject, index) => (
+                          <span key={`${teacher._id || teacher.id}-subject-${index}`} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                            {subject}
+                          </span>
+                        ))}
+                        {teacher.subjectChoices.length > 3 && (
+                          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                            +{teacher.subjectChoices.length - 3} more
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start text-sm">
-                    <span className="text-gray-600 w-20">Preferred:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {teacher.preferredDays.map((day, index) => (
-                        <span key={index} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                          {day}
-                        </span>
-                      ))}
+                  <div className="space-y-2">
+                    <div className="flex items-start text-sm">
+                      <span className="text-gray-600 w-20 flex-shrink-0">Preferred:</span>
+                      <div className="flex flex-wrap gap-1 flex-1">
+                        {teacher.preferredDays.slice(0, 3).map((day, index) => (
+                          <span key={`${teacher._id || teacher.id}-day-${index}`} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                            {day}
+                          </span>
+                        ))}
+                        {teacher.preferredDays.length > 3 && (
+                          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                            +{teacher.preferredDays.length - 3} more
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   {teacher.qualification && (
                     <div className="flex items-center text-sm">
-                      <span className="text-gray-600 w-20">Qualification:</span>
-                      <span>{teacher.qualification}</span>
+                      <span className="text-gray-600 w-20 flex-shrink-0">Qualification:</span>
+                      <span className="truncate">{teacher.qualification}</span>
                     </div>
                   )}
 
                   <div className="flex items-center text-sm">
-                    <span className="text-gray-600 w-20">Joined:</span>
+                    <span className="text-gray-600 w-20 flex-shrink-0">Joined:</span>
                     <span>{new Date(teacher.joiningDate).toLocaleDateString()}</span>
                   </div>
 
                   <div className="flex items-center text-sm">
-                    <span className="text-gray-600 w-20">Status:</span>
+                    <span className="text-gray-600 w-20 flex-shrink-0">Status:</span>
                     <span className={`px-2 py-1 text-xs rounded-full ${
                       teacher.isVerified 
                         ? 'bg-green-100 text-green-800' 
@@ -206,12 +230,21 @@ function Teachers() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t flex justify-between">
-                  <Button variant="ghost" className="text-sm" onClick={() => window.location.href = `mailto:${teacher.email}`}>
+                <div className="mt-4 pt-4 border-t flex gap-2">
+                  <Button 
+                    variant="ghost" 
+                    className="flex-1 text-sm h-9" 
+                    onClick={() => window.location.href = `mailto:${teacher.email}`}
+                  >
                     <Mail className="w-4 h-4 mr-2" />
-                    Email
+                    <span className="hidden sm:inline">Email</span>
+                    <span className="sm:hidden">Mail</span>
                   </Button>
-                  <Button variant="ghost" className="text-sm" onClick={() => window.location.href = `tel:${teacher.mobileNo}`}>
+                  <Button 
+                    variant="ghost" 
+                    className="flex-1 text-sm h-9" 
+                    onClick={() => window.location.href = `tel:${teacher.mobileNo}`}
+                  >
                     <Phone className="w-4 h-4 mr-2" />
                     Call
                   </Button>
@@ -222,8 +255,8 @@ function Teachers() {
         </div>
 
         {filteredTeachers.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-gray-500">
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-sm">
               {searchQuery || selectedDepartment !== 'all' 
                 ? 'No teachers found matching your criteria.' 
                 : 'No teachers found.'}

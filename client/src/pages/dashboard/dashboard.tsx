@@ -19,8 +19,6 @@ import { BarChart3 } from "lucide-react";
 
 import { useAttendance } from "@/contexts/attendanceContext";
 
-
-
 function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   // const [presentStudents, setPresentStudents] = useState<PresentPerson[]>([]);
@@ -37,10 +35,10 @@ function Dashboard() {
   const handleCallTeacher = (teacher: Teacher) => {
     if (teacher.mobileNo) {
       // Create a tel: link to initiate the call
-      const phoneNumber = teacher.mobileNo.replace(/\s+/g, ''); // Remove spaces
-      window.open(`tel:${phoneNumber}`, '_self');
+      const phoneNumber = teacher.mobileNo.replace(/\s+/g, ""); // Remove spaces
+      window.open(`tel:${phoneNumber}`, "_self");
     } else {
-      alert('No phone number available for this teacher');
+      alert("No phone number available for this teacher");
     }
   };
 
@@ -56,8 +54,8 @@ function Dashboard() {
         setStats(dashboardData);
         setTeachers(teachersData);
 
-        console.log("Dashboard Data:", dashboardData);
-        console.log("Teachers Data:", teachersData);
+        // console.log("Dashboard Data:", dashboardData);
+        // console.log("Teachers Data:", teachersData);
 
         // Fetch present students
         const today = new Date();
@@ -79,15 +77,20 @@ function Dashboard() {
         }
         // Teachers with today as preferred day
         const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-        console.log("Today's day:", dayName);
-        console.log("All teachers and their preferred days:");
-        teachersData.forEach(teacher => {
-          console.log(`${teacher.name}: ${teacher.preferredDays.join(', ')}`);
-        });
-        
-        const teachersWithTodayPreferred = teachersData.filter((t) => t.preferredDays.includes(dayName));
-        console.log("Teachers preferring today:", teachersWithTodayPreferred.map(t => t.name));
-        
+        // console.log("Today's day:", dayName);
+        // console.log("All teachers and their preferred days:");
+        // teachersData.forEach((teacher) => {
+        // console.log(`${teacher.name}: ${teacher.preferredDays.join(", ")}`);
+        // });
+
+        const teachersWithTodayPreferred = teachersData.filter((t) =>
+          t.preferredDays.includes(dayName)
+        );
+        console.log(
+          "Teachers preferring today:",
+          teachersWithTodayPreferred.map((t) => t.name)
+        );
+
         setPreferredTodayTeachers(teachersWithTodayPreferred);
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
@@ -191,8 +194,6 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-
-        
             </div>
 
             {/* Teachers with today as preferred day */}
@@ -200,19 +201,28 @@ function Dashboard() {
               <h2 className="text-sm sm:text-lg font-semibold mb-2">
                 Teachers and Their Preferred Days
               </h2>
-              
+
               {/* Special section for teachers preferring today */}
               {preferredTodayTeachers.length > 0 && (
                 <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                   <h3 className="text-sm font-medium text-green-800 mb-2">
-                    Teachers Preferring Today ({new Date().toLocaleDateString("en-US", { weekday: "long" })})
+                    Teachers Preferring Today (
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                    })}
+                    )
                   </h3>
                   <div className="space-y-2">
                     {preferredTodayTeachers.map((t) => (
-                      <div key={t.id} className="flex justify-between items-center p-2 bg-white rounded border">
+                      <div
+                        key={t._id}
+                        className="flex justify-between items-center p-2 bg-white rounded border"
+                      >
                         <div>
                           <span className="text-sm font-medium">{t.name}</span>
-                          <span className="text-xs text-gray-500 ml-2">({t.department})</span>
+                          <span className="text-xs text-gray-500 ml-2">
+                            ({t.department})
+                          </span>
                         </div>
                         {t.mobileNo && (
                           <button
@@ -229,14 +239,23 @@ function Dashboard() {
                   </div>
                 </div>
               )}
-              
+
               {teachers.length > 0 ? (
                 <div className="space-y-2">
                   {teachers.map((t) => {
-                    const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+                    const today = new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                    });
                     const prefersToday = t.preferredDays.includes(today);
                     return (
-                      <div key={t.id} className={`p-2 rounded ${prefersToday ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
+                      <div
+                        key={t._id}
+                        className={`p-2 rounded ${
+                          prefersToday
+                            ? "bg-green-50 border border-green-200"
+                            : "bg-gray-50"
+                        }`}
+                      >
                         <div className="flex justify-between items-center">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
@@ -253,7 +272,7 @@ function Dashboard() {
                               )}
                             </div>
                             <div className="text-xs text-gray-600 mt-1">
-                              {t.preferredDays.join(', ')}
+                              {t.preferredDays.join(", ")}
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
@@ -299,7 +318,6 @@ function Dashboard() {
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   View Teacher Report
-                 
                 </Button>
                 <Button
                   onClick={() => navigate("/homework")}
@@ -315,7 +333,6 @@ function Dashboard() {
                 >
                   <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Mark Teacher Attendance
-              
                 </Button>
               </div>
             </div>

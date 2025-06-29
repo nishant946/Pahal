@@ -15,6 +15,7 @@ export const createHomework = async (req, res) => {
       subject,
       description,
       dueDate,
+      dateAssigned: new Date(),
       assignedBy
     });
 

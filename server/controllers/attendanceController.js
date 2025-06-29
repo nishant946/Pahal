@@ -48,7 +48,7 @@ export const getAttendance = async (req, res) => {
   // params example:
   const { userId } = req.params;
   try {
-    const attendanceRecords = await Attendance.find({ user: userId });
+    const attendanceRecords = await Attendance.find({ student: userId });
     res.status(200).json(attendanceRecords);
   } catch (error) {
     console.error("Error fetching attendance records:", error);
