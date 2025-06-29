@@ -127,6 +127,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
   const filteredItems = sidebarItems.filter((item) => {
     if (item.requiresAdmin && !teacher?.isAdmin) return false;
     if (item.requiresVerification && !teacher?.isVerified) return false;
+    if (item.label === 'Settings') return false;
     return true;
   });
 
