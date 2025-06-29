@@ -95,7 +95,7 @@ class DashboardService {
   async getDashboardStats(): Promise<DashboardStats> {
     try {
       const response = await api.get('/dashboard/stats');
-      console.log('Dashboard stats fetched successfully:', response.data);
+      // console.log('Dashboard stats fetched successfully:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);

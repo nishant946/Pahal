@@ -9,8 +9,6 @@ interface VerifiedTeacherProtectedRouteProps {
 const VerifiedTeacherProtectedRoute: React.FC<VerifiedTeacherProtectedRouteProps> = ({ children }) => {
   const { teacher, isLoading } = useTeacherAuth();
 
-  console.log('VerifiedTeacherProtectedRoute - teacher:', teacher, 'isLoading:', isLoading);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -20,16 +18,13 @@ const VerifiedTeacherProtectedRoute: React.FC<VerifiedTeacherProtectedRouteProps
   }
 
   if (!teacher) {
-    console.log('No teacher found, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
   if (!teacher.isVerified) {
-    console.log('Teacher not verified, redirecting to pending verification');
     return <Navigate to="/pending-verification" replace />;
   }
 
-  console.log('Teacher verified, rendering children');
   return <>{children}</>;
 };
 

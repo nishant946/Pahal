@@ -1,7 +1,8 @@
 import api from './api';
 
 export interface Teacher {
-  id: string;
+  _id: string;
+  id?: string;
   rollNo: string;
   name: string;
   mobileNo: string;
@@ -19,7 +20,8 @@ export interface Teacher {
 }
 
 export interface TeacherAttendance {
-  id: string;
+  _id: string;
+  id?: string;
   teacher: Teacher;
   date: string;
   status: 'present' | 'absent';

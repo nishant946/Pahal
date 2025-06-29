@@ -4,14 +4,14 @@ const BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://lo
 const API_URL = `${BASE_URL}/api/v1`;
 
 export const API_URLS = {
-  LOGIN: `${API_URL}/auth/login`,
-  REGISTER: `${API_URL}/auth/register`,
-  FORGOT_PASSWORD: `${API_URL}/auth/forgot-password`,
-  RESET_PASSWORD: `${API_URL}/auth/reset-password`,
-  GET_USER: `${API_URL}/user/get-user`,
-  UPDATE_USER: `${API_URL}/user/update-user`,
-  GET_ALL_USERS: `${API_URL}/user/get-all-users`,
-  GET_USER_BY_ID: (id: string) => `${API_URL}/user/get-user/${id}`,
+    LOGIN: `${API_URL}/auth/login`,
+    REGISTER: `${API_URL}/auth/register`,
+    FORGOT_PASSWORD: `${API_URL}/auth/forgot-password`,
+    RESET_PASSWORD: `${API_URL}/auth/reset-password`,
+    GET_USER: `${API_URL}/user/get-user`,
+    UPDATE_USER: `${API_URL}/user/update-user`,
+    GET_ALL_USERS: `${API_URL}/user/get-all-users`,
+    GET_USER_BY_ID: (id: string) => `${API_URL}/user/get-user/${id}`,
 };
 
 
@@ -25,7 +25,6 @@ const api = axios.create({
 // Add a request interceptor
 api.interceptors.request.use(
     (config) => {
-        console.log('API Request:', config.method?.toUpperCase(), config.url, config.data);
         // Add the teacher token to the headers if it exists
         const token = localStorage.getItem('teacherToken');
         if (token) {
@@ -34,7 +33,7 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
-        console.error('API Request Error:', error);
+        // console.error('API Request Error:', error);
         return Promise.reject(error);
     }
 );
@@ -42,28 +41,27 @@ api.interceptors.request.use(
 // Add a response interceptor
 api.interceptors.response.use(
     (response) => {
-        console.log('API Response:', response.status, response.data);
         return response;
     },
     (error) => {
         console.error('API Response Error:', error.response?.status, error.response?.data);
-        
+
         // Don't redirect on 401 for auth endpoints (login/register)
         const isAuthEndpoint = error.config?.url?.includes('/auth/');
-        
+
         if (error.response?.status === 401 && !isAuthEndpoint) {
             // Clear auth data on unauthorized (but not for auth endpoints)
             localStorage.removeItem('teacherToken');
             localStorage.removeItem('teacher');
             window.location.href = '/login';
         }
-        
+
         if (!error.response) {
             // Handle network error
             console.error('Network error:', error);
             return Promise.reject(new Error('Network error'));
         }
-        
+
         return Promise.reject(error);
     }
 );

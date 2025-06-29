@@ -8,7 +8,7 @@ export interface Homework {
   dueDate: string;
   dateAssigned: string;
   status: 'pending' | 'completed';
-  assignedBy: {
+  assignedBy?: {
     id: string;
     name: string;
     employeeId: string;
@@ -35,6 +35,28 @@ export interface HomeworkStats {
   }>;
 }
 
+// Helper function to transform MongoDB document to frontend format
+const transformHomework = (data: any): Homework => {
+  return {
+    id: data._id || data.id,
+    group: data.group,
+    subject: data.subject,
+    description: data.description,
+    dueDate: data.dueDate,
+    dateAssigned: data.dateAssigned,
+    status: data.status,
+    assignedBy: data.assignedBy ? {
+      id: data.assignedBy._id || data.assignedBy.id,
+      name: data.assignedBy.name,
+      employeeId: data.assignedBy.employeeId,
+      department: data.assignedBy.department
+    } : undefined,
+    attachments: data.attachments,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt
+  };
+};
+
 class HomeworkService {
   // Create new homework
   async createHomework(homeworkData: {
@@ -46,7 +68,7 @@ class HomeworkService {
   }): Promise<Homework> {
     try {
       const response = await api.post('/homework', homeworkData);
-      return response.data;
+      return transformHomework(response.data);
     } catch (error) {
       console.error('Error creating homework:', error);
       throw error;
@@ -57,7 +79,7 @@ class HomeworkService {
   async getAllHomework(): Promise<Homework[]> {
     try {
       const response = await api.get('/homework');
-      return response.data;
+      return response.data.map(transformHomework);
     } catch (error) {
       console.error('Error fetching homework:', error);
       throw error;
@@ -68,7 +90,7 @@ class HomeworkService {
   async getHomeworkByGroup(group: 'A' | 'B' | 'C'): Promise<Homework[]> {
     try {
       const response = await api.get(`/homework/group/${group}`);
-      return response.data;
+      return response.data.map(transformHomework);
     } catch (error) {
       console.error('Error fetching homework by group:', error);
       throw error;
@@ -79,7 +101,7 @@ class HomeworkService {
   async getHomeworkByTeacher(teacherId: string): Promise<Homework[]> {
     try {
       const response = await api.get(`/homework/teacher/${teacherId}`);
-      return response.data;
+      return response.data.map(transformHomework);
     } catch (error) {
       console.error('Error fetching homework by teacher:', error);
       throw error;
@@ -90,7 +112,7 @@ class HomeworkService {
   async getRecentHomework(): Promise<Homework[]> {
     try {
       const response = await api.get('/homework/recent');
-      return response.data;
+      return response.data.map(transformHomework);
     } catch (error) {
       console.error('Error fetching recent homework:', error);
       throw error;
@@ -101,7 +123,7 @@ class HomeworkService {
   async getYesterdayHomework(): Promise<Homework[]> {
     try {
       const response = await api.get('/homework/yesterday');
-      return response.data;
+      return response.data.map(transformHomework);
     } catch (error) {
       console.error('Error fetching yesterday\'s homework:', error);
       throw error;
@@ -123,7 +145,7 @@ class HomeworkService {
   async updateHomework(id: string, updateData: Partial<Homework>): Promise<Homework> {
     try {
       const response = await api.put(`/homework/${id}`, updateData);
-      return response.data;
+      return transformHomework(response.data);
     } catch (error) {
       console.error('Error updating homework:', error);
       throw error;
