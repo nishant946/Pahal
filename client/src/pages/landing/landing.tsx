@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
+import pahalLogo from '../../assets/pahalLogo.png';
 
 function Landing() {
   const navigate = useNavigate()
@@ -39,15 +40,23 @@ function Landing() {
 
         <nav className="absolute top-0 left-0 right-0 z-10 px-6 py-4 flex justify-between items-center backdrop-blur-sm bg-black/10">
           <h1 className={`text-3xl font-bold transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <div className="flex flex-row items-center gap-2">
+              <img
+                src={pahalLogo}
+                alt="Pahal Logo"
+                className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain bg-white shadow"
+              />
+
             <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               पहल
             </span>
+          </div>
           </h1>
           <div className={`space-x-4 transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <Button
               variant="outline"
               onClick={() => navigate('/login')}
-              className="text-white border-white/50 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+              className="text-black border-white/50 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -88,14 +97,6 @@ function Landing() {
                 <span className="relative z-10">Volunteer as Teacher</span>
               </Button>
               
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => navigate('/about')}
-                className="text-white border-white/50 hover:bg-white/20 backdrop-blur-sm px-8 py-4 text-lg font-semibold transition-all duration-300 hover:scale-105"
-              >
-                Learn More
-              </Button>
             </div>
           </div>
         </div>
@@ -238,17 +239,6 @@ function Landing() {
               <span className="relative z-10">Start Teaching Today</span>
             </Button>
             
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => navigate('/contact')}
-              className="text-white border-white/50 hover:bg-white/20 backdrop-blur-sm px-10 py-4 text-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Contact Us
-            </Button>
           </div>
         </div>
       </div>
@@ -256,7 +246,7 @@ function Landing() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="flex flex-col md:flex-row justify-between gap-8">
             <div className="md:col-span-2">
               <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 पहल Initiative
@@ -268,35 +258,13 @@ function Landing() {
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-3 text-gray-400">
-                <li><button onClick={() => navigate('/about')} className="hover:text-white transition-colors duration-200">About Us</button></li>
-                <li><button onClick={() => navigate('/programs')} className="hover:text-white transition-colors duration-200">Programs</button></li>
-                <li><button onClick={() => navigate('/volunteer')} className="hover:text-white transition-colors duration-200">Volunteer</button></li>
-                <li><button onClick={() => navigate('/contact')} className="hover:text-white transition-colors duration-200">Contact</button></li>
-              </ul>
-            </div>
-            <div>
               <h3 className="text-xl font-semibold mb-4">Contact Info</h3>
               <div className="space-y-3 text-gray-400">
                 <p className="flex items-center">
                   <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  contact@pahal.org
-                </p>
-                <p className="flex items-center">
-                  <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Asrong MIT Campus
-                </p>
-                <p className="flex items-center">
-                  <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  +91 XXXXXXXXXX
+                  pahalmit@gmail.com
                 </p>
               </div>
             </div>
