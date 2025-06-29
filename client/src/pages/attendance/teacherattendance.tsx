@@ -77,14 +77,14 @@ function TeacherAttendance() {
       try {
         const statsArr = await Promise.all(
           filteredTeachers.map(teacher =>
-            teacherService.getTeacherAttendanceStats(teacher.id, startDate, endDate)
+            teacherService.getTeacherAttendanceStats(teacher._id, startDate, endDate)
           )
         );
         
         if (isMounted) {
           const statsObj: { [id: string]: TeacherAttendanceStats } = {};
           filteredTeachers.forEach((teacher, i) => {
-            statsObj[teacher.id] = statsArr[i] || { total: 0, present: 0, absent: 0, attendancePercentage: 0 };
+            statsObj[teacher._id] = statsArr[i] || { total: 0, present: 0, absent: 0, attendancePercentage: 0 };
           });
           setTeacherStats(statsObj);
         }
@@ -109,7 +109,7 @@ function TeacherAttendance() {
     
     // Fetch all stats in parallel
     const statsArray = await Promise.all(filteredTeachers.map(teacher =>
-      teacherService.getTeacherAttendanceStats(teacher.id, startDate, endDate)
+      teacherService.getTeacherAttendanceStats(teacher._id, startDate, endDate)
     ));
     
     const csvData = filteredTeachers.map((teacher, i) => {
@@ -209,9 +209,9 @@ function TeacherAttendance() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredTeachers.map(teacher => {
-                const stats = teacherStats[teacher.id] || { total: 0, present: 0, absent: 0, attendancePercentage: 0 };
+                const stats = teacherStats[teacher._id] || { total: 0, present: 0, absent: 0, attendancePercentage: 0 };
                 return (
-                  <tr key={teacher.id}>
+                  <tr key={teacher._id}>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.rollNo}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{teacher.department}</td>
@@ -230,7 +230,7 @@ function TeacherAttendance() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => viewIndividualReport(teacher.id)}
+                        onClick={() => viewIndividualReport(teacher._id)}
                         className="flex items-center gap-1"
                       >
                         <Eye className="w-3 h-3" />

@@ -14,40 +14,70 @@ function Layout({ children }: LayoutProps): React.ReactNode {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
 
+  const closeSidebar = () => {
+    // console.log("Closing sidebar");
+    setIsSidebarOpen(false);
+  };
+
+  const openSidebar = () => {
+    // console.log("Opening sidebar");
+    setIsSidebarOpen(true);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:flex">
+      <div className="hidden md:flex md:w-64">
         {!isAdminRoute && <Sidebar />}
       </div>
 
       {/* Mobile sidebar */}
-      <div className={`fixed inset-0 z-40 md:hidden ${isSidebarOpen ? "block" : "hidden"}`}>
+      <div
+        className={`fixed inset-0 z-50 md:hidden ${
+          isSidebarOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        {/* Overlay */}
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-75"
-          onClick={() => setIsSidebarOpen(false)}
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            isSidebarOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={closeSidebar}
         />
-        <div className="fixed inset-y-0 left-0 flex w-full max-w-xs">
-          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white pt-5 pb-4">
-            <div className="absolute top-0 right-0 -mr-12 pt-2">
+
+        {/* Sidebar panel */}
+        <div
+          className={`fixed inset-y-0 left-0 w-80 max-w-[85vw] transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="relative h-full">
+            {/* Close button */}
+            <div className="absolute top-4 right-4 z-50">
               <Button
                 variant="ghost"
-                className="ml-1 flex h-10 w-10 items-center justify-center rounded-full"
-                onClick={() => setIsSidebarOpen(false)}
+                size="sm"
+                className="h-8 w-8 rounded-full bg-white/90 shadow-lg hover:bg-white"
+                onClick={closeSidebar}
               >
-                <span className="sr-only">Close sidebar</span>
                 <svg
-                  className="h-6 w-6 text-white"
+                  className="h-4 w-4 text-gray-600"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </Button>
             </div>
-            <Sidebar />
+
+            {/* Sidebar content */}
+            <Sidebar onClose={closeSidebar} />
           </div>
         </div>
       </div>
@@ -55,7 +85,7 @@ function Layout({ children }: LayoutProps): React.ReactNode {
       {/* Main content */}
       <div className="flex flex-1 flex-col">
         <div className="sticky top-0 z-10">
-          <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
+          <Navbar onMenuClick={openSidebar} />
         </div>
         <main className="flex-1 overflow-y-auto bg-gray-50 px-2 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
           <div className="mx-auto w-full max-w-7xl">{children}</div>

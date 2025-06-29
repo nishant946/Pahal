@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Bell, Sun, Moon, User, Menu } from "lucide-react";
+import { Sun, Moon, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import pahalLogo from '../../assets/pahalLogo.png';
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -9,7 +10,7 @@ interface NavbarProps {
 
 function Navbar({ onMenuClick }: NavbarProps) {
   const [isDark, setIsDark] = useState(false);
-  const [notifications] = useState(2);
+  // const [notifications] = useState(2);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -41,9 +42,11 @@ function Navbar({ onMenuClick }: NavbarProps) {
 
         {/* Pahal Logo & Title */}
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-sm sm:text-xl">P</span>
-          </div>
+          <img
+            src={pahalLogo}
+            alt="Pahal Logo"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain bg-white shadow"
+          />
           <span className="text-lg sm:text-xl font-bold">Pahal</span>
         </div>
 
@@ -64,7 +67,7 @@ function Navbar({ onMenuClick }: NavbarProps) {
           </Button>
 
           {/* Notifications */}
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="w-8 h-8 sm:w-9 sm:h-9 px-0 relative"
@@ -76,7 +79,7 @@ function Navbar({ onMenuClick }: NavbarProps) {
                 {notifications}
               </span>
             )}
-          </Button>
+          </Button> */}
 
           {/* Profile */}
           <Button
