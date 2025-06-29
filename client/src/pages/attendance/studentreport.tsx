@@ -185,8 +185,8 @@ function StudentReport() {
         </div>
 
         {/* Card/List view for mobile and tablet */}
-        <div className="block lg:hidden">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="block xl:hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
             {filteredStudents.map((student) => {
               const stats = studentStats[student.id] || {
                 totalDays: 0,
@@ -249,7 +249,7 @@ function StudentReport() {
         </div>
 
         {/* Table view for desktop */}
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
