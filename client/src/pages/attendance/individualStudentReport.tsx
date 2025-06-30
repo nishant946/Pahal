@@ -87,7 +87,7 @@ function IndividualStudentReport() {
 
         if (allRecordsResponse.status === 200) {
           actualRecords = allRecordsResponse.data || [];
-          console.log("Actual attendance records for student:", actualRecords);
+          // console.log("Actual attendance records for student:", actualRecords);
         }
 
         // Create attendance records for each day in the range
@@ -133,7 +133,7 @@ function IndividualStudentReport() {
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
 
-        console.log("Final attendance records to display:", sortedRecords);
+        // console.log("Final attendance records to display:", sortedRecords);
         setAttendanceRecords(sortedRecords);
 
         // Use the stats from API
