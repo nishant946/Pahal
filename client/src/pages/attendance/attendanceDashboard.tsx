@@ -1,22 +1,21 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Layout from '@/components/layout/layout'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  Users, 
-  GraduationCap, 
-  UserCheck, 
-  UserX, 
-  TrendingUp, 
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "@/components/layout/layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Users,
+  GraduationCap,
+  UserCheck,
+  UserX,
+  TrendingUp,
   Calendar,
   BarChart3,
   Download,
-  Clock
-} from 'lucide-react'
-import { useAttendance } from '@/contexts/attendanceContext'
-import teacherService from '@/services/teacherService'
-
+  Clock,
+} from "lucide-react";
+import { useAttendance } from "@/contexts/attendanceContext";
+import teacherService from "@/services/teacherService";
 
 interface DashboardStats {
   totalStudents: number;
@@ -31,8 +30,8 @@ interface DashboardStats {
 }
 
 function AttendanceDashboard() {
-  const navigate = useNavigate()
-  const { students, todayAttendance } = useAttendance()
+  const navigate = useNavigate();
+  const { students, todayAttendance } = useAttendance();
   const [stats, setStats] = useState<DashboardStats>({
     totalStudents: 0,
     totalTeachers: 0,
@@ -42,44 +41,50 @@ function AttendanceDashboard() {
     absentTeachers: 0,
     studentAttendancePercentage: 0,
     teacherAttendancePercentage: 0,
-    todayDate: new Date().toISOString().split('T')[0]
-  })
-  const [loading, setLoading] = useState(true)
+    todayDate: new Date().toISOString().split("T")[0],
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardData()
-  }, [students, todayAttendance])
+    fetchDashboardData();
+  }, [students, todayAttendance]);
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true)
-      
+      setLoading(true);
+
+      console.log("Today's Attendance Data:", todayAttendance);
+
       // Fetch teachers
-      const teachersData = await teacherService.getAllTeachers()
+      const teachersData = await teacherService.getAllTeachers();
 
       // Get today's attendance for teachers
-      const todayDate = new Date().toISOString().split('T')[0]
-      let presentTeachers = 0
+      const todayDate = new Date().toISOString().split("T")[0];
+      let presentTeachers = 0;
 
       try {
-        const teacherAttendance = await fetch(`/api/v1/teacher-attendance/date?date=${todayDate}`)
+        const teacherAttendance = await fetch(
+          `/api/v1/teacher-attendance/date?date=${todayDate}`
+        );
         if (teacherAttendance.ok) {
-          const data = await teacherAttendance.json()
-          presentTeachers = data.presentTeachers?.length || 0
+          const data = await teacherAttendance.json();
+          presentTeachers = data.presentTeachers?.length || 0;
         }
       } catch (error) {
-        console.error('Error fetching teacher attendance:', error)
+        console.error("Error fetching teacher attendance:", error);
       }
 
       // Use todayAttendance from context for present students
-      const presentStudents = todayAttendance.presentStudents.length
-      const totalStudents = students.length
-      const totalTeachers = teachersData.length
-      const absentStudents = totalStudents - presentStudents
-      const absentTeachers = totalTeachers - presentTeachers
+      const presentStudents = todayAttendance.presentStudents.length;
+      const totalStudents = students.length;
+      const totalTeachers = teachersData.length;
+      const absentStudents = totalStudents - presentStudents;
+      const absentTeachers = totalTeachers - presentTeachers;
 
-      const studentAttendancePercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0
-      const teacherAttendancePercentage = totalTeachers > 0 ? (presentTeachers / totalTeachers) * 100 : 0
+      const studentAttendancePercentage =
+        totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+      const teacherAttendancePercentage =
+        totalTeachers > 0 ? (presentTeachers / totalTeachers) * 100 : 0;
 
       setStats({
         totalStudents,
@@ -90,14 +95,14 @@ function AttendanceDashboard() {
         absentTeachers,
         studentAttendancePercentage,
         teacherAttendancePercentage,
-        todayDate
-      })
+        todayDate,
+      });
     } catch (error) {
-      console.error('Error fetching dashboard data:', error)
+      console.error("Error fetching dashboard data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const downloadDashboardReport = () => {
     const reportData = {
@@ -110,18 +115,18 @@ function AttendanceDashboard() {
         absentStudents: stats.absentStudents,
         absentTeachers: stats.absentTeachers,
         studentAttendancePercentage: stats.studentAttendancePercentage,
-        teacherAttendancePercentage: stats.teacherAttendancePercentage
-      }
-    }
+        teacherAttendancePercentage: stats.teacherAttendancePercentage,
+      },
+    };
 
-    const jsonString = JSON.stringify(reportData, null, 2)
-    const blob = new Blob([jsonString], { type: 'application/json' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `attendance_dashboard_${stats.todayDate}.json`
-    a.click()
-  }
+    const jsonString = JSON.stringify(reportData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `attendance_dashboard_${stats.todayDate}.json`;
+    a.click();
+  };
 
   if (loading) {
     return (
@@ -132,7 +137,7 @@ function AttendanceDashboard() {
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   return (
@@ -141,17 +146,26 @@ function AttendanceDashboard() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">Attendance Dashboard</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              Attendance Dashboard
+            </h1>
             <p className="text-sm sm:text-base text-gray-600 mt-1">
               Overview for {new Date(stats.todayDate).toLocaleDateString()}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button onClick={downloadDashboardReport} className="w-full sm:w-auto">
+            <Button
+              onClick={downloadDashboardReport}
+              className="w-full sm:w-auto"
+            >
               <Download className="w-4 h-4 mr-2" />
               Download Report
             </Button>
-            <Button variant="outline" onClick={() => navigate('/attendance')} className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/attendance")}
+              className="w-full sm:w-auto"
+            >
               Back to Attendance
             </Button>
           </div>
@@ -167,7 +181,9 @@ function AttendanceDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600">{stats.totalStudents}</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600">
+                {stats.totalStudents}
+              </div>
             </CardContent>
           </Card>
 
@@ -179,7 +195,9 @@ function AttendanceDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600">{stats.totalTeachers}</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600">
+                {stats.totalTeachers}
+              </div>
             </CardContent>
           </Card>
 
@@ -195,7 +213,8 @@ function AttendanceDashboard() {
                 {stats.presentStudents + stats.presentTeachers}
               </div>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                {stats.presentStudents} students, {stats.presentTeachers} teachers
+                {stats.presentStudents} students, {stats.presentTeachers}{" "}
+                teachers
               </p>
             </CardContent>
           </Card>
@@ -231,33 +250,52 @@ function AttendanceDashboard() {
             <CardContent>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-medium">Present</span>
-                  <span className="text-sm sm:text-lg font-semibold text-green-600">{stats.presentStudents}</span>
+                  <span className="text-xs sm:text-sm font-medium">
+                    Present
+                  </span>
+                  <span className="text-sm sm:text-lg font-semibold text-green-600">
+                    {stats.presentStudents}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs sm:text-sm font-medium">Absent</span>
-                  <span className="text-sm sm:text-lg font-semibold text-red-600">{stats.absentStudents}</span>
+                  <span className="text-sm sm:text-lg font-semibold text-red-600">
+                    {stats.absentStudents}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-medium">Attendance Rate</span>
-                  <span className={`text-sm sm:text-lg font-semibold ${
-                    stats.studentAttendancePercentage >= 75 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <span className="text-xs sm:text-sm font-medium">
+                    Attendance Rate
+                  </span>
+                  <span
+                    className={`text-sm sm:text-lg font-semibold ${
+                      stats.studentAttendancePercentage >= 75
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
                     {stats.studentAttendancePercentage.toFixed(1)}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     className={`h-2 rounded-full ${
-                      stats.studentAttendancePercentage >= 75 ? 'bg-green-600' : 'bg-red-600'
+                      stats.studentAttendancePercentage >= 75
+                        ? "bg-green-600"
+                        : "bg-red-600"
                     }`}
-                    style={{ width: `${Math.min(stats.studentAttendancePercentage, 100)}%` }}
+                    style={{
+                      width: `${Math.min(
+                        stats.studentAttendancePercentage,
+                        100
+                      )}%`,
+                    }}
                   ></div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full text-xs sm:text-sm"
-                  onClick={() => navigate('/attendance/studentreport')}
+                  onClick={() => navigate("/attendance/studentreport")}
                 >
                   View Student Report
                 </Button>
@@ -276,37 +314,58 @@ function AttendanceDashboard() {
             <CardContent>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-medium">Present</span>
-                  <span className="text-sm sm:text-lg font-semibold text-green-600">{stats.presentTeachers}</span>
+                  <span className="text-xs sm:text-sm font-medium">
+                    Present
+                  </span>
+                  <span className="text-sm sm:text-lg font-semibold text-green-600">
+                    {stats.presentTeachers}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs sm:text-sm font-medium">Absent</span>
-                  <span className="text-sm sm:text-lg font-semibold text-red-600">{stats.absentTeachers}</span>
+                  <span className="text-sm sm:text-lg font-semibold text-red-600">
+                    {stats.absentTeachers}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-medium">Attendance Rate</span>
-                  <span className={`text-sm sm:text-lg font-semibold ${
-                    stats.teacherAttendancePercentage >= 75 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <span className="text-xs sm:text-sm font-medium">
+                    Attendance Rate
+                  </span>
+                  <span
+                    className={`text-sm sm:text-lg font-semibold ${
+                      stats.teacherAttendancePercentage >= 75
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
                     {stats.teacherAttendancePercentage.toFixed(1)}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     className={`h-2 rounded-full ${
-                      stats.teacherAttendancePercentage >= 75 ? 'bg-green-600' : 'bg-red-600'
+                      stats.teacherAttendancePercentage >= 75
+                        ? "bg-green-600"
+                        : "bg-red-600"
                     }`}
-                    style={{ width: `${Math.min(stats.teacherAttendancePercentage, 100)}%` }}
+                    style={{
+                      width: `${Math.min(
+                        stats.teacherAttendancePercentage,
+                        100
+                      )}%`,
+                    }}
                   ></div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
                   onClick={() => {}}
                   title="Coming soon"
                 >
                   View Teacher Report
-                  <span className="ml-2 text-xs text-gray-400">(Coming soon)</span>
+                  <span className="ml-2 text-xs text-gray-400">
+                    (Coming soon)
+                  </span>
                 </Button>
               </div>
             </CardContent>
@@ -323,17 +382,17 @@ function AttendanceDashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
-                onClick={() => navigate('/attendance/markattendance')}
+                onClick={() => navigate("/attendance/markattendance")}
               >
                 <Calendar className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Mark Student Attendance</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
+                variant="outline"
                 className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
                 onClick={() => {}}
                 title="Coming soon"
@@ -342,18 +401,18 @@ function AttendanceDashboard() {
                 <span>Mark Teacher Attendance</span>
                 <span className="text-xs text-gray-400">(Coming soon)</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
+                variant="outline"
                 className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
-                onClick={() => navigate('/attendance/studentreport')}
+                onClick={() => navigate("/attendance/studentreport")}
               >
                 <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Student Reports</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
+
+              <Button
+                variant="outline"
                 className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
                 onClick={() => {}}
                 title="Coming soon"
@@ -367,7 +426,7 @@ function AttendanceDashboard() {
         </Card>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default AttendanceDashboard 
+export default AttendanceDashboard;
