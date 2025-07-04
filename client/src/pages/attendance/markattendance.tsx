@@ -38,6 +38,20 @@ function MarkAttendance() {
       student.group.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const sortedFilteredStudents = filteredStudents.sort((a, b) => {
+    const groupA = a.rollNumber[0];
+    const groupB = b.rollNumber[0];
+
+    const numberA = parseInt(a.rollNumber.slice(1));
+    const numberB = parseInt(b.rollNumber.slice(1));
+
+    if (groupA === groupB) {
+      return numberA - numberB;
+    } else {
+      return groupA.localeCompare(groupB);
+    }
+  });
+
   const isPresent = (studentId: string) =>
     (todayAttendance?.presentStudents ?? []).some(
       (student) => String(student.id) === String(studentId)
@@ -132,14 +146,14 @@ function MarkAttendance() {
             </div>
 
             {/* Mobile and Desktop Views */}
-            {(filteredStudents ?? []).length === 0 && (
+            {(sortedFilteredStudents ?? []).length === 0 && (
               <div className="p-4 sm:p-8 text-center text-gray-500 text-sm sm:text-base">
                 No students found.
               </div>
             )}
-            {filteredStudents.length > 0 && (
+            {sortedFilteredStudents.length > 0 && (
               <div className="divide-y divide-gray-200">
-                {filteredStudents.map((student) => (
+                {sortedFilteredStudents.map((student) => (
                   <div
                     key={student.id}
                     className={`p-3 sm:p-4 transition-colors ${
