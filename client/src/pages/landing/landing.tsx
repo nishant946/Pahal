@@ -2,14 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import pahalLogo from "../../assets/pahalLogo.png";
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 
 function Landing() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
+  const { teacher } = useTeacherAuth();
 
   useEffect(() => {
+    if (teacher) {
+      navigate("/dashboard");
+    }
     setIsVisible(true);
-  }, []);
+  }, [teacher, navigate]);
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -355,9 +360,9 @@ function Landing() {
                 provides free education to underprivileged children living near
                 the campus especially those who cannot afford formal learning.
                 Our goal is not just to teach, but to show them what education
-                can truly do how it can open doors, build dreams, and
-                transform lives. Because education isn't just a
-                subject it's a spark that can change everything.
+                can truly do how it can open doors, build dreams, and transform
+                lives. Because education isn't just a subject it's a spark that
+                can change everything.
               </p>
             </div>
             <div>
