@@ -1,11 +1,17 @@
-import { useState } from 'react'
-import Layout from '@/components/layout/layout'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Plus, Download, Search, Edit, Trash2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { useAttendance } from '@/contexts/attendanceContext'
+import { useState } from "react";
+import Layout from "@/components/layout/layout";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Plus, Download, Search, Edit, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { useAttendance } from "@/contexts/attendanceContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 interface Student {
   id: string;
@@ -30,16 +36,20 @@ interface Student {
   joinDate: string;
 }
 
-function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => void }) {
+function AddStudentDialog({
+  onAdd,
+}: {
+  onAdd: (student: Omit<Student, "id">) => void;
+}) {
   const [formData, setFormData] = useState({
-    name: '',
-    rollNumber: '',
-    grade: '',
-    group: 'A',
-    contact: '',
-    parentName: '',
-    address: '',
-    joinDate: new Date().toISOString().split('T')[0]
+    name: "",
+    rollNumber: "",
+    grade: "",
+    group: "A",
+    contact: "",
+    parentName: "",
+    address: "",
+    joinDate: new Date().toISOString().split("T")[0],
   });
   const [open, setOpen] = useState(false);
 
@@ -68,7 +78,9 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="name"
                 value={formData.name}
-                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
                 required
               />
             </div>
@@ -77,7 +89,12 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="rollNumber"
                 value={formData.rollNumber}
-                onChange={e => setFormData(prev => ({ ...prev, rollNumber: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    rollNumber: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
@@ -86,7 +103,9 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="grade"
                 value={formData.grade}
-                onChange={e => setFormData(prev => ({ ...prev, grade: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, grade: e.target.value }))
+                }
                 required
               />
             </div>
@@ -96,7 +115,9 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
                 id="group"
                 className="w-full rounded-md border border-input px-3 py-2"
                 value={formData.group}
-                onChange={e => setFormData(prev => ({ ...prev, group: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, group: e.target.value }))
+                }
                 required
               >
                 <option value="A">Group A</option>
@@ -109,7 +130,9 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="contact"
                 value={formData.contact}
-                onChange={e => setFormData(prev => ({ ...prev, contact: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, contact: e.target.value }))
+                }
                 required
               />
             </div>
@@ -118,7 +141,12 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="parentName"
                 value={formData.parentName}
-                onChange={e => setFormData(prev => ({ ...prev, parentName: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    parentName: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
@@ -127,7 +155,9 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
               <Input
                 id="address"
                 value={formData.address}
-                onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, address: e.target.value }))
+                }
                 required
               />
             </div>
@@ -137,24 +167,34 @@ function AddStudentDialog({ onAdd }: { onAdd: (student: Omit<Student, 'id'>) => 
                 id="joinDate"
                 type="date"
                 value={formData.joinDate}
-                onChange={e => setFormData(prev => ({ ...prev, joinDate: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, joinDate: e.target.value }))
+                }
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="w-full">Add Student</Button>
+          <Button type="submit" className="w-full">
+            Add Student
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
 
-function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id: string, student: Omit<Student, 'id'>) => Promise<void> }) {
+function EditStudentDialog({
+  student,
+  onEdit,
+}: {
+  student: Student;
+  onEdit: (id: string, student: Omit<Student, "id">) => Promise<void>;
+}) {
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return '';
+    if (!dateStr) return "";
     // Handles ISO or other formats
     const d = new Date(dateStr);
-    return d.toISOString().split('T')[0];
+    return d.toISOString().split("T")[0];
   };
 
   const [formData, setFormData] = useState({
@@ -165,8 +205,8 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
     contact: student.contact,
     parentName: student.parentName,
     address: student.address,
-    joinDate: formatDate(student.joinDate) 
-  })
+    joinDate: formatDate(student.joinDate),
+  });
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -196,7 +236,9 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="name"
                 value={formData.name}
-                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
                 required
               />
             </div>
@@ -205,7 +247,12 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="rollNumber"
                 value={formData.rollNumber}
-                onChange={e => setFormData(prev => ({ ...prev, rollNumber: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    rollNumber: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
@@ -214,7 +261,9 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="grade"
                 value={formData.grade}
-                onChange={e => setFormData(prev => ({ ...prev, grade: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, grade: e.target.value }))
+                }
                 required
               />
             </div>
@@ -224,7 +273,9 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
                 id="group"
                 className="w-full rounded-md border border-input px-3 py-2"
                 value={formData.group}
-                onChange={e => setFormData(prev => ({ ...prev, group: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, group: e.target.value }))
+                }
                 required
               >
                 <option value="A">Group A</option>
@@ -237,7 +288,9 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="contact"
                 value={formData.contact}
-                onChange={e => setFormData(prev => ({ ...prev, contact: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, contact: e.target.value }))
+                }
                 required
               />
             </div>
@@ -246,7 +299,12 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="parentName"
                 value={formData.parentName}
-                onChange={e => setFormData(prev => ({ ...prev, parentName: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    parentName: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
@@ -255,7 +313,9 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
               <Input
                 id="address"
                 value={formData.address}
-                onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, address: e.target.value }))
+                }
                 required
               />
             </div>
@@ -265,19 +325,29 @@ function EditStudentDialog({ student, onEdit }: { student: Student, onEdit: (id:
                 id="joinDate"
                 type="date"
                 value={formData.joinDate}
-                onChange={e => setFormData(prev => ({ ...prev, joinDate: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, joinDate: e.target.value }))
+                }
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Saving...' : 'Save Changes'}</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Saving..." : "Save Changes"}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
-function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete: (id: string) => Promise<void> }) {
+function DeleteStudentDialog({
+  student,
+  onDelete,
+}: {
+  student: Student;
+  onDelete: (id: string) => Promise<void>;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -299,75 +369,111 @@ function DeleteStudentDialog({ student, onDelete }: { student: Student, onDelete
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Student</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete {student.name}? This action cannot be undone.
+            Are you sure you want to delete {student.name}? This action cannot
+            be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600" disabled={loading}>
-            {loading ? 'Deleting...' : 'Delete'}
+          <AlertDialogAction
+            onClick={handleDelete}
+            className="bg-red-500 hover:bg-red-600"
+            disabled={loading}
+          >
+            {loading ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
 
 function StudentList() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const { students, addStudent, editStudent, deleteStudent } = useAttendance()
+  const [searchQuery, setSearchQuery] = useState("");
+  const { students, addStudent, editStudent, deleteStudent } = useAttendance();
 
   // Wrap edit and delete to return Promise for dialog closing
-  const handleEditStudent = async (id: string, data: Omit<Student, 'id'>) => {
+  const handleEditStudent = async (id: string, data: Omit<Student, "id">) => {
     await editStudent(id, data);
   };
   const handleDeleteStudent = async (id: string) => {
     await deleteStudent(id);
   };
 
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.group.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredStudents = students.filter(
+    (student) =>
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.grade.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.group.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const sortedFilteredStudents = filteredStudents.sort((a, b) => {
+    const groupA = a.rollNumber[0];
+    const groupB = b.rollNumber[0];
+
+    const numberA = parseInt(a.rollNumber.slice(1));
+    const numberB = parseInt(b.rollNumber.slice(1));
+
+    if (groupA === groupB) {
+      return numberA - numberB;
+    } else {
+      return groupA.localeCompare(groupB);
+    }
+  });
 
   const downloadStudentsList = () => {
-    const headers = ['Name', 'Roll Number', 'Grade', 'Group', 'Contact', "Parent's Name", 'Address', 'Join Date']
-    const csvData = filteredStudents.map(student => [
-      student.name,
-      student.rollNumber,
-      student.grade,
-      student.group,
-      student.contact,
-      student.parentName,
-      student.address,
-      student.joinDate
-    ].join(','))
-    
-    const csv = [headers.join(','), ...csvData].join('\n')
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    const timestamp = new Date().toISOString().split('T')[0]
-    a.href = url
-    a.download = `students_list_${timestamp}.csv`
-    a.click()
-  }
+    const headers = [
+      "Name",
+      "Roll Number",
+      "Grade",
+      "Group",
+      "Contact",
+      "Parent's Name",
+      "Address",
+      "Join Date",
+    ];
+    const csvData = filteredStudents.map((student) =>
+      [
+        student.name,
+        student.rollNumber,
+        student.grade,
+        student.group,
+        student.contact,
+        student.parentName,
+        student.address,
+        student.joinDate,
+      ].join(",")
+    );
+
+    const csv = [headers.join(","), ...csvData].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const timestamp = new Date().toISOString().split("T")[0];
+    a.href = url;
+    a.download = `students_list_${timestamp}.csv`;
+    a.click();
+  };
 
   return (
     <Layout>
-      <div className="p-6">        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="p-6">
+        {" "}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Students List</h1>
           <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
             <AddStudentDialog onAdd={addStudent} />
-            <Button variant="outline" onClick={downloadStudentsList} className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={downloadStudentsList}
+              className="w-full sm:w-auto"
+            >
               <Download className="w-4 h-4 mr-2" />
               Download List
             </Button>
           </div>
         </div>
-
         <div className="mb-6">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -379,54 +485,70 @@ function StudentList() {
             />
           </div>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStudents.map(student => (
-            <div key={student.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          {sortedFilteredStudents.map((student) => (
+            <div
+              key={student.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
               <div className="p-4">
                 <div className="flex justify-between items-start">
                   <h3 className="text-lg font-semibold">{student.name}</h3>
                   <div className="flex gap-1">
-                    <EditStudentDialog student={student} onEdit={handleEditStudent} />
-                    <DeleteStudentDialog student={student} onDelete={handleDeleteStudent} />
+                    <EditStudentDialog
+                      student={student}
+                      onEdit={handleEditStudent}
+                    />
+                    <DeleteStudentDialog
+                      student={student}
+                      onDelete={handleDeleteStudent}
+                    />
                   </div>
                 </div>
                 <div className="mt-2 space-y-1">
                   <p className="text-sm">
-                    <span className="text-gray-600">Roll Number:</span> {student.rollNumber}
+                    <span className="text-gray-600">Roll Number:</span>{" "}
+                    {student.rollNumber}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Grade:</span> {student.grade}
+                    <span className="text-gray-600">Grade:</span>{" "}
+                    {student.grade}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Group:</span> {student.group}
+                    <span className="text-gray-600">Group:</span>{" "}
+                    {student.group}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Contact:</span> {student.contact}
+                    <span className="text-gray-600">Contact:</span>{" "}
+                    {student.contact}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Parent:</span> {student.parentName}
+                    <span className="text-gray-600">Parent:</span>{" "}
+                    {student.parentName}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Address:</span> {student.address}
+                    <span className="text-gray-600">Address:</span>{" "}
+                    {student.address}
                   </p>
                   <p className="text-sm">
-                    <span className="text-gray-600">Join Date:</span> {(new Date(student.joinDate)).toLocaleDateString()}
+                    <span className="text-gray-600">Join Date:</span>{" "}
+                    {new Date(student.joinDate).toLocaleDateString()}
                   </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
         {filteredStudents.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">No students found matching your search.</p>
+            <p className="text-gray-500">
+              No students found matching your search.
+            </p>
           </div>
         )}
       </div>
     </Layout>
-  )
+  );
 }
 
-export default StudentList
+export default StudentList;
