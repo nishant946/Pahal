@@ -119,7 +119,7 @@ function Dashboard() {
             Dashboard
           </h1>
           <p className="text-sm sm:text-base text-gray-600">
-            Welcome to your school management dashboard
+            Welcome to Pahal management dashboard
           </p>
         </div>
 
