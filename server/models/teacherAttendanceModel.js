@@ -28,10 +28,10 @@ const TeacherAttendanceSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  notes: {
-    type: String,
-    trim: true
-  }
+  // notes: {
+  //   type: String,
+  //   trim: true
+  // }
 });
 
 // Compound index to ensure one attendance record per teacher per date

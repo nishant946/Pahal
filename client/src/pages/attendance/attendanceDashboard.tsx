@@ -393,13 +393,11 @@ function AttendanceDashboard() {
 
               <Button
                 variant="outline"
-                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
-                onClick={() => {}}
-                title="Coming soon"
+                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
+                onClick={() => navigate("/attendance/markteacherattendance")}
               >
                 <Clock className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Mark Teacher Attendance</span>
-                <span className="text-xs text-gray-400">(Coming soon)</span>
               </Button>
 
               <Button
@@ -413,13 +411,11 @@ function AttendanceDashboard() {
 
               <Button
                 variant="outline"
-                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
-                onClick={() => {}}
-                title="Coming soon"
+                className="h-16 sm:h-20 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm "
+                onClick={() => navigate("/attendance/teacherattendance")}
               >
                 <BarChart3 className="w-4 h-4 sm:w-6 sm:h-6" />
                 <span>Teacher Reports</span>
-                <span className="text-xs text-gray-400">(Coming soon)</span>
               </Button>
             </div>
           </CardContent>

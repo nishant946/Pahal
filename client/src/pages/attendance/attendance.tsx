@@ -90,8 +90,8 @@ function Attendance() {
               Teacher Attendance
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Link to="/attendance/markteacherattendance" tabIndex={-1} title="Coming soon">
-                <Card className="hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50 relative">
+              <Link to="/attendance/markteacherattendance">
+                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Mark Teacher Attendance</CardTitle>
                   </CardHeader>
@@ -104,8 +104,8 @@ function Attendance() {
                 </Card>
               </Link>
 
-              <Link to="/attendance/todayteacherattendance" tabIndex={-1} title="Coming soon">
-                <Card className="hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50 relative">
+              <Link to="/attendance/todayteacherattendance">
+                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Today's Teacher Attendance</CardTitle>
                   </CardHeader>
@@ -118,8 +118,8 @@ function Attendance() {
                 </Card>
               </Link>
 
-              <Link to="/attendance/teacherattendance" tabIndex={-1} title="Coming soon">
-                <Card className="hover:bg-gray-50 transition-colors cursor-not-allowed opacity-50 relative">
+              <Link to="/attendance/teacherattendance">
+                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Teacher Reports</CardTitle>
                   </CardHeader>
