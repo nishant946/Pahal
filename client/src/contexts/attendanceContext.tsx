@@ -4,6 +4,7 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 
 interface Student {
@@ -67,7 +68,19 @@ interface AttendanceHistory {
   };
 }
 
+interface TeacherAttendanceRecord {
+  date: string;
+  presentTeachers: Array<{
+    id: string;
+    name: string;
+    employeeId: string;
+    department: string;
+    timeMarked: string;
+  }>;
+}
+
 interface AttendanceContextType {
+  teacherAttendanceRecord: TeacherAttendanceRecord;
   students: Student[];
   teachers: Teacher[];
   todayAttendance: AttendanceRecord;
@@ -79,6 +92,7 @@ interface AttendanceContextType {
   editTeacher: (id: string, teacher: Omit<Teacher, "id">) => void;
   deleteTeacher: (id: string) => void;
   markStudentAttendance: (studentId: string) => void;
+  getTodaysTeacherAttendance: () => void;
   markTeacherAttendance: (teacherId: string) => void;
   getTodayAttendance: () => Promise<AttendanceRecord | undefined>;
   unmarkStudentAttendance: (studentId: string) => void;
@@ -581,6 +595,29 @@ export function AttendanceProvider({
     }
   };
 
+  const getTodaysTeacherAttendance = useCallback(async () => {
+    const today = new Date().toISOString().split("T")[0];
+    console.log("Fetching today's teacher attendance for date:", today);
+    try {
+      const response = await api.get(`/teacher-attendance/date?date=${today}`);
+      console.log("Response from getTodaysTeacherAttendance:", response);
+      if (response.status === 200) {
+        setTodayAttendance((prev) => ({
+          ...prev,
+          presentTeachers: response.data.presentTeachers || [],
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching today's teacher attendance:", error);
+    }
+  }, []);
+
+  // Initialize teacherAttendanceRecord with default values
+  const teacherAttendanceRecord: TeacherAttendanceRecord = {
+    date: todayAttendance.date,
+    presentTeachers: todayAttendance.presentTeachers,
+  };
+
   return (
     <AttendanceContext.Provider
       value={{
@@ -588,6 +625,7 @@ export function AttendanceProvider({
         teachers,
         todayAttendance,
         attendanceHistory,
+        teacherAttendanceRecord,
         addStudent,
         editStudent,
         deleteStudent,
@@ -600,6 +638,7 @@ export function AttendanceProvider({
         unmarkTeacherAttendance,
         getTodayAttendance,
         getStudentAttendanceStats,
+        getTodaysTeacherAttendance,
         getTeacherAttendanceStats,
       }}
     >

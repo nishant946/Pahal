@@ -63,6 +63,7 @@ export const getTeacherAttendance = async (req, res) => {
 };
 
 export const getPresentTeachersByDate = async (req, res) => {
+  console.log("Get present teachers by date request received:", req.query);
   const { date } = req.query;
   if (!date) {
     return res
@@ -93,6 +94,8 @@ export const getPresentTeachersByDate = async (req, res) => {
         timeMarked: record.timeMarked,
         timeIn: record.timeIn,
       }));
+
+      console.log("Present teachers on", date, ":", presentTeachers);
 
     res.status(200).json({
       date,
