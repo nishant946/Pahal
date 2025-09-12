@@ -125,18 +125,25 @@ function MarkTeacherAttendance() {
   const presentCount = teachers.filter(t => t.isPresent).length
   const absentCount = teachers.filter(t => !t.isPresent).length
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="p-6 relative">
-          <div className="absolute inset-0 bg-gray-100 bg-opacity-80 z-10 flex flex-col items-center justify-center" style={{ pointerEvents: 'auto' }}>
-            <div className="text-2xl font-bold text-gray-500 mb-2">Coming soon</div>
-            <div className="text-sm text-gray-400">This feature will be available in a future update.</div>
-          </div>
+if (loading) {
+  return (
+    <Layout>
+      <div className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="border rounded-lg p-4 animate-pulse">
+              <div className="h-6 bg-gray-300 rounded w-1/2 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
         </div>
-      </Layout>
-    )
-  }
+      </div>
+    </Layout>
+  )
+}
+
 
   return (
     <Layout>
