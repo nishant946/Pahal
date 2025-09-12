@@ -31,6 +31,7 @@ const ProgressPage: React.FC = () => {
   useEffect(() => {
     const fetchStudentsAndProgress = async () => {
       const data = await getStudents();
+      console.log("Fetched students data:", data);
       let studentsList = [];
       if (Array.isArray(data)) studentsList = data;
       else if (Array.isArray(data.students)) studentsList = data.students;
@@ -106,6 +107,8 @@ const ProgressPage: React.FC = () => {
       }
     }
   };
+
+  console.log("Rendering ProgressPage with students:", students);
 
   return (
     <Layout>
