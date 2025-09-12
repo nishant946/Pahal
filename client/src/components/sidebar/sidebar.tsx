@@ -1,12 +1,10 @@
 import { cn } from "@/lib/utils";
 import {
-  Book,
   Calendar,
   Home,
   LogOut,
   Settings,
   User,
-  Image,
   Heart,
   BookOpen,
   Shield,
@@ -95,24 +93,6 @@ const Sidebar = ({ onClose }: SidebarProps) => {
               requiresVerification: true,
             },
           {
-            label: "Gallery",
-            icon: <Image className="w-5 h-5" />,
-            href: "/gallery",
-            requiresVerification: true,
-          },
-          {
-            label: "Contributors",
-            icon: <Heart className="w-5 h-5" />,
-            href: "/contributors",
-            requiresVerification: true,
-          },
-          {
-            label: "Syllabus",
-            icon: <Book className="w-5 h-5" />,
-            href: "/syllabus",
-            requiresVerification: true,
-          },
-          {
             label: "Settings",
             icon: <Settings className="w-5 h-5" />,
             href: "/settings",
@@ -121,7 +101,12 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         ]
       : []),
 
-    // Common items
+    // Common items (available to everyone)
+    {
+      label: "Contributors",
+      icon: <Heart className="w-5 h-5" />,
+      href: "/contributors",
+    },
     {
       label: "Logout",
       icon: <LogOut className="w-5 h-5 text-red-500" />,
@@ -158,9 +143,6 @@ const Sidebar = ({ onClose }: SidebarProps) => {
           {filteredItems.map((item, i) => {
             // Dim these features for teachers
             const dimmed = [
-              "/gallery",
-              "/contributors",
-              "/syllabus",
               "/settings",
             ].includes(item.href);
             return item.href === "/admin" || item.href === "/logout" ? (

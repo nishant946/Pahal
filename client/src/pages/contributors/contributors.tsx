@@ -1,321 +1,228 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '@/components/layout/layout';
-import { Card, CardContent, } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Upload, X, Linkedin, Twitter, Globe } from 'lucide-react';
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
-
-interface Contributor {
-  id: string;
-  name: string;
-  role: string;
-  imageUrl: string;
-  bio: string;
-  year: string;
-  isInitiator: boolean;
-  socialLinks?: {
-    linkedin?: string;
-    twitter?: string;
-    website?: string;
-  };
-}
-
-// Temporary mock data - replace with actual API data later
-const mockContributors: Contributor[] = [
-  {
-    id: '1',
-    name: 'Dr. Rajesh Kumar',
-    role: 'Founder & Initiative Lead',
-    imageUrl: 'https://source.unsplash.com/random/400x400?portrait',
-    bio: 'Started Pahal with a vision to transform education in rural areas',
-    year: '2020',
-    isInitiator: true,
-    socialLinks: {
-      linkedin: 'https://linkedin.com/in/rajeshkumar',
-      twitter: 'https://twitter.com/rajeshkumar',
-      website: 'https://rajeshkumar.com'
-    }
-  },
-  {
-    id: '2',
-    name: 'Priya Sharma',
-    role: 'Education Coordinator',
-    imageUrl: 'https://source.unsplash.com/random/400x400?woman',
-    bio: 'Dedicated volunteer who helped establish our first learning center',
-    year: '2021',
-    isInitiator: false,
-    socialLinks: {
-      linkedin: 'https://linkedin.com/in/priyasharma'
-    }
-  }
-];
-
-function AddContributorDialog() {
-  const [formData, setFormData] = useState({
-    name: '',
-    role: '',
-    bio: '',
-    year: new Date().getFullYear().toString(),
-    isInitiator: false,
-    image: null as File | null,
-    linkedin: '',
-    twitter: '',
-    website: ''
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement contributor addition logic
-  };
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Contributor
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Add New Contributor</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Photo</label>
-            <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center">
-              {formData.image ? (
-                <div className="relative w-full">
-                  <img
-                    src={URL.createObjectURL(formData.image)}
-                    alt="Preview"
-                    className="w-32 h-32 object-cover rounded-full mx-auto"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, image: null }))}
-                    className="absolute top-0 right-1/2 translate-x-16 -translate-y-2 p-1 bg-red-500 text-white rounded-full"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                  <label className="cursor-pointer">
-                    <span className="text-blue-500 hover:text-blue-600">Click to upload</span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          setFormData(prev => ({ ...prev, image: file }));
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Role</label>
-              <input
-                type="text"
-                value={formData.role}
-                onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Bio</label>
-            <textarea
-              value={formData.bio}
-              onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-              className="w-full rounded-md border p-2 min-h-[100px]"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Year</label>
-              <input
-                type="text"
-                value={formData.year}
-                onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                required
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="isInitiator"
-                checked={formData.isInitiator}
-                onChange={(e) => setFormData(prev => ({ ...prev, isInitiator: e.target.checked }))}
-                className="rounded border-gray-300"
-              />
-              <label htmlFor="isInitiator" className="text-sm font-medium">
-                Initiator/Founder
-              </label>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium">Social Links (Optional)</h4>
-            <div className="space-y-2">
-              <label className="text-sm">LinkedIn Profile</label>
-              <input
-                type="url"
-                value={formData.linkedin}
-                onChange={(e) => setFormData(prev => ({ ...prev, linkedin: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                placeholder="https://linkedin.com/in/username"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm">Twitter Profile</label>
-              <input
-                type="url"
-                value={formData.twitter}
-                onChange={(e) => setFormData(prev => ({ ...prev, twitter: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                placeholder="https://twitter.com/username"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm">Website</label>
-              <input
-                type="url"
-                value={formData.website}
-                onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
-                className="w-full rounded-md border p-2"
-                placeholder="https://example.com"
-              />
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full">Add Contributor</Button>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import { Linkedin, Globe, Github, Mail } from 'lucide-react';
+import { getContributors, type Contributor } from '@/services/contributorService';
 
 export default function Contributors() {
-  const { teacher } = useTeacherAuth();
-  const initiators = mockContributors.filter(c => c.isInitiator);
-  const pastVolunteers = mockContributors.filter(c => !c.isInitiator);
+  const [contributors, setContributors] = useState<Contributor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch contributors on component mount
+  useEffect(() => {
+    const fetchContributors = async () => {
+      try {
+        setLoading(true);
+        const data = await getContributors();
+        setContributors(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error fetching contributors:', err);
+        setError('Failed to load contributors');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContributors();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading contributors...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <div className="p-6 space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Our Team</h1>
-            <p className="mt-1 text-sm text-gray-500">Meet the people behind Pahal</p>
-          </div>
-          {teacher?.isAdmin && <AddContributorDialog />}
+      <div className="p-4 lg:p-8">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Our Contributors
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Meet the passionate individuals who have made Pahal possible. Their dedication, 
+            expertise, and commitment to education continue to drive our mission forward.
+          </p>
         </div>
 
-        {/* Initiators Section */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">Initiators</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {initiators.map((person) => (
-              <Card key={person.id} className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center">
-                    <img
-                      src={person.imageUrl}
-                      alt={person.name}
-                      className="w-32 h-32 rounded-full object-cover mb-4"
-                    />
-                    <h3 className="font-semibold text-lg">{person.name}</h3>
-                    <p className="text-sm text-blue-600 mb-2">{person.role}</p>
-                    <p className="text-sm text-gray-600 mb-4">{person.bio}</p>
-                    {person.socialLinks && (
-                      <div className="flex space-x-4">
-                        {person.socialLinks.linkedin && (
-                          <a href={person.socialLinks.linkedin} target="_blank" rel="noopener noreferrer"
-                             className="text-gray-600 hover:text-blue-600">
-                            <Linkedin className="w-5 h-5" />
-                          </a>
-                        )}
-                        {person.socialLinks.twitter && (
-                          <a href={person.socialLinks.twitter} target="_blank" rel="noopener noreferrer"
-                             className="text-gray-600 hover:text-blue-400">
-                            <Twitter className="w-5 h-5" />
-                          </a>
-                        )}
-                        {person.socialLinks.website && (
-                          <a href={person.socialLinks.website} target="_blank" rel="noopener noreferrer"
-                             className="text-gray-600 hover:text-gray-900">
-                            <Globe className="w-5 h-5" />
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+        {contributors.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No contributors to display at the moment.</p>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Initiators Section */}
+            <div className="mb-16">
+              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+                Initiative Founders
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {contributors
+                  .filter(contributor => contributor.role.toLowerCase().includes('founder') || 
+                                       contributor.role.toLowerCase().includes('initiator'))
+                  .map((contributor) => (
+                    <ContributorCard key={contributor._id} contributor={contributor} isFounder={true} />
+                  ))}
+              </div>
+            </div>
 
-        {/* Past Volunteers Section */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">Past Volunteers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pastVolunteers.map((person) => (
-              <Card key={person.id} className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center">
-                    <img
-                      src={person.imageUrl}
-                      alt={person.name}
-                      className="w-24 h-24 rounded-full object-cover mb-4"
-                    />
-                    <h3 className="font-semibold">{person.name}</h3>
-                    <p className="text-sm text-blue-600 mb-1">{person.role}</p>
-                    <p className="text-xs text-gray-500 mb-2">{person.year}</p>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{person.bio}</p>
-                    {person.socialLinks && (
-                      <div className="flex space-x-4">
-                        {person.socialLinks.linkedin && (
-                          <a href={person.socialLinks.linkedin} target="_blank" rel="noopener noreferrer"
-                             className="text-gray-600 hover:text-blue-600">
-                            <Linkedin className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+            {/* Other Contributors Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+                Contributors
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {contributors
+                  .filter(contributor => !contributor.role.toLowerCase().includes('founder') && 
+                                       !contributor.role.toLowerCase().includes('initiator'))
+                  .map((contributor) => (
+                    <ContributorCard key={contributor._id} contributor={contributor} isFounder={false} />
+                  ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </Layout>
+  );
+}
+
+interface ContributorCardProps {
+  contributor: Contributor;
+  isFounder?: boolean;
+}
+
+function ContributorCard({ contributor, isFounder = false }: ContributorCardProps) {
+  return (
+    <Card className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+      isFounder ? 'border-primary/20 bg-gradient-to-br from-primary/5 to-transparent' : ''
+    }`}>
+      <CardContent className="p-6">
+        <div className="text-center">
+          {/* Profile Image */}
+          <div className="relative mx-auto mb-4 w-24 h-24">
+            {contributor.image ? (
+              <img
+                src={contributor.image}
+                alt={contributor.name}
+                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center border-4 border-white shadow-lg">
+                <span className="text-white font-bold text-2xl">
+                  {contributor.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                </span>
+              </div>
+            )}
+            {isFounder && (
+              <div className="absolute -top-2 -right-2 bg-primary text-white text-xs px-2 py-1 rounded-full shadow-md">
+                Founder
+              </div>
+            )}
+          </div>
+
+          {/* Name and Role */}
+          <h3 className="text-xl font-bold text-gray-900 mb-1">{contributor.name}</h3>
+          <p className="text-primary font-medium mb-2">{contributor.role}</p>
+
+          {/* Batch and Branch */}
+          {(contributor.batch || contributor.branch) && (
+            <div className="mb-3 space-y-1">
+              {contributor.batch && (
+                <p className="text-sm text-gray-500 font-medium">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700">
+                    Batch: {contributor.batch}
+                  </span>
+                </p>
+              )}
+              {contributor.branch && (
+                <p className="text-sm text-gray-500 font-medium">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-50 text-green-700">
+                    {contributor.branch}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Bio */}
+          <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+            {contributor.description}
+          </p>
+
+          {/* Social Links */}
+          <div className="flex justify-center space-x-3">
+            {contributor.linkedinUrl && (
+              <a
+                href={contributor.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                title="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+            )}
+            {contributor.githubUrl && (
+              <a
+                href={contributor.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                title="GitHub"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+            )}
+            {contributor.websiteUrl && (
+              <a
+                href={contributor.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+                title="Website"
+              >
+                <Globe className="w-5 h-5" />
+              </a>
+            )}
+            {contributor.email && (
+              <a
+                href={`mailto:${contributor.email}`}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                title="Email"
+              >
+                <Mail className="w-5 h-5" />
+              </a>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

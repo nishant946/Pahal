@@ -12,7 +12,12 @@ import {
   getAllTeachersForAdmin,
   getTeacherStatsByDepartment,
   getAttendanceOverview,
-  getHomeworkOverview
+  getHomeworkOverview,
+  getAttendanceAnalytics,
+  getStudentsByDate,
+  getTeacherAttendanceOverview,
+  getTeacherAttendanceAnalytics,
+  getTeachersByDate
 } from '../../controllers/adminController.js';
 import { requireAdminAccess } from '../../middlewares/auth.middleware.js';
 
@@ -32,6 +37,11 @@ adminRoutes.get('/teachers/stats/department', requireAdminAccess, getTeacherStat
 
 // Overview routes
 adminRoutes.get('/attendance/overview', requireAdminAccess, getAttendanceOverview);
+adminRoutes.get('/attendance/analytics', requireAdminAccess, getAttendanceAnalytics);
+adminRoutes.get('/attendance/students', requireAdminAccess, getStudentsByDate);
+adminRoutes.get('/teacher-attendance/overview', requireAdminAccess, getTeacherAttendanceOverview);
+adminRoutes.get('/teacher-attendance/analytics', requireAdminAccess, getTeacherAttendanceAnalytics);
+adminRoutes.get('/teacher-attendance/teachers', requireAdminAccess, getTeachersByDate);
 adminRoutes.get('/homework/overview', requireAdminAccess, getHomeworkOverview);
 
 export default adminRoutes;

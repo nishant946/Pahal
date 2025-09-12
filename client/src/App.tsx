@@ -7,9 +7,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import Landing from "./pages/landing/landing";
 import StudentList from "./pages/student/studentlist";
 import Settings from "./pages/settings/settings";
-import Gallery from "./pages/gallery/gallery";
 import Contributors from "./pages/contributors/contributors";
-import Syllabus from "./pages/syllabus/syllabus";
 import Attendance from "./pages/attendance/attendance";
 import MarkAttendance from "./pages/attendance/markattendance";
 import TodayAttendance from "./pages/attendance/todayattendance";
@@ -31,7 +29,6 @@ import TeacherManagement from "./pages/admin/TeacherManagement";
 import TeacherVerification from "./pages/admin/TeacherVerification";
 import AdminContributors from "./pages/admin/AdminContributors";
 import AttendanceOverview from "./pages/admin/attendanceoverview";
-import GalleryManagement from "./pages/admin/gallary";
 import AdminSettings from "./pages/admin/settings";
 import AttendanceDashboard from "./pages/attendance/attendanceDashboard";
 import IndividualStudentReport from "./pages/attendance/individualStudentReport";
@@ -63,7 +60,6 @@ function App() {
                   />
                   <Route path="contributors" element={<AdminContributors />} />
                   <Route path="attendance" element={<AttendanceOverview />} />
-                  <Route path="gallary" element={<GalleryManagement />} />
                   <Route path="settings" element={<AdminSettings />} />
 
                   {/* More nested routes can go here */}
@@ -117,31 +113,7 @@ function App() {
                     </VerifiedTeacherProtectedRoute>
                   }
                 />
-                <Route
-                  path="/gallery"
-                  element={
-                    <VerifiedTeacherProtectedRoute>
-                      <Gallery />
-                    </VerifiedTeacherProtectedRoute>
-                  }
-                />{" "}
-                <Route
-                  path="/contributors"
-                  element={
-                    <VerifiedTeacherProtectedRoute>
-                      <Contributors />
-                    </VerifiedTeacherProtectedRoute>
-                  }
-                  
-                />
-                <Route
-                  path="/syllabus"
-                  element={
-                    <VerifiedTeacherProtectedRoute>
-                      <Syllabus />
-                    </VerifiedTeacherProtectedRoute>
-                  }
-                />
+                <Route path="/contributors" element={<Contributors />} />
                 <Route path="/logout" element={<Logout />} />
                 {/* Attendance Routes */}
                 <Route

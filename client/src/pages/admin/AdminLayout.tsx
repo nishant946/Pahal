@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
-import { LogOut, Shield, Users, Calendar, Settings, Heart, Image } from "lucide-react";
+import { LogOut, Shield, Users, Calendar, Settings, Heart } from "lucide-react";
 
 const AdminLayout = () => {
   const { teacher, logout } = useTeacherAuth();
@@ -14,10 +14,8 @@ const AdminLayout = () => {
   const adminNavItems = [
     { label: "Dashboard", href: "/admin", icon: <Shield className="w-4 h-4" /> },
     { label: "Teacher Management", href: "/admin/teachers", icon: <Users className="w-4 h-4" /> },
-    { label: "Teacher Verification", href: "/admin/verification", icon: <Users className="w-4 h-4" /> },
     { label: "Attendance Overview", href: "/admin/attendance", icon: <Calendar className="w-4 h-4" /> },
     { label: "Contributors", href: "/admin/contributors", icon: <Heart className="w-4 h-4" /> },
-    { label: "Gallery Management", href: "/admin/gallery", icon: <Image className="w-4 h-4" /> },
     { label: "Settings", href: "/admin/settings", icon: <Settings className="w-4 h-4" /> },
   ];
 
