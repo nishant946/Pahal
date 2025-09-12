@@ -36,7 +36,8 @@ function TeacherAttendance() {
       teacher.department.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     [teachers, searchQuery]
-  );
+  )
+  .sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
     const fetchTeachers = async () => {

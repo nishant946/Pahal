@@ -58,11 +58,21 @@ function MarkTeacherAttendance() {
     fetchTeachers()
   }, [todayDate])
 
-  const filteredTeachers = teachers.filter(teacher =>
-    teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    teacher.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    teacher.department.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // const filteredTeachers = teachers.filter(teacher =>
+  //   teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //   teacher.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //   teacher.department.toLowerCase().includes(searchQuery.toLowerCase())
+  // )
+    // Filter teachers
+  const filteredTeachers = teachers
+    .filter(teacher =>
+      teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.department.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    // ✅ Sort alphabetically by teacher name
+    .sort((a, b) => a.name.localeCompare(b.name));
+
 
   const markAttendance = async (teacherId: string, status: 'present' | 'absent') => {
     try {
