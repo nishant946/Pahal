@@ -88,6 +88,12 @@ const Sidebar = ({ onClose }: SidebarProps) => {
             href: "/homework",
             requiresVerification: true,
           },
+            {
+              label: "Progress",
+              icon: <BookOpen className="w-5 h-5" />,
+              href: "/progress",
+              requiresVerification: true,
+            },
           {
             label: "Gallery",
             icon: <Image className="w-5 h-5" />,

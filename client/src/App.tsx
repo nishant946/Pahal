@@ -16,9 +16,10 @@ import TodayAttendance from "./pages/attendance/todayattendance";
 import MarkTeacherAttendance from "./pages/attendance/markteacherattendance";
 import TeacherAttendance from "./pages/attendance/teacherattendance";
 import StudentReport from "./pages/attendance/studentreport";
-import TodayTeacherAttendance from "./pages/attendance/todayteacherattendance";
+import TodayTeacherAttendance from "./pages/attendance/todayattendance";
 import Teachers from "./pages/teacher/teachers";
 import Homework from "./pages/homework/homework";
+import ProgressPage from "./pages/progress/index";
 import { AttendanceProvider } from "./contexts/attendanceContext";
 import { TeacherAuthProvider } from "./contexts/teacherAuthContext";
 import { HomeworkProvider } from "./contexts/homeworkContext";
@@ -91,6 +92,14 @@ function App() {
                     </VerifiedTeacherProtectedRoute>
                   }
                 />{" "}
+                  <Route
+                    path="/progress"
+                    element={
+                      <VerifiedTeacherProtectedRoute>
+                        <ProgressPage />
+                      </VerifiedTeacherProtectedRoute>
+                    }
+                  />
                 <Route
                   path="/view-all-students"
                   element={
@@ -123,6 +132,7 @@ function App() {
                       <Contributors />
                     </VerifiedTeacherProtectedRoute>
                   }
+                  
                 />
                 <Route
                   path="/syllabus"

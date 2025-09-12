@@ -7,6 +7,7 @@ import homeworkRoutes from './homeworkRoutes.js';
 import studentRouter from './studentRoutes.js';
 import dashboardRoutes from './dashboardRoutes.js';
 import adminRoutes from './admin.js';
+import progressRoutes from './progressRoutes.js';
 
 const v1Routes = Router();
 
@@ -18,5 +19,6 @@ v1Routes.use('/homework', homeworkRoutes); // http://localhost:3000/api/v1/homew
 v1Routes.use('/student', studentRouter); // http://localhost:3000/api/v1/student
 v1Routes.use('/dashboard', dashboardRoutes); // http://localhost:3000/api/v1/dashboard
 v1Routes.use('/admin', adminRoutes); // http://localhost:3000/api/v1/admin
+v1Routes.use('/progress', progressRoutes); // http://localhost:3000/api/v1/progress
 
 export default v1Routes;

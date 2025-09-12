@@ -8,17 +8,26 @@ export const authenticateToken = async (req, res, next) => {
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
+      console.error('JWT Middleware: No token found in Authorization header');
       return res.status(401).json({ message: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      console.error('JWT Middleware: Token verification failed:', err.message);
+      return res.status(401).json({ message: 'Invalid token', error: err.message });
+    }
+
     const teacher = await Teacher.findById(decoded.id).select('-password');
-    
     if (!teacher) {
-      return res.status(401).json({ message: 'Invalid token' });
+      console.error('JWT Middleware: No teacher found for decoded id', decoded.id);
+      return res.status(401).json({ message: 'Invalid token: teacher not found', decoded });
     }
 
     if (!teacher.isActive) {
+      console.error('JWT Middleware: Teacher account is deactivated', teacher._id);
       return res.status(401).json({ message: 'Account is deactivated' });
     }
 

@@ -9,6 +9,7 @@ const StudentSchema = new mongoose.Schema({
   address: { type: String },
   joinDate: { type: Date, default: Date.now },
   grade: { type: String, required: true }, // Class name or identifier
+  mentor: { type: String, default: '' }, // Mentor name
 });
 
 const Student = mongoose.model('Student', StudentSchema);
