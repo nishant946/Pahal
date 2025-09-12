@@ -35,8 +35,22 @@ function TodayTeacherAttendance() {
   }, [getTodaysTeacherAttendance]);
 
   // Extract safe counts
-  const presentTeachers: Teacher[] = teacherAttendanceRecord?.presentTeachers || [];
-  const absentTeachers: Teacher[] = teacherAttendanceRecord?.absentTeachers || [];
+  const presentTeachers: Teacher[] = (teacherAttendanceRecord?.presentTeachers || []).map((teacher) => ({
+    id: teacher.id,
+    name: teacher.name,
+    employeeId: teacher.employeeId,
+    department: teacher.department,
+    batch: (teacher as any).batch ?? "", // Provide default value if batch is missing
+    timeIn: (teacher as any).timeMarked ?? "", // Map timeMarked to timeIn
+  }));
+  const absentTeachers: Teacher[] = (teacherAttendanceRecord?.presentTeachers || []).map((teacher) => ({
+    id: teacher.id,
+    name: teacher.name,
+    employeeId: teacher.employeeId,
+    department: teacher.department,
+    batch: (teacher as any).batch ?? "",
+    timeIn: (teacher as any).timeMarked ?? "",
+  }));
   const presentCount = presentTeachers.length;
   const absentCount = absentTeachers.length;
   const totalCount = presentCount + absentCount;
