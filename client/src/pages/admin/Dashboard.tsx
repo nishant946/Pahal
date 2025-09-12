@@ -22,6 +22,7 @@ import {
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '@/services/api';
+import { SkeletonCard } from "@/components/ui/skeleton";
 
 interface DashboardStats {
   totalTeachers: number;
@@ -126,9 +127,28 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="p-6 space-y-6">
         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <div className="flex justify-center items-center py-12">
-          <RefreshCw className="h-8 w-8 animate-spin text-gray-500" />
-          <span className="ml-2 text-gray-600">Loading dashboard...</span>
+        
+        {/* Statistics Cards Skeleton */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, index) => (
+            <SkeletonCard key={index} showButton={false} lines={2} />
+          ))}
+        </div>
+
+        {/* Quick Actions Skeleton */}
+        <SkeletonCard className="p-6" lines={4} showButton={false} />
+
+        {/* Main Content Grid Skeleton */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <SkeletonCard className="p-6" lines={6} showButton={false} />
+          <SkeletonCard className="p-6" lines={6} showButton={false} />
+        </div>
+
+        {/* Bottom Content Skeleton */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {[...Array(3)].map((_, index) => (
+            <SkeletonCard key={index} className="p-6" lines={5} showButton={false} />
+          ))}
         </div>
       </div>
     );

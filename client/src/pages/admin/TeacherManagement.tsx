@@ -43,6 +43,7 @@ import {
 } from "lucide-react";
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
 import api from '@/services/api';
+import { SkeletonCard, SkeletonTable } from "@/components/ui/skeleton";
 
 interface Teacher {
   _id: string;
@@ -274,11 +275,45 @@ const TeacherManagement: React.FC = () => {
   if (loading) {
     return (
       <div className="p-6 space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">Teacher Management</h1>
-        <div className="flex justify-center items-center py-12">
-          <RefreshCw className="h-8 w-8 animate-spin text-gray-500" />
-          <span className="ml-2 text-gray-600">Loading teachers...</span>
+        {/* Header Skeleton */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+          <div className="space-y-2">
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="flex gap-2">
+            <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-10 w-40 bg-gray-200 rounded animate-pulse"></div>
+          </div>
         </div>
+
+        {/* Stats Cards Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} showButton={false} />
+          ))}
+        </div>
+
+        {/* Controls Skeleton */}
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+              <div className="flex gap-2">
+                <div className="h-10 w-64 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="flex gap-2">
+                <div className="h-10 w-10 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-10 w-10 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-10 w-28 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <SkeletonTable rows={8} columns={7} />
+          </CardContent>
+        </Card>
       </div>
     );
   }

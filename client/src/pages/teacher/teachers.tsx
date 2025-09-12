@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Mail, Phone, Search, Download, RefreshCw, User,  BadgeCheck, } from 'lucide-react'
 import teacherService from '@/services/teacherService'
 import type { Teacher } from '@/services/teacherService'
+import { SkeletonCard } from "@/components/ui/skeleton"
 
 function Teachers() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -72,8 +73,25 @@ function Teachers() {
     return (
       <Layout>
         <div className="p-3 sm:p-6">
-          <div className="flex justify-center items-center h-64">
-            <RefreshCw className="w-8 h-8 animate-spin" />
+          {/* Header Skeleton */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-10 w-40 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Search Skeleton */}
+          <div className="mb-6">
+            <div className="h-10 w-full max-w-md bg-gray-200 rounded animate-pulse"></div>
+          </div>
+
+          {/* Teacher Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <SkeletonCard key={i} showButton={false} />
+            ))}
           </div>
         </div>
       </Layout>

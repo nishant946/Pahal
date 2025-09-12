@@ -16,7 +16,36 @@ interface FormState {
   rollNumber: string;
   preferredDays: string[];
   subjectChoices: string[];
+  batch: string;
 }
+
+// Predefined options
+const DAYS_OF_WEEK = [
+  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+];
+
+const DEPARTMENTS = [
+  'Information Technology',
+  'Civil Engineering',
+  'Electrical Engineering',
+  'Electronics and Communication Engineering',
+  'Computer Science Engineering',
+  'Mechanical Engineering',
+  'Leather Technology',
+  'Chemical Engineering',
+  'Pharmacy',
+  'Biomedical and Robotics Engineering',
+  'Other'
+];
+
+const BATCHES = [
+  '2021-2025',
+  '2022-2026', 
+  '2023-2027',
+  '2024-2028',
+  '2025-2029',
+  'Other'
+];
 
 const Register = () => {
   const navigate = useNavigate();
@@ -30,17 +59,28 @@ const Register = () => {
     rollNumber: "",
     preferredDays: [],
     subjectChoices: [],
+    batch: "",
   });
 
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [customDepartment, setCustomDepartment] = useState("");
+  const [customBatch, setCustomBatch] = useState("");
+  const [availableDepartments, setAvailableDepartments] = useState<string[]>(DEPARTMENTS);
+  const [availableBatches, setAvailableBatches] = useState<string[]>(BATCHES);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
     
-    if (name === 'preferredDays') {
-      // Convert comma-separated string to array
-      const daysArray = value.split(',').map(day => day.trim()).filter(day => day.length > 0);
-      setForm((prev) => ({ ...prev, [name]: daysArray }));
+    if (type === 'checkbox') {
+      const { checked } = e.target as HTMLInputElement;
+      if (name === 'preferredDays') {
+        setForm((prev) => ({
+          ...prev,
+          preferredDays: checked
+            ? [...prev.preferredDays, value]
+            : prev.preferredDays.filter(day => day !== value)
+        }));
+      }
     } else if (name === 'subjectChoices') {
       // Convert comma-separated string to array
       const subjectsArray = value.split(',').map(subject => subject.trim()).filter(subject => subject.length > 0);
@@ -52,8 +92,46 @@ const Register = () => {
     setValidationError(null);
   };
 
+  const handleDayToggle = (day: string) => {
+    setForm((prev) => ({
+      ...prev,
+      preferredDays: prev.preferredDays.includes(day)
+        ? prev.preferredDays.filter(d => d !== day)
+        : [...prev.preferredDays, day]
+    }));
+    setValidationError(null);
+  };
+
+  const handleDepartmentChange = (value: string) => {
+    setForm((prev) => ({ ...prev, department: value }));
+    setValidationError(null);
+  };
+
+  const handleCustomDepartmentAdd = () => {
+    if (customDepartment.trim() && !availableDepartments.includes(customDepartment.trim())) {
+      const newDepartments = [...availableDepartments.slice(0, -1), customDepartment.trim(), 'Other'];
+      setAvailableDepartments(newDepartments);
+      setForm((prev) => ({ ...prev, department: customDepartment.trim() }));
+      setCustomDepartment("");
+    }
+  };
+
+  const handleBatchChange = (value: string) => {
+    setForm((prev) => ({ ...prev, batch: value }));
+    setValidationError(null);
+  };
+
+  const handleCustomBatchAdd = () => {
+    if (customBatch.trim() && !availableBatches.includes(customBatch.trim())) {
+      const newBatches = [...availableBatches.slice(0, -1), customBatch.trim(), 'Other'];
+      setAvailableBatches(newBatches);
+      setForm((prev) => ({ ...prev, batch: customBatch.trim() }));
+      setCustomBatch("");
+    }
+  };
+
   const validateForm = () => {
-    if (!form.name || !form.email || !form.password || !form.mobile || !form.rollNumber || !form.department) {
+    if (!form.name || !form.email || !form.password || !form.mobile || !form.rollNumber || !form.department || !form.batch) {
       setValidationError("All fields are required");
       return false;
     }
@@ -70,11 +148,19 @@ const Register = () => {
       return false;
     }
     if (form.preferredDays.length === 0) {
-      setValidationError("Please enter at least one preferred day");
+      setValidationError("Please select at least one preferred day");
       return false;
     }
     if (form.subjectChoices.length === 0) {
       setValidationError("Please enter at least one subject choice");
+      return false;
+    }
+    if (form.department === 'Other') {
+      setValidationError("Please add your custom department before submitting");
+      return false;
+    }
+    if (form.batch === 'Other') {
+      setValidationError("Please add your custom batch before submitting");
       return false;
     }
     return true;
@@ -153,15 +239,80 @@ const Register = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="department">Department <span className="text-red-500">*</span></Label>
-              <Input
+              <select
                 id="department"
                 name="department"
-                type="text"
                 value={form.department}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Information Technology, Civil Engineering, etc."
-              />
+                onChange={(e) => handleDepartmentChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Department</option>
+                {availableDepartments.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+              
+              {form.department === 'Other' && (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    type="text"
+                    value={customDepartment}
+                    onChange={(e) => setCustomDepartment(e.target.value)}
+                    placeholder="Enter your department"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleCustomDepartmentAdd}
+                    disabled={!customDepartment.trim()}
+                    className="px-4"
+                  >
+                    Add
+                  </Button>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="batch">Batch <span className="text-red-500">*</span></Label>
+              <select
+                id="batch"
+                name="batch"
+                value={form.batch}
+                onChange={(e) => handleBatchChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Batch</option>
+                {availableBatches.map((batch) => (
+                  <option key={batch} value={batch}>
+                    {batch}
+                  </option>
+                ))}
+              </select>
+              
+              {form.batch === 'Other' && (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    type="text"
+                    value={customBatch}
+                    onChange={(e) => setCustomBatch(e.target.value)}
+                    placeholder="Enter your batch (e.g., 2024-2028)"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleCustomBatchAdd}
+                    disabled={!customBatch.trim()}
+                    className="px-4"
+                  >
+                    Add
+                  </Button>
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="rollNumber">Roll Number <span className="text-red-500">*</span></Label>
@@ -189,17 +340,26 @@ const Register = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="preferredDays">Preferred Day <span className="text-red-500">*</span></Label>
-              <Input
-                id="preferredDays"
-                name="preferredDays"
-                type="text"
-                value={form.preferredDays.join(', ')}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Monday, Tuesday, Wednesday, Thursday, Friday"
-              />
-              <p className="text-xs text-gray-500">Enter your preferred day (e.g., Monday, Tuesday, Wednesday)</p>
+              <Label>Preferred Days <span className="text-red-500">*</span></Label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {DAYS_OF_WEEK.map((day) => (
+                  <label key={day} className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.preferredDays.includes(day)}
+                      onChange={() => handleDayToggle(day)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700">{day}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500">Select the days you prefer to teach</p>
+              {form.preferredDays.length > 0 && (
+                <p className="text-xs text-blue-600">
+                  Selected: {form.preferredDays.join(', ')}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="subjectChoices">Subject Choice <span className="text-red-500">*</span></Label>

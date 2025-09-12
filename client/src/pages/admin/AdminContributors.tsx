@@ -54,6 +54,7 @@ import {
   List
 } from 'lucide-react';
 import api from '@/services/api';
+import { SkeletonCard, SkeletonTable } from "@/components/ui/skeleton";
 
 interface Contributor {
   _id: string;
@@ -784,9 +785,33 @@ export default function AdminContributors() {
 
         {/* Main Content */}
         {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <RefreshCw className="h-8 w-8 animate-spin text-gray-500" />
-            <span className="ml-2 text-gray-600">Loading contributors...</span>
+          <div className="space-y-6">
+            {/* Stats Cards Skeleton */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <SkeletonCard key={i} showButton={false} />
+              ))}
+            </div>
+
+            {/* Controls and Table Skeleton */}
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                  <div className="flex gap-2">
+                    <div className="h-10 w-64 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-10 w-10 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-10 w-10 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-10 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <SkeletonTable rows={8} columns={6} />
+              </CardContent>
+            </Card>
           </div>
         ) : filteredAndSortedContributors.length === 0 ? (
           <Card className="text-center py-12">

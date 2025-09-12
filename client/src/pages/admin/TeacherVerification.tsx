@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, User, Mail, Phone, Building, Clock } from "lucide-react";
 import { useTeacherAuth } from '@/contexts/teacherAuthContext';
+import { SkeletonCard } from "@/components/ui/skeleton";
 
 interface Teacher {
   _id: string;
@@ -63,10 +64,15 @@ const TeacherVerification: React.FC = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-foreground">Teacher Verification</h1>
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading unverified teachers...</p>
+        <div className="space-y-2">
+          <div className="h-8 w-64 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 w-96 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <SkeletonCard key={i} showButton={true} />
+          ))}
         </div>
       </div>
     );

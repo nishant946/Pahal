@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { RefreshCw } from "lucide-react";
 import type { ProgressLog, Student } from "./index";
 
 interface ProgressModalProps {
@@ -9,6 +10,7 @@ interface ProgressModalProps {
   onClose: () => void;
   onUpdate: (studentId: string, progress: string, mentor?: string) => void;
   error?: string;
+  updating?: boolean;
 }
 
 const ProgressModal: React.FC<ProgressModalProps> = ({
@@ -17,6 +19,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   onClose,
   onUpdate,
   error,
+  updating = false,
 }) => {
   const [progress, setProgress] = useState("");
   const [mentor, setMentor] = useState(student.mentor || "");
@@ -90,9 +93,17 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
             </div>
             <Button
               type="submit"
-              className="mt-2 w-full py-2 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow"
+              className="mt-2 w-full py-2 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={updating}
             >
-              Submit
+              {updating ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </form>
         </div>

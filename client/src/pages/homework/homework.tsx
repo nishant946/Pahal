@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useHomework } from '@/contexts/homeworkContext';
 import { Plus, CalendarDays, User,Trash2, RefreshCw } from 'lucide-react';
 import type { Homework } from '@/services/homeworkService';
+import { SkeletonCard } from "@/components/ui/skeleton";
 
 type Group = 'A' | 'B' | 'C';
 
@@ -147,11 +148,15 @@ function HomeworkCard({ group }: { group: Group }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{group} Group</CardTitle>
+          <div className="space-y-2">
+            <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-center py-8">
-            <RefreshCw className="w-6 h-6 animate-spin" />
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <SkeletonCard key={i} showButton={true} />
+            ))}
           </div>
         </CardContent>
       </Card>
