@@ -27,10 +27,16 @@ export const addProgressLog = async (req, res) => {
 		console.log('ProgressLog Debug: student query result:', student);
 		if (!teacher || !student) return res.status(404).json({ error: 'Teacher or Student not found' });
 
-		// Set mentor from input if provided, else default to teacher name
+		// Set mentor from input if provided, else keep existing or default to teacher name
 		let mentor = student.mentor;
-		if (!mentor) {
-			mentor = mentorInput && mentorInput.trim() ? mentorInput.trim() : teacher.name;
+		if (mentorInput && mentorInput.trim()) {
+			// If a new mentor is explicitly provided, update it
+			mentor = mentorInput.trim();
+			student.mentor = mentor;
+			await student.save();
+		} else if (!mentor) {
+			// If no mentor exists and none provided, default to teacher name
+			mentor = teacher.name;
 			student.mentor = mentor;
 			await student.save();
 		}

@@ -21,6 +21,7 @@ import ProgressPage from "./pages/progress/index";
 import { AttendanceProvider } from "./contexts/attendanceContext";
 import { TeacherAuthProvider } from "./contexts/teacherAuthContext";
 import { HomeworkProvider } from "./contexts/homeworkContext";
+import { ThemeProvider } from "./contexts/themeContext";
 // import { TeacherProtectedRoute } from "./components/auth/TeacherProtectedRoute";
 import VerifiedTeacherProtectedRoute from "./components/auth/VerifiedTeacherProtectedRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -28,6 +29,8 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import TeacherManagement from "./pages/admin/TeacherManagement";
 import TeacherVerification from "./pages/admin/TeacherVerification";
 import AdminContributors from "./pages/admin/AdminContributors";
+import TeacherProfile from "./pages/profile/TeacherProfile";
+import AdminProfile from "./pages/profile/AdminProfile";
 import AttendanceOverview from "./pages/admin/attendanceoverview";
 import AdminSettings from "./pages/admin/settings";
 import AttendanceDashboard from "./pages/attendance/attendanceDashboard";
@@ -37,11 +40,12 @@ import IndividualTeacherReport from "./pages/attendance/individualTeacherReport"
 function App() {
   return (
     <BrowserRouter>
-      <TeacherAuthProvider>
-        <AttendanceProvider>
-          <HomeworkProvider>
-            <div className="flex flex-col min-h-screen">
-              <Routes>
+      <ThemeProvider>
+        <TeacherAuthProvider>
+          <AttendanceProvider>
+            <HomeworkProvider>
+              <div className="flex flex-col min-h-screen">
+                <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
@@ -104,12 +108,28 @@ function App() {
                     </VerifiedTeacherProtectedRoute>
                   }
                 />
-                {/* Settings & Logout Routes */}{" "}
+                {/* Settings & Profile Routes */}
                 <Route
                   path="/profile"
                   element={
                     <VerifiedTeacherProtectedRoute>
                       <Settings />
+                    </VerifiedTeacherProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/teacher/profile"
+                  element={
+                    <VerifiedTeacherProtectedRoute>
+                      <TeacherProfile />
+                    </VerifiedTeacherProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/profile"
+                  element={
+                    <VerifiedTeacherProtectedRoute>
+                      <AdminProfile />
                     </VerifiedTeacherProtectedRoute>
                   }
                 />
@@ -201,6 +221,7 @@ function App() {
           </HomeworkProvider>
         </AttendanceProvider>
       </TeacherAuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

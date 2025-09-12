@@ -226,7 +226,7 @@ const ProgressPage: React.FC = () => {
       setChangingMentor(studentId);
       
       // Update the student's mentor using the progress service (which handles mentor assignment)
-      await updateStudentProgress(studentId, "Mentor assigned", newMentorName);
+      await updateStudentProgress(studentId, "Mentor changed to " + newMentorName, newMentorName);
       
       // Refresh students list to update mentor field
       const updatedStudents = await getStudents();
@@ -254,6 +254,9 @@ const ProgressPage: React.FC = () => {
         progressMap[studentId] = undefined;
       }
       setLatestProgressMap(progressMap);
+      
+      // Show success feedback
+      console.log(`Mentor changed successfully for ${studentsList.find((s: Student) => s.id === studentId)?.name}`);
       
     } catch (error) {
       console.error('Error changing mentor:', error);
@@ -474,8 +477,12 @@ const ProgressPage: React.FC = () => {
                         setChangingMentor(student.id);
                       }
                     }}
-                    className="h-6 w-6 p-0 hover:bg-gray-100"
-                    title={student.mentor ? "Change Mentor" : "Assign Mentor"}
+                    className={`h-7 w-7 p-0 transition-all duration-200 ${
+                      changingMentor === student.id 
+                        ? "bg-red-50 border-red-300 hover:bg-red-100 text-red-600" 
+                        : "hover:bg-blue-50 hover:border-blue-300 text-blue-600"
+                    }`}
+                    title={changingMentor === student.id ? "Cancel" : (student.mentor ? "Change Mentor" : "Assign Mentor")}
                   >
                     {changingMentor === student.id ? (
                       <UserX className="h-3 w-3" />
@@ -487,27 +494,63 @@ const ProgressPage: React.FC = () => {
 
                 {/* Mentor Selection Dropdown */}
                 {changingMentor === student.id && (
-                  <div className="flex gap-2 mb-2">
-                    <select
-                      value={selectedMentorForStudent[student.id] || ""}
-                      onChange={(e) => handleMentorSelection(student.id, e.target.value)}
-                      className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select Mentor</option>
-                      {activeTeachers.map((teacher) => (
-                        <option key={teacher._id} value={teacher.name}>
-                          {teacher.name} ({teacher.department})
-                        </option>
-                      ))}
-                    </select>
-                    <Button
-                      size="sm"
-                      onClick={() => handleChangeMentor(student.id, selectedMentorForStudent[student.id])}
-                      disabled={!selectedMentorForStudent[student.id]}
-                      className="px-2 h-7"
-                    >
-                      <UserPlus className="h-3 w-3" />
-                    </Button>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Users className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm font-medium text-gray-700">
+                        {student.mentor ? "Change Mentor" : "Assign Mentor"}
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1">
+                        <select
+                          value={selectedMentorForStudent[student.id] || ""}
+                          onChange={(e) => handleMentorSelection(student.id, e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        >
+                          <option value="" disabled>
+                            Choose a mentor...
+                          </option>
+                          {activeTeachers.map((teacher) => (
+                            <option key={teacher._id} value={teacher.name}>
+                              {teacher.name} ({teacher.rollNo}) • {teacher.department}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          onClick={() => handleChangeMentor(student.id, selectedMentorForStudent[student.id])}
+                          disabled={!selectedMentorForStudent[student.id]}
+                          className="px-3 h-9 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 transition-colors duration-200"
+                          title="Confirm mentor assignment"
+                        >
+                          <UserPlus className="h-4 w-4 mr-1" />
+                          {student.mentor ? "Change" : "Assign"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setChangingMentor(null);
+                            setSelectedMentorForStudent(prev => ({
+                              ...prev,
+                              [student.id]: ""
+                            }));
+                          }}
+                          className="px-2 h-9 border-gray-300 hover:bg-gray-50 transition-colors duration-200"
+                          title="Cancel"
+                        >
+                          <UserX className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    {student.mentor && (
+                      <div className="mt-2 text-xs text-gray-500 bg-blue-50 px-2 py-1 rounded">
+                        Current mentor: {student.mentor}
+                      </div>
+                    )}
                   </div>
                 )}
                 

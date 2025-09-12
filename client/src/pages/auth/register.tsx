@@ -47,6 +47,65 @@ const BATCHES = [
   'Other'
 ];
 
+const SUBJECTS = [
+  // Core Academic Subjects
+  'Mathematics',
+  'Science',
+  'English',
+  'Hindi',
+  'Social Science',
+  'Sanskrit',
+  
+  // Science Subjects (Class 9-10)
+  'Physics',
+  'Chemistry',
+  'Biology',
+  
+  // Languages
+  'Urdu',
+  'Bengali',
+  'Tamil',
+  'Telugu',
+  'Marathi',
+  'Gujarati',
+  'Punjabi',
+  'Assamese',
+  'Odia',
+  'Malayalam',
+  'Kannada',
+  'French',
+  'German',
+  'Spanish',
+  
+  // Social Sciences
+  'History',
+  'Geography',
+  'Political Science',
+  'Economics',
+  'Civics',
+  
+  // Vocational/Optional Subjects
+  'Computer Science',
+  'Information Technology',
+  'Home Science',
+  'Physical Education',
+  'Art Education',
+  'Music',
+  'Dance',
+  'Drawing',
+  'Painting',
+  'Work Education',
+  'Health and Physical Education',
+  
+  // Additional Subjects
+  'Environmental Studies',
+  'Moral Science',
+  'General Knowledge',
+  'Library Science',
+  
+  'Other'
+];
+
 const Register = () => {
   const navigate = useNavigate();
   const { register, loading, error } = useTeacherAuth();
@@ -65,8 +124,10 @@ const Register = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [customDepartment, setCustomDepartment] = useState("");
   const [customBatch, setCustomBatch] = useState("");
+  const [customSubject, setCustomSubject] = useState("");
   const [availableDepartments, setAvailableDepartments] = useState<string[]>(DEPARTMENTS);
   const [availableBatches, setAvailableBatches] = useState<string[]>(BATCHES);
+  const [availableSubjects, setAvailableSubjects] = useState<string[]>(SUBJECTS);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -80,9 +141,16 @@ const Register = () => {
             ? [...prev.preferredDays, value]
             : prev.preferredDays.filter(day => day !== value)
         }));
+      } else if (name === 'subjectChoices') {
+        setForm((prev) => ({
+          ...prev,
+          subjectChoices: checked
+            ? [...prev.subjectChoices, value]
+            : prev.subjectChoices.filter(subject => subject !== value)
+        }));
       }
     } else if (name === 'subjectChoices') {
-      // Convert comma-separated string to array
+      // This is for the old text input handling - keeping for backward compatibility
       const subjectsArray = value.split(',').map(subject => subject.trim()).filter(subject => subject.length > 0);
       setForm((prev) => ({ ...prev, [name]: subjectsArray }));
     } else {
@@ -130,6 +198,28 @@ const Register = () => {
     }
   };
 
+  const handleSubjectToggle = (subject: string) => {
+    setForm((prev) => ({
+      ...prev,
+      subjectChoices: prev.subjectChoices.includes(subject)
+        ? prev.subjectChoices.filter(s => s !== subject)
+        : [...prev.subjectChoices, subject]
+    }));
+    setValidationError(null);
+  };
+
+  const handleCustomSubjectAdd = () => {
+    if (customSubject.trim() && !availableSubjects.includes(customSubject.trim())) {
+      const newSubjects = [...availableSubjects.slice(0, -1), customSubject.trim(), 'Other'];
+      setAvailableSubjects(newSubjects);
+      setForm((prev) => ({ 
+        ...prev, 
+        subjectChoices: [...prev.subjectChoices, customSubject.trim()]
+      }));
+      setCustomSubject("");
+    }
+  };
+
   const validateForm = () => {
     if (!form.name || !form.email || !form.password || !form.mobile || !form.rollNumber || !form.department || !form.batch) {
       setValidationError("All fields are required");
@@ -152,7 +242,7 @@ const Register = () => {
       return false;
     }
     if (form.subjectChoices.length === 0) {
-      setValidationError("Please enter at least one subject choice");
+      setValidationError("Please select at least one subject you can teach");
       return false;
     }
     if (form.department === 'Other') {
@@ -361,18 +451,160 @@ const Register = () => {
                 </p>
               )}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="subjectChoices">Subject Choice <span className="text-red-500">*</span></Label>
-              <Input
-                id="subjectChoices"
-                name="subjectChoices"
-                type="text"
-                value={form.subjectChoices.join(', ')}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Mathematics, Physics, Chemistry"
-              />
-              <p className="text-xs text-gray-500">Enter subjects</p>
+            <div className="space-y-3">
+              <Label>Subject Choices <span className="text-red-500">*</span></Label>
+              
+              {/* Core Subjects */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Core Academic Subjects</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(0, 6).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Science Subjects */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Science Subjects (Class 9-10)</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(6, 9).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Languages */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Languages</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(9, 23).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Social Sciences */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Social Sciences</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(23, 28).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Vocational/Optional Subjects */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Vocational & Optional Subjects</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(28, -5).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Additional Subjects */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-gray-700">Additional Subjects</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {availableSubjects.slice(-5, -1).map((subject) => (
+                    <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="subjectChoices"
+                        value={subject}
+                        checked={form.subjectChoices.includes(subject)}
+                        onChange={() => handleSubjectToggle(subject)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-gray-700">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom Subject Addition */}
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm text-gray-700">Add Custom Subject</h4>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    value={customSubject}
+                    onChange={(e) => setCustomSubject(e.target.value)}
+                    placeholder="Enter subject name"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleCustomSubjectAdd}
+                    disabled={!customSubject.trim()}
+                    className="px-4"
+                  >
+                    Add Subject
+                  </Button>
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-500">Select all subjects you can teach</p>
+              {form.subjectChoices.length > 0 && (
+                <div className="p-3 bg-blue-50 rounded-md">
+                  <p className="text-xs text-blue-800 font-medium">Selected Subjects:</p>
+                  <p className="text-sm text-blue-700 mt-1">
+                    {form.subjectChoices.join(', ')}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

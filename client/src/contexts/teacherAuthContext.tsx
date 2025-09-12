@@ -12,6 +12,7 @@ interface Teacher {
   subjectChoices: string[];
   designation: string;
   qualification?: string;
+  avatar?: string;
   joiningDate: string;
   isVerified: boolean;
   isAdmin: boolean;
@@ -41,6 +42,7 @@ interface TeacherAuthContextType {
   register: (registrationData: registrationData) => Promise<any>;
   verifyTeacher: (teacherId: string) => Promise<void>;
   getUnverifiedTeachers: () => Promise<Teacher[]>;
+  updateTeacherProfile: (profileData: Partial<Teacher>) => void;
 }
 
 const TeacherAuthContext = createContext<TeacherAuthContextType | undefined>(undefined);
@@ -142,6 +144,12 @@ const register = async (registrationData: registrationData) => {
     }
   };
 
+  const updateTeacherProfile = (profileData: Partial<Teacher>) => {
+    if (teacher) {
+      setTeacher({ ...teacher, ...profileData });
+    }
+  };
+
   return (
     <TeacherAuthContext.Provider value={{
         teacher,
@@ -152,7 +160,8 @@ const register = async (registrationData: registrationData) => {
         logout,
         register,
         verifyTeacher,
-      getUnverifiedTeachers
+        getUnverifiedTeachers,
+        updateTeacherProfile
     }}>
       {children}
     </TeacherAuthContext.Provider>

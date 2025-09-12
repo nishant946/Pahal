@@ -9,6 +9,7 @@ import dashboardRoutes from './dashboardRoutes.js';
 import adminRoutes from './admin.js';
 import progressRoutes from './progressRoutes.js';
 import contributorRoutes from './contributorRoutes.js';
+import profileRoutes from './profileRoutes.js';
 
 const v1Routes = Router();
 
@@ -22,5 +23,6 @@ v1Routes.use('/dashboard', dashboardRoutes); // http://localhost:3000/api/v1/das
 v1Routes.use('/admin', adminRoutes); // http://localhost:3000/api/v1/admin
 v1Routes.use('/progress', progressRoutes); // http://localhost:3000/api/v1/progress
 v1Routes.use('/contributors', contributorRoutes); // http://localhost:3000/api/v1/contributors
+v1Routes.use('/', profileRoutes); // http://localhost:3000/api/v1/
 
 export default v1Routes;

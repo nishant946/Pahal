@@ -5,6 +5,12 @@ import dotenv from "dotenv";
 import ApiRoutes from "./routes/index.js";
 import cors from "cors";
 import StudentRoutes from "./routes/v1/studentRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 
 connectDB();
@@ -24,6 +30,9 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
+
+// Serve static files for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api", ApiRoutes);
 app.use("/api/v1/students", StudentRoutes); // http://localhost:3000/api/v1/students
