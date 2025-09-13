@@ -11,7 +11,8 @@ const __dirname = path.dirname(__filename);
 // Configure multer for avatar upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, '../../uploads/avatars');
+    // Save under server/uploads/avatars to match express static path
+    const uploadPath = path.join(__dirname, '../uploads/avatars');
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
