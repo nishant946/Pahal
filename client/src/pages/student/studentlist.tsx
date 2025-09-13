@@ -489,7 +489,7 @@ function StudentList() {
           {sortedFilteredStudents.map((student) => (
             <div
               key={student.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-card border border-border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="p-4">
                 <div className="flex justify-between items-start">

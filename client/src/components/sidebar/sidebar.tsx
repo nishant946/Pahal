@@ -86,12 +86,12 @@ const Sidebar = ({ onClose }: SidebarProps) => {
             href: "/homework",
             requiresVerification: true,
           },
-            {
-              label: "Progress",
-              icon: <BookOpen className="w-5 h-5" />,
-              href: "/progress",
-              requiresVerification: true,
-            },
+          {
+            label: "Progress",
+            icon: <BookOpen className="w-5 h-5" />,
+            href: "/progress",
+            requiresVerification: true,
+          },
           {
             label: "Settings",
             icon: <Settings className="w-5 h-5" />,
@@ -118,19 +118,19 @@ const Sidebar = ({ onClose }: SidebarProps) => {
   const filteredItems = sidebarItems.filter((item) => {
     if (item.requiresAdmin && !teacher?.isAdmin) return false;
     if (item.requiresVerification && !teacher?.isVerified) return false;
-    if (item.label === 'Settings') return false;
+    if (item.label === "Settings") return false;
     return true;
   });
 
   return (
-    <div className="w-full h-full bg-white/80 backdrop-blur-md border-r border-gray-200 shadow-2xl flex flex-col rounded-r-2xl overflow-hidden transition-all duration-300">
+    <div className="w-full h-full bg-sidebar/80 backdrop-blur-md border-r border-sidebar-border shadow-2xl flex flex-col rounded-r-2xl overflow-hidden transition-all duration-300">
       {/* Sidebar Header */}
       <div className="p-4 md:p-6">
-        <h2 className="text-lg font-bold text-gray-900 tracking-wide mb-2">
+        <h2 className="text-lg font-bold text-sidebar-foreground tracking-wide mb-2">
           Menu
         </h2>
         {teacher && !teacher.isVerified && (
-          <div className="mt-2 flex items-center gap-2 text-xs text-yellow-700 bg-yellow-100 px-2 py-1 rounded-lg">
+          <div className="mt-2 flex items-center gap-2 text-xs text-yellow-700 bg-yellow-100 dark:text-yellow-200 dark:bg-yellow-900/20 px-2 py-1 rounded-lg">
             <Clock className="w-3 h-3" />
             <span>Pending Verification</span>
           </div>
@@ -142,15 +142,13 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         <div className="space-y-1 px-2 md:px-4">
           {filteredItems.map((item, i) => {
             // Dim these features for teachers
-            const dimmed = [
-              "/settings",
-            ].includes(item.href);
+            const dimmed = ["/settings"].includes(item.href);
             return item.href === "/admin" || item.href === "/logout" ? (
               <Link
                 key={i}
                 to={item.href}
                 onClick={handleLinkClick}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 text-gray-700"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus:outline-none focus:ring-2 focus:ring-sidebar-ring text-sidebar-foreground"
               >
                 <div className="flex-shrink-0">{item.icon}</div>
                 <span className="truncate">{item.label}</span>
@@ -162,10 +160,10 @@ const Sidebar = ({ onClose }: SidebarProps) => {
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-primary/20 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30",
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus:outline-none focus:ring-2 focus:ring-sidebar-ring",
                     isActive
-                      ? "bg-gradient-to-r from-primary/20 to-primary/5 text-primary font-bold shadow-md"
-                      : "text-gray-700 hover:text-primary",
+                      ? "bg-gradient-to-r from-sidebar-primary/20 to-sidebar-primary/5 text-sidebar-primary font-bold shadow-md"
+                      : "text-sidebar-foreground hover:text-sidebar-accent-foreground",
                     dimmed
                       ? "opacity-50 pointer-events-none cursor-not-allowed"
                       : ""
@@ -176,7 +174,9 @@ const Sidebar = ({ onClose }: SidebarProps) => {
               >
                 <div className="flex-shrink-0">{item.icon}</div>
                 <span className="truncate">{item.label}</span>
-                {dimmed && <span className="ml-2 text-xs text-gray-400"></span>}
+                {dimmed && (
+                  <span className="ml-2 text-xs text-muted-foreground"></span>
+                )}
               </NavLink>
             );
           })}
@@ -184,19 +184,19 @@ const Sidebar = ({ onClose }: SidebarProps) => {
       </nav>
 
       {/* User Section */}
-      <div className="border-t border-gray-200 p-5 bg-white/60 backdrop-blur-md">
+      <div className="border-t border-sidebar-border p-5 bg-sidebar/60 backdrop-blur-md">
         <div className="flex items-center gap-3 rounded-xl px-2 py-2">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center flex-shrink-0 shadow-md">
-            <span className="text-white font-bold text-xl">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-sidebar-primary/80 to-sidebar-primary flex items-center justify-center flex-shrink-0 shadow-md">
+            <span className="text-sidebar-primary-foreground font-bold text-xl">
               {teacher?.name.charAt(0)}
             </span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-base font-semibold text-gray-900 truncate">
+            <p className="text-base font-semibold text-sidebar-foreground truncate">
               {teacher?.name}
             </p>
             <div className="flex items-center gap-1">
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-muted-foreground truncate">
                 {teacher?.isAdmin ? "Admin" : "Teacher"}
               </p>
               {teacher?.isVerified && (

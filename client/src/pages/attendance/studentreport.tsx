@@ -197,28 +197,40 @@ function StudentReport() {
               return (
                 <div
                   key={student.id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4"
+                  className="bg-card border border-border rounded-xl shadow-sm  p-4"
                 >
                   <div className="mb-3">
                     <div className="font-semibold text-base mb-1">
                       {student.name}
                     </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <div><span className="font-medium">Roll:</span> {student.rollNumber}</div>
-                      <div><span className="font-medium">Grade:</span> {student.grade}</div>
-                      <div><span className="font-medium">Group:</span> {student.group}</div>
+                    <div className="text-sm text-foreground space-y-1">
+                      <div>
+                        <span className="font-medium">Roll:</span>{" "}
+                        {student.rollNumber}
+                      </div>
+                      <div>
+                        <span className="font-medium">Grade:</span>{" "}
+                        {student.grade}
+                      </div>
+                      <div>
+                        <span className="font-medium">Group:</span>{" "}
+                        {student.group}
+                      </div>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
-                    <div className="text-gray-600">
-                      <span className="font-medium">Total:</span> {stats.totalDays}
+                    <div className="text-foreground">
+                      <span className="font-medium">Total:</span>{" "}
+                      {stats.totalDays}
                     </div>
-                    <div className="text-green-600">
-                      <span className="font-medium">Present:</span> {stats.presentDays}
+                    <div className="text-gforeground">
+                      <span className="font-medium">Present:</span>{" "}
+                      {stats.presentDays}
                     </div>
-                    <div className="text-red-600">
-                      <span className="font-medium">Absent:</span> {stats.absentDays}
+                    <div className="textforeground">
+                      <span className="font-medium">Absent:</span>{" "}
+                      {stats.absentDays}
                     </div>
                     <div className="flex items-center">
                       <span
@@ -232,7 +244,7 @@ function StudentReport() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -250,36 +262,36 @@ function StudentReport() {
 
         {/* Table view for desktop */}
         <div className="hidden xl:block">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-card border-b border-border">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Roll Number
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Grade
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Group
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Total Days
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Present
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Absent
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Attendance %
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -293,26 +305,29 @@ function StudentReport() {
                       attendancePercentage: 0,
                     };
                     return (
-                      <tr key={student.id} className="hover:bg-gray-50">
+                      <tr
+                        key={student.id}
+                        className="hover:opacity-80 transition"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap font-medium">
                           {student.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                        <td className="px-6 py-4 whitespace-nowrap text-foreground">
                           {student.rollNumber}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                        <td className="px-6 py-4 whitespace-nowrap text-foreground">
                           {student.grade}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                        <td className="px-6 py-4 whitespace-nowrap text-foreground">
                           {student.group}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                           {stats.totalDays}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap text-gforeground font-medium">
                           {stats.presentDays}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-red-600 font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap textforeground font-medium">
                           {stats.absentDays}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -348,7 +363,7 @@ function StudentReport() {
 
         {filteredStudents.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
+            <p className="text-foreground text-lg">
               No students found matching your search.
             </p>
           </div>

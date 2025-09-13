@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
-import Layout from '@/components/layout/layout';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Linkedin, Globe, Github, Mail } from 'lucide-react';
-import { getContributors, type Contributor } from '@/services/contributorService';
+import { useState, useEffect } from "react";
+import Layout from "@/components/layout/layout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Linkedin, Globe, Github, Mail } from "lucide-react";
+import {
+  getContributors,
+  type Contributor,
+} from "@/services/contributorService";
 
 export default function Contributors() {
   const [contributors, setContributors] = useState<Contributor[]>([]);
@@ -18,9 +21,9 @@ export default function Contributors() {
         const data = await getContributors();
         setContributors(data);
         setError(null);
-      } catch (err: any) {
-        console.error('Error fetching contributors:', err);
-        setError('Failed to load contributors');
+      } catch (err: unknown) {
+        console.error("Error fetching contributors:", err);
+        setError("Failed to load contributors");
       } finally {
         setLoading(false);
       }
@@ -35,7 +38,7 @@ export default function Contributors() {
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading contributors...</p>
+            <p className="text-muted-foreground">Loading contributors...</p>
           </div>
         </div>
       </Layout>
@@ -48,9 +51,7 @@ export default function Contributors() {
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
         </div>
       </Layout>
@@ -62,47 +63,64 @@ export default function Contributors() {
       <div className="p-4 lg:p-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Our Contributors
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Meet the passionate individuals who have made Pahal possible. Their dedication, 
-            expertise, and commitment to education continue to drive our mission forward.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Meet the passionate individuals who have made Pahal possible. Their
+            dedication, expertise, and commitment to education continue to drive
+            our mission forward.
           </p>
         </div>
 
         {contributors.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No contributors to display at the moment.</p>
+            <p className="text-muted-foreground text-lg">
+              No contributors to display at the moment.
+            </p>
           </div>
         ) : (
           <>
             {/* Initiators Section */}
             <div className="mb-16">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
                 Initiative Founders
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {contributors
-                  .filter(contributor => contributor.role.toLowerCase().includes('founder') || 
-                                       contributor.role.toLowerCase().includes('initiator'))
+                  .filter(
+                    (contributor) =>
+                      contributor.role.toLowerCase().includes("founder") ||
+                      contributor.role.toLowerCase().includes("initiator")
+                  )
                   .map((contributor) => (
-                    <ContributorCard key={contributor._id} contributor={contributor} isFounder={true} />
+                    <ContributorCard
+                      key={contributor._id}
+                      contributor={contributor}
+                      isFounder={true}
+                    />
                   ))}
               </div>
             </div>
 
             {/* Other Contributors Section */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
                 Contributors
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {contributors
-                  .filter(contributor => !contributor.role.toLowerCase().includes('founder') && 
-                                       !contributor.role.toLowerCase().includes('initiator'))
+                  .filter(
+                    (contributor) =>
+                      !contributor.role.toLowerCase().includes("founder") &&
+                      !contributor.role.toLowerCase().includes("initiator")
+                  )
                   .map((contributor) => (
-                    <ContributorCard key={contributor._id} contributor={contributor} isFounder={false} />
+                    <ContributorCard
+                      key={contributor._id}
+                      contributor={contributor}
+                      isFounder={false}
+                    />
                   ))}
               </div>
             </div>
@@ -118,11 +136,18 @@ interface ContributorCardProps {
   isFounder?: boolean;
 }
 
-function ContributorCard({ contributor, isFounder = false }: ContributorCardProps) {
+function ContributorCard({
+  contributor,
+  isFounder = false,
+}: ContributorCardProps) {
   return (
-    <Card className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-      isFounder ? 'border-primary/20 bg-gradient-to-br from-primary/5 to-transparent' : ''
-    }`}>
+    <Card
+      className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+        isFounder
+          ? "border-primary/20 bg-gradient-to-br from-primary/5 to-transparent"
+          : ""
+      }`}
+    >
       <CardContent className="p-6">
         <div className="text-center">
           {/* Profile Image */}
@@ -136,7 +161,11 @@ function ContributorCard({ contributor, isFounder = false }: ContributorCardProp
             ) : (
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center border-4 border-white shadow-lg">
                 <span className="text-white font-bold text-2xl">
-                  {contributor.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {contributor.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
                 </span>
               </div>
             )}
@@ -148,21 +177,23 @@ function ContributorCard({ contributor, isFounder = false }: ContributorCardProp
           </div>
 
           {/* Name and Role */}
-          <h3 className="text-xl font-bold text-gray-900 mb-1">{contributor.name}</h3>
+          <h3 className="text-xl font-bold text-foreground mb-1">
+            {contributor.name}
+          </h3>
           <p className="text-primary font-medium mb-2">{contributor.role}</p>
 
           {/* Batch and Branch */}
           {(contributor.batch || contributor.branch) && (
             <div className="mb-3 space-y-1">
               {contributor.batch && (
-                <p className="text-sm text-gray-500 font-medium">
+                <p className="text-sm text-muted-foreground font-medium">
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700">
                     Batch: {contributor.batch}
                   </span>
                 </p>
               )}
               {contributor.branch && (
-                <p className="text-sm text-gray-500 font-medium">
+                <p className="text-sm text-muted-foreground font-medium">
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-50 text-green-700">
                     {contributor.branch}
                   </span>
@@ -172,7 +203,7 @@ function ContributorCard({ contributor, isFounder = false }: ContributorCardProp
           )}
 
           {/* Bio */}
-          <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+          <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
             {contributor.description}
           </p>
 
@@ -194,7 +225,7 @@ function ContributorCard({ contributor, isFounder = false }: ContributorCardProp
                 href={contributor.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors"
                 title="GitHub"
               >
                 <Github className="w-5 h-5" />

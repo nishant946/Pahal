@@ -83,7 +83,7 @@ function MarkAttendance() {
               Mark Student Attendance
             </h1>
           </div>
-          <div className="text-gray-600 text-sm sm:text-base">
+          <div className="text-muted-foreground text-sm sm:text-base">
             <Calendar className="w-4 h-4 inline-block mr-1" />
             {currentDate}
           </div>
@@ -94,13 +94,13 @@ function MarkAttendance() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
             <div className="w-full sm:w-72">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   type="text"
                   placeholder="Search by name, roll no, or group..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border-gray-200 focus:border-blue-500 focus:ring-blue-500 text-sm"
+                  className="pl-10 pr-4 py-2 w-full border-border focus:border-blue-500 focus:ring-blue-500 text-sm bg-background text-foreground"
                 />
               </div>
             </div>
@@ -108,7 +108,7 @@ function MarkAttendance() {
 
           {/* Stats Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
+            <div className="bg-card border border-border rounded-lg p-3 sm:p-4">
               <h3 className="text-blue-700 font-semibold text-xs sm:text-sm lg:text-base">
                 Total Students
               </h3>
@@ -116,7 +116,7 @@ function MarkAttendance() {
                 {students.length}
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-3 sm:p-4">
+            <div className="bg-card border border-border rounded-lg p-3 sm:p-4">
               <h3 className="text-green-700 font-semibold text-xs sm:text-sm lg:text-base">
                 Present
               </h3>
@@ -124,7 +124,7 @@ function MarkAttendance() {
                 {todayAttendance.presentStudents.length}
               </p>
             </div>
-            <div className="bg-red-50 rounded-lg p-3 sm:p-4">
+            <div className="bg-card border border-border rounded-lg p-3 sm:p-4">
               <h3 className="text-red-700 font-semibold text-xs sm:text-sm lg:text-base">
                 Absent
               </h3>
@@ -135,9 +135,9 @@ function MarkAttendance() {
           </div>
 
           {/* Table/List Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-x-auto">
             {/* Desktop View */}
-            <div className="hidden sm:grid grid-cols-12 gap-3 sm:gap-4 p-3 sm:p-4 font-semibold border-b bg-gray-50 rounded-t-xl text-xs sm:text-sm">
+            <div className="hidden sm:grid grid-cols-12 gap-3 sm:gap-4 p-3 sm:p-4 font-semibold border-b bg-muted rounded-t-xl text-xs sm:text-sm">
               <div className="col-span-2">Roll No</div>
               <div className="col-span-3">Name</div>
               <div className="col-span-2">Grade</div>
@@ -147,7 +147,7 @@ function MarkAttendance() {
 
             {/* Mobile and Desktop Views */}
             {(sortedFilteredStudents ?? []).length === 0 && (
-              <div className="p-4 sm:p-8 text-center text-gray-500 text-sm sm:text-base">
+              <div className="p-4 sm:p-8 text-center text-muted-foreground text-sm sm:text-base">
                 No students found.
               </div>
             )}
@@ -167,13 +167,13 @@ function MarkAttendance() {
                           <p className="font-medium text-sm sm:text-base">
                             {student.name}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Roll No: {student.rollNumber}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Grade: {student.grade}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Group: {student.group}
                           </p>
                         </div>
@@ -188,7 +188,7 @@ function MarkAttendance() {
                             className={`text-xs sm:text-sm font-medium ${
                               isPresent(student.id)
                                 ? "text-green-600"
-                                : "text-gray-600"
+                                : "text-muted-foreground"
                             }`}
                           >
                             {isPresent(student.id) ? "Present" : "Absent"}
@@ -199,7 +199,7 @@ function MarkAttendance() {
 
                     {/* Desktop View */}
                     <div className="hidden sm:grid grid-cols-12 gap-3 sm:gap-4 items-center">
-                      <div className="col-span-2 font-medium text-gray-600 text-xs sm:text-sm">
+                      <div className="col-span-2 font-medium text-muted-foreground text-xs sm:text-sm">
                         {student.rollNumber}
                       </div>
                       <div className="col-span-3 text-xs sm:text-sm">
@@ -222,7 +222,7 @@ function MarkAttendance() {
                           className={`text-xs sm:text-sm font-medium ${
                             isPresent(student.id)
                               ? "text-green-600"
-                              : "text-gray-600"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {isPresent(student.id) ? "Present" : "Absent"}

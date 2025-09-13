@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
-import { Button } from './button';
-import { Input } from './input';
-import { Label } from './label';
-import { Upload, X, ImageIcon } from 'lucide-react';
+import { useState, useRef } from "react";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Label } from "./label";
+import { Upload, X, ImageIcon } from "lucide-react";
 
 interface ImageUploadProps {
   value?: string;
@@ -12,12 +12,12 @@ interface ImageUploadProps {
   className?: string;
 }
 
-export function ImageUpload({ 
-  value = '', 
-  onChange, 
-  label = 'Image', 
-  placeholder = 'Enter image URL or upload a file',
-  className = ''
+export function ImageUpload({
+  value = "",
+  onChange,
+  label = "Image",
+  placeholder = "Enter image URL or upload a file",
+  className = "",
 }: ImageUploadProps) {
   const [preview, setPreview] = useState<string>(value);
   const [uploading, setUploading] = useState(false);
@@ -28,18 +28,21 @@ export function ImageUpload({
     setPreview(url);
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     // Basic validation
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      alert('File size must be less than 5MB');
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB limit
+      alert("File size must be less than 5MB");
       return;
     }
 
@@ -57,26 +60,24 @@ export function ImageUpload({
       };
       reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
       setUploading(false);
     }
   };
 
   const handleClear = () => {
-    onChange('');
-    setPreview('');
+    onChange("");
+    setPreview("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   return (
     <div className={`space-y-3 ${className}`}>
-      {label && (
-        <Label className="text-sm font-medium">{label}</Label>
-      )}
-      
+      {label && <Label className="text-sm font-medium">{label}</Label>}
+
       {/* URL Input */}
       <div className="flex gap-2">
         <Input
@@ -118,13 +119,13 @@ export function ImageUpload({
       {/* Preview */}
       {preview && (
         <div className="relative">
-          <div className="w-32 h-32 rounded-lg border-2 border-gray-200 overflow-hidden bg-gray-50">
+          <div className="w-32 h-32 rounded-lg border-2 border-border overflow-hidden bg-muted">
             <img
               src={preview}
               alt="Preview"
               className="w-full h-full object-cover"
               onError={() => {
-                setPreview('');
+                setPreview("");
                 // Show placeholder for broken images
               }}
             />
@@ -144,21 +145,19 @@ export function ImageUpload({
       )}
 
       {!preview && value && (
-        <div className="flex items-center justify-center w-32 h-32 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+        <div className="flex items-center justify-center w-32 h-32 rounded-lg border-2 border-dashed border-border bg-muted">
           <div className="text-center">
-            <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-xs text-gray-500">Invalid image URL</p>
+            <ImageIcon className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">Invalid image URL</p>
           </div>
         </div>
       )}
 
       {uploading && (
-        <div className="text-sm text-blue-600">
-          Uploading image...
-        </div>
+        <div className="text-sm text-blue-600">Uploading image...</div>
       )}
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-muted-foreground">
         Supported formats: JPG, PNG, GIF, WebP. Max size: 5MB
       </p>
     </div>

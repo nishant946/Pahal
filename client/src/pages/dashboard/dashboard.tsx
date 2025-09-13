@@ -115,10 +115,10 @@ function Dashboard() {
     <Layout>
       <div className="p-2 sm:p-4 lg:p-6">
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Dashboard
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Welcome to Pahal management dashboard
           </p>
         </div>
@@ -131,64 +131,64 @@ function Dashboard() {
           <div className="space-y-6">
             {/* Stats Overview */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+              <div className="bg-card border border-border p-4 sm:p-6 rounded-lg shadow-sm">
                 <div className="flex items-center">
                   <div className="p-2 sm:p-3 rounded-full bg-blue-100">
                     <User className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                       Total Students
                     </p>
-                    <p className="text-lg sm:text-2xl font-semibold text-gray-900">
+                    <p className="text-lg sm:text-2xl font-semibold text-foreground">
                       {students?.length || 0}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+              <div className="bg-card border border-border p-4 sm:p-6 rounded-lg shadow-sm">
                 <div className="flex items-center">
                   <div className="p-2 sm:p-3 rounded-full bg-green-100">
                     <UserCheck className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                       Present Today
                     </p>
-                    <p className="text-lg sm:text-2xl font-semibold text-gray-900">
+                    <p className="text-lg sm:text-2xl font-semibold text-foreground">
                       {todayAttendance.presentStudents.length}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+              <div className="bg-card border border-border p-4 sm:p-6 rounded-lg shadow-sm">
                 <div className="flex items-center">
                   <div className="p-2 sm:p-3 rounded-full bg-purple-100">
                     <GraduationCap className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                       Total Teachers
                     </p>
-                    <p className="text-lg sm:text-2xl font-semibold text-gray-900">
+                    <p className="text-lg sm:text-2xl font-semibold text-foreground">
                       {teachers.length || 0}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+              <div className="bg-card border border-borderp-4 sm:p-6 rounded-lg shadow">
                 <div className="flex items-center">
                   <div className="p-2 sm:p-3 rounded-full bg-orange-100">
                     <BookOpen className="h-4 w-4 sm:h-6 sm:w-6 text-orange-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">
+                    <p className="text-xs sm:text-sm font-medium text-foreground">
                       Homework
                     </p>
-                    <p className="text-lg sm:text-2xl font-semibold text-gray-900">
+                    <p className="text-lg sm:text-2xl font-semibold text-foreground">
                       {stats?.homework.total || 0}
                     </p>
                   </div>
@@ -197,14 +197,14 @@ function Dashboard() {
             </div>
 
             {/* Teachers with today as preferred day */}
-            <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+            <div className="bg-card shadow rounded-lg p-4 sm:p-6">
               <h2 className="text-sm sm:text-lg font-semibold mb-2">
                 Teachers and Their Preferred Days
               </h2>
 
               {/* Special section for teachers preferring today */}
               {preferredTodayTeachers.length > 0 && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                   <h3 className="text-sm font-medium text-green-800 mb-2">
                     Teachers Preferring Today (
                     {new Date().toLocaleDateString("en-US", {
@@ -216,11 +216,11 @@ function Dashboard() {
                     {preferredTodayTeachers.map((t) => (
                       <div
                         key={t._id}
-                        className="flex justify-between items-center p-2 bg-white rounded border"
+                        className="flex justify-between items-center p-2 bg-background border border-border rounded"
                       >
                         <div>
                           <span className="text-sm font-medium">{t.name}</span>
-                          <span className="text-xs text-gray-500 ml-2">
+                          <span className="text-xs text-muted-foreground ml-2">
                             ({t.department})
                           </span>
                         </div>
@@ -252,8 +252,8 @@ function Dashboard() {
                         key={t._id}
                         className={`p-2 rounded ${
                           prefersToday
-                            ? "bg-green-50 border border-green-200"
-                            : "bg-gray-50"
+                            ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+                            : "bg-muted"
                         }`}
                       >
                         <div className="flex justify-between items-center">
@@ -262,7 +262,7 @@ function Dashboard() {
                               <span className="text-xs sm:text-sm font-medium">
                                 {t.name}
                               </span>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted-foreground">
                                 ({t.department})
                               </span>
                               {prefersToday && (
@@ -271,7 +271,7 @@ function Dashboard() {
                                 </span>
                               )}
                             </div>
-                            <div className="text-xs text-gray-600 mt-1">
+                            <div className="text-xs text-muted-foreground mt-1">
                               {t.preferredDays.join(", ")}
                             </div>
                           </div>
@@ -292,14 +292,14 @@ function Dashboard() {
                   })}
                 </div>
               ) : (
-                <div className="text-xs sm:text-sm text-gray-500">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   No teachers found.
                 </div>
               )}
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+            <div className="bg-card shadow rounded-lg p-4 sm:p-6">
               <h2 className="text-sm sm:text-lg font-semibold mb-4">
                 Quick Actions
               </h2>
@@ -312,9 +312,8 @@ function Dashboard() {
                   Mark Attendance
                 </Button>
                 <Button
-                  onClick={() => {}}
-                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
-                  title="Coming soon"
+                  onClick={() => navigate("/attendance/teacherattendance")}
+                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
                 >
                   <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                   View Teacher Report
@@ -327,9 +326,8 @@ function Dashboard() {
                   Manage Homework
                 </Button>
                 <Button
-                  onClick={() => {}}
-                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm opacity-50 pointer-events-none cursor-not-allowed"
-                  title="Coming soon"
+                  onClick={() => navigate("/attendance/markteacherattendance")}
+                  className="h-12 sm:h-16 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm"
                 >
                   <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Mark Teacher Attendance

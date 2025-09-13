@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SkeletonProps {
   className?: string;
@@ -7,12 +7,7 @@ interface SkeletonProps {
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => {
   return (
-    <div
-      className={cn(
-        'animate-pulse rounded-md bg-gray-200',
-        className
-      )}
-    />
+    <div className={cn("animate-pulse rounded-md bg-gray-200", className)} />
   );
 };
 
@@ -28,10 +23,13 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = ({
   lines = 3,
 }) => {
   return (
-    <div className={cn('bg-white rounded-lg shadow p-4 space-y-3', className)}>
+    <div className={cn("bg-card rounded-lg shadow p-4 space-y-3", className)}>
       <Skeleton className="h-6 w-3/4" />
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton key={i} className={`h-4 ${i === 0 ? 'w-5/6' : i === 1 ? 'w-1/2' : 'w-2/3'}`} />
+        <Skeleton
+          key={i}
+          className={`h-4 ${i === 0 ? "w-5/6" : i === 1 ? "w-1/2" : "w-2/3"}`}
+        />
       ))}
       {showButton && <Skeleton className="h-9 w-full" />}
     </div>

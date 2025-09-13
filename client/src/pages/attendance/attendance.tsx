@@ -1,14 +1,14 @@
-import Layout from '@/components/layout/layout'
-import { Link } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart3, Users, GraduationCap } from 'lucide-react'
+import Layout from "@/components/layout/layout";
+import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3, Users, GraduationCap } from "lucide-react";
 
 function Attendance() {
   return (
     <Layout>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Attendance Management</h1>
-        
+
         <div className="space-y-6">
           {/* Dashboard Section */}
           <div>
@@ -18,7 +18,7 @@ function Attendance() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/attendance/dashboard">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer border-blue-200">
+                <Card className="hover:bg-muted transition-colors cursor-pointer border-blue-200">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <BarChart3 className="w-5 h-5 text-blue-600" />
@@ -26,7 +26,7 @@ function Attendance() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       View comprehensive attendance overview and statistics
                     </p>
                   </CardContent>
@@ -43,12 +43,12 @@ function Attendance() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/attendance/markattendance">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Mark Attendance</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Take daily attendance for students
                     </p>
                   </CardContent>
@@ -56,12 +56,12 @@ function Attendance() {
               </Link>
 
               <Link to="/attendance/todayattendance">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Today's Attendance</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       View and manage today's student attendance
                     </p>
                   </CardContent>
@@ -69,12 +69,12 @@ function Attendance() {
               </Link>
 
               <Link to="/attendance/studentreport">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Student Reports</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       View and download student attendance reports
                     </p>
                   </CardContent>
@@ -91,43 +91,49 @@ function Attendance() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link to="/attendance/markteacherattendance">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Mark Teacher Attendance</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Take daily attendance for teachers
                     </p>
-                    <span className="absolute top-2 right-2 text-xs text-gray-400">(Coming soon)</span>
+                    <span className="absolute top-2 right-2 text-xs text-muted-foreground">
+                      (Coming soon)
+                    </span>
                   </CardContent>
                 </Card>
               </Link>
 
               <Link to="/attendance/todayteacherattendance">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Today's Teacher Attendance</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       View today's teacher attendance status
                     </p>
-                    <span className="absolute top-2 right-2 text-xs text-gray-400">(Coming soon)</span>
+                    <span className="absolute top-2 right-2 text-xs text-gray-400">
+                      (Coming soon)
+                    </span>
                   </CardContent>
                 </Card>
               </Link>
 
               <Link to="/attendance/teacherattendance">
-                <Card className="hover:bg-gray-50 transition-colors cursor-pointer">
+                <Card className="hover:bg-muted transition-colors cursor-pointer">
                   <CardHeader>
                     <CardTitle>Teacher Reports</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       View and download teacher attendance reports
                     </p>
-                    <span className="absolute top-2 right-2 text-xs text-gray-400">(Coming soon)</span>
+                    <span className="absolute top-2 right-2 text-xs text-muted-foreground">
+                      (Coming soon)
+                    </span>
                   </CardContent>
                 </Card>
               </Link>
@@ -136,7 +142,7 @@ function Attendance() {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default Attendance
+export default Attendance;
