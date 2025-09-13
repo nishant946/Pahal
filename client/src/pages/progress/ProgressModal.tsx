@@ -49,7 +49,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="p-8 max-w-lg">
-        <h2 className="text-2xl font-bold mb-4 text-center text-foreground">
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-gray-100">
           Progress for {student.name}
         </h2>
         <div className="mb-6">
@@ -66,27 +66,27 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {!student.mentor || student.mentor === "" ? (
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-foreground">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
                   Mentor Name
                 </label>
                 <input
                   type="text"
                   value={mentor}
                   onChange={(e) => setMentor(e.target.value)}
-                  className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="Enter mentor name"
                   required
                 />
               </div>
             ) : null}
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-foreground">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
                 Progress Update
               </label>
               <textarea
                 value={progress}
                 onChange={(e) => setProgress(e.target.value)}
-                className="border rounded-lg px-3 py-2 min-h-[60px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 min-h-[60px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter new progress update"
                 required
               />
@@ -107,21 +107,21 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
             </Button>
           </form>
         </div>
-        <div className="mb-3 font-semibold text-foreground">
+        <div className="mb-3 font-semibold text-gray-900 dark:text-gray-100">
           Progress History
         </div>
         <div className="max-h-60 overflow-y-auto space-y-3">
           {logs.length === 0 ? (
-            <div className="text-muted-foreground text-center">
+            <div className="text-gray-500 dark:text-gray-400 text-center">
               No progress updates yet.
             </div>
           ) : (
             logs.map((log) => (
-              <div key={log._id} className="border rounded-lg p-3 bg-muted">
-                <div className="text-base text-foreground mb-1">
+              <div key={log._id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700">
+                <div className="text-base text-gray-900 dark:text-gray-100 mb-1">
                   {log.progress}
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-gray-500 dark:text-gray-400">
                   {new Date(log.timestamp).toLocaleString()} by{" "}
                   <span className="font-semibold">{log.teacherName}</span>
                 </div>

@@ -62,8 +62,8 @@ function AddStudentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
+        <Button className="border border-border">
+          <Plus className="w-4 h-4 mr-2 " />
           Add New Student
         </Button>
       </DialogTrigger>
@@ -77,6 +77,7 @@ function AddStudentDialog({
               <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
+                className="border border-gray-200"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
@@ -87,6 +88,7 @@ function AddStudentDialog({
             <div className="space-y-2">
               <Label htmlFor="rollNumber">Roll Number</Label>
               <Input
+                className="border border-gray-200"
                 id="rollNumber"
                 value={formData.rollNumber}
                 onChange={(e) =>
@@ -101,6 +103,7 @@ function AddStudentDialog({
             <div className="space-y-2">
               <Label htmlFor="grade">Grade/Class</Label>
               <Input
+                className="border border-gray-200"
                 id="grade"
                 value={formData.grade}
                 onChange={(e) =>
@@ -113,7 +116,7 @@ function AddStudentDialog({
               <Label htmlFor="group">Group</Label>
               <select
                 id="group"
-                className="w-full rounded-md border border-input px-3 py-2"
+                className="w-full bg-gray-800 rounded-md border border-gray-200 px-3 py-2"
                 value={formData.group}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, group: e.target.value }))
@@ -128,6 +131,7 @@ function AddStudentDialog({
             <div className="space-y-2">
               <Label htmlFor="contact">Contact Number</Label>
               <Input
+                className="border border-gray-200"
                 id="contact"
                 value={formData.contact}
                 onChange={(e) =>
@@ -140,6 +144,7 @@ function AddStudentDialog({
               <Label htmlFor="parentName">Parent's Name</Label>
               <Input
                 id="parentName"
+                className="border border-gray-200"
                 value={formData.parentName}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -154,6 +159,7 @@ function AddStudentDialog({
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
+                className="border border-gray-200"
                 value={formData.address}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, address: e.target.value }))
@@ -164,6 +170,7 @@ function AddStudentDialog({
             <div className="space-y-2">
               <Label htmlFor="joinDate">Join Date</Label>
               <Input
+                className="border border-gray-200"
                 id="joinDate"
                 type="date"
                 value={formData.joinDate}
