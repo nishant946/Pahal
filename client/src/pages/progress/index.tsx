@@ -693,7 +693,7 @@ const ProgressPage: React.FC = () => {
                 <Button
                   variant="outline"
                   onClick={() => handleOpenModal(student)}
-                  className="w-full h-9 transition-all duration-200 hover:bg-blue-50"
+                  className="w-full h-9 transition-all duration-200 hover:bg-gray-600"
                   disabled={updating}
                 >
                   {updating ? (

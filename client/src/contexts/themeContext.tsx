@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
@@ -58,21 +59,21 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // Add current theme class
     root.classList.add(theme);
     
-    // Update the data-theme attribute for additional styling support
-    root.setAttribute('data-theme', theme);
+  // Update the data-theme attribute for additional styling support
+  root.setAttribute('data-theme', theme);
+  // Ensure native UI (form controls, scrollbars) follows the theme
+  root.style.setProperty('color-scheme', theme);
   }, [theme]);
 
   // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
     const handleChange = (e: MediaQueryListEvent) => {
-      // Only update if user hasn't manually set a preference
+      // Respect explicit user choice; only react to system changes if no saved theme
       if (!localStorage.getItem('theme')) {
         setThemeState(e.matches ? 'dark' : 'light');
       }
     };
-
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);

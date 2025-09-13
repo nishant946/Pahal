@@ -129,28 +129,28 @@ function Navbar({ onMenuClick }: NavbarProps) {
 
             {/* Dropdown Menu */}
             {showProfileDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-background rounded-lg shadow-lg border border-border py-1 z-50 animate-in slide-in-from-top-2 duration-200">
+              <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg border py-1 z-50 animate-in slide-in-from-top-2 duration-200 bg-white border-gray-200 text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 [color-scheme:light] dark:[color-scheme:dark]">
                 {teacher && (
                   <>
                     {/* User Info */}
-                    <div className="px-4 py-3 border-b border-border">
+                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <div className="flex items-center gap-3">
                         {teacher.avatar ? (
                           <img
                             src={teacher.avatar}
                             alt="Profile"
-                            className="h-10 w-10 rounded-full object-cover border-2 border-border"
+                            className="h-10 w-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
                           />
                         ) : (
-                          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-                            <User className="h-5 w-5 text-muted-foreground" />
+                          <div className="h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                            <User className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-foreground truncate">
+                          <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                             {teacher.name}
                           </div>
-                          <div className="text-xs text-muted-foreground truncate">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {teacher.email}
                           </div>
                           {teacher.isAdmin && (
@@ -176,22 +176,22 @@ function Navbar({ onMenuClick }: NavbarProps) {
                           );
                           setShowProfileDropdown(false);
                         }}
-                        className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-3 transition-colors duration-150"
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors duration-150"
                       >
-                        <UserCircle className="h-4 w-4 text-muted-foreground" />
+                        <UserCircle className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                         <span>Edit Profile</span>
                       </button>
                     </div>
 
-                    <div className="border-t border-border">
+                    <div className="border-t border-gray-200 dark:border-gray-700">
                       <button
                         onClick={() => {
                           navigate("/logout");
                           setShowProfileDropdown(false);
                         }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors duration-150"
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors duration-150"
                       >
-                        <LogOut className="h-4 w-4 text-red-500" />
+                        <LogOut className="h-4 w-4 text-red-500 dark:text-red-400" />
                         <span>Logout</span>
                       </button>
                     </div>
