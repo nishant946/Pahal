@@ -49,7 +49,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="p-8 max-w-lg">
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+        <h2 className="text-2xl font-bold mb-4 text-center text-foreground">
           Progress for {student.name}
         </h2>
         <div className="mb-6">
@@ -66,7 +66,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {!student.mentor || student.mentor === "" ? (
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-foreground">
                   Mentor Name
                 </label>
                 <input
@@ -80,7 +80,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
               </div>
             ) : null}
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-foreground">
                 Progress Update
               </label>
               <textarea
@@ -102,27 +102,26 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
                   Updating...
                 </>
               ) : (
-                'Submit'
+                "Submit"
               )}
             </Button>
           </form>
         </div>
-        <div className="mb-3 font-semibold text-gray-700">Progress History</div>
+        <div className="mb-3 font-semibold text-foreground">
+          Progress History
+        </div>
         <div className="max-h-60 overflow-y-auto space-y-3">
           {logs.length === 0 ? (
-            <div className="text-gray-400 text-center">
+            <div className="text-muted-foreground text-center">
               No progress updates yet.
             </div>
           ) : (
             logs.map((log) => (
-              <div
-                key={log._id}
-                className="border rounded-lg p-3 bg-gray-50"
-              >
-                <div className="text-base text-gray-800 mb-1">
+              <div key={log._id} className="border rounded-lg p-3 bg-muted">
+                <div className="text-base text-foreground mb-1">
                   {log.progress}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   {new Date(log.timestamp).toLocaleString()} by{" "}
                   <span className="font-semibold">{log.teacherName}</span>
                 </div>

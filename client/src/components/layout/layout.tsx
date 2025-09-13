@@ -25,7 +25,7 @@ function Layout({ children }: LayoutProps): React.ReactNode {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar for larger screens */}
       <div className="hidden md:flex md:w-64">
         {!isAdminRoute && <Sidebar />}
@@ -57,11 +57,11 @@ function Layout({ children }: LayoutProps): React.ReactNode {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 rounded-full bg-white/90 shadow-lg hover:bg-white"
+                className="h-8 w-8 rounded-full bg-background/90 shadow-lg hover:bg-background"
                 onClick={closeSidebar}
               >
                 <svg
-                  className="h-4 w-4 text-gray-600"
+                  className="h-4 w-4 text-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="2"
@@ -87,7 +87,7 @@ function Layout({ children }: LayoutProps): React.ReactNode {
         <div className="sticky top-0 z-10">
           <Navbar onMenuClick={openSidebar} />
         </div>
-        <main className="flex-1 overflow-y-auto bg-gray-50 px-2 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
+        <main className="flex-1 overflow-y-auto bg-background px-2 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
           <div className="mx-auto w-full max-w-7xl">{children}</div>
         </main>
       </div>

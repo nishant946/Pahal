@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Sun, Moon, User, Menu, LogOut, UserCircle, Shield } from "lucide-react";
+import {
+  Sun,
+  Moon,
+  User,
+  Menu,
+  LogOut,
+  UserCircle,
+  Shield,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
-import { useTheme } from '@/contexts/themeContext';
-import pahalLogo from '../../assets/pahalLogo.png';
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
+import { useTheme } from "@/contexts/themeContext";
+import pahalLogo from "../../assets/pahalLogo.png";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -28,14 +36,17 @@ function Navbar({ onMenuClick }: NavbarProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowProfileDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -58,7 +69,7 @@ function Navbar({ onMenuClick }: NavbarProps) {
           <img
             src={pahalLogo}
             alt="Pahal Logo"
-            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain bg-white shadow"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain bg-white dark:bg-gray-800 shadow"
           />
           <span className="text-lg sm:text-xl font-bold">Pahal</span>
         </div>
@@ -71,9 +82,11 @@ function Navbar({ onMenuClick }: NavbarProps) {
             size="icon"
             onClick={toggleTheme}
             className="w-8 h-8 sm:w-9 sm:h-9 px-0"
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
-            {theme === 'dark' ? (
+            {theme === "dark" ? (
               <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
             ) : (
               <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -116,34 +129,36 @@ function Navbar({ onMenuClick }: NavbarProps) {
 
             {/* Dropdown Menu */}
             {showProfileDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-in slide-in-from-top-2 duration-200">
+              <div className="absolute right-0 mt-2 w-56 bg-background rounded-lg shadow-lg border border-border py-1 z-50 animate-in slide-in-from-top-2 duration-200">
                 {teacher && (
                   <>
                     {/* User Info */}
-                    <div className="px-4 py-3 border-b border-gray-100">
+                    <div className="px-4 py-3 border-b border-border">
                       <div className="flex items-center gap-3">
                         {teacher.avatar ? (
                           <img
                             src={teacher.avatar}
                             alt="Profile"
-                            className="h-10 w-10 rounded-full object-cover border-2 border-gray-200"
+                            className="h-10 w-10 rounded-full object-cover border-2 border-border"
                           />
                         ) : (
-                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <User className="h-5 w-5 text-gray-600" />
+                          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                            <User className="h-5 w-5 text-muted-foreground" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-gray-900 truncate">
+                          <div className="text-sm font-medium text-foreground truncate">
                             {teacher.name}
                           </div>
-                          <div className="text-xs text-gray-500 truncate">
+                          <div className="text-xs text-muted-foreground truncate">
                             {teacher.email}
                           </div>
                           {teacher.isAdmin && (
                             <div className="flex items-center gap-1 mt-1">
                               <Shield className="h-3 w-3 text-blue-600" />
-                              <span className="text-xs text-blue-600 font-medium">Administrator</span>
+                              <span className="text-xs text-blue-600 font-medium">
+                                Administrator
+                              </span>
                             </div>
                           )}
                         </div>
@@ -154,23 +169,27 @@ function Navbar({ onMenuClick }: NavbarProps) {
                     <div className="py-1">
                       <button
                         onClick={() => {
-                          navigate(teacher.isAdmin ? "/admin/profile" : "/teacher/profile");
+                          navigate(
+                            teacher.isAdmin
+                              ? "/admin/profile"
+                              : "/teacher/profile"
+                          );
                           setShowProfileDropdown(false);
                         }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition-colors duration-150"
+                        className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted flex items-center gap-3 transition-colors duration-150"
                       >
-                        <UserCircle className="h-4 w-4 text-gray-500" />
+                        <UserCircle className="h-4 w-4 text-muted-foreground" />
                         <span>Edit Profile</span>
                       </button>
                     </div>
 
-                    <div className="border-t border-gray-100">
+                    <div className="border-t border-border">
                       <button
                         onClick={() => {
                           navigate("/logout");
                           setShowProfileDropdown(false);
                         }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors duration-150"
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors duration-150"
                       >
                         <LogOut className="h-4 w-4 text-red-500" />
                         <span>Logout</span>
