@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import api from "../services/api";
 
 interface Teacher {
   _id: string;
@@ -45,113 +45,125 @@ interface TeacherAuthContextType {
   updateTeacherProfile: (profileData: Partial<Teacher>) => void;
 }
 
-const TeacherAuthContext = createContext<TeacherAuthContextType | undefined>(undefined);
+const TeacherAuthContext = createContext<TeacherAuthContextType | undefined>(
+  undefined
+);
 
-export function TeacherAuthProvider({ children }: { children: React.ReactNode }) {
+export function TeacherAuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLoading, setIsLoading] = useState(true); // for initial load
   const [loading, setLoading] = useState(false); // for async ops
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedTeacher = localStorage.getItem('teacher');
+    const storedTeacher = localStorage.getItem("teacher");
     if (storedTeacher) {
       try {
         const teacherData = JSON.parse(storedTeacher);
         setTeacher(teacherData);
       } catch (error) {
-        console.error('Error parsing stored teacher:', error);
-        localStorage.removeItem('teacher');
+        console.error("Error parsing stored teacher:", error);
+        localStorage.removeItem("teacher");
       }
     }
     setIsLoading(false);
   }, []);
 
-const login = async (email: string, password: string) => {
-  setLoading(true);
-  setError(null);
-  try {
-    const response = await api.post('/auth/login', { email, password });
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.post("/auth/login", { email, password });
 
-    if (![200, 201].includes(response.status)) {
-      throw new Error('Login failed');
-    }
+      if (![200, 201].includes(response.status)) {
+        throw new Error("Login failed");
+      }
 
       const teacherData = response.data.teacher;
-      if (!teacherData) throw new Error('Invalid response from server');
+      if (!teacherData) throw new Error("Invalid response from server");
 
       setTeacher(teacherData);
-      localStorage.setItem('teacher', JSON.stringify(teacherData));
-      localStorage.setItem('teacherToken', response.data.token);
+      localStorage.setItem("teacher", JSON.stringify(teacherData));
+      localStorage.setItem("teacherToken", response.data.token);
 
       // Return the teacher data for the component to handle redirection
       return teacherData;
     } catch (err: any) {
-      console.error('Login error in context:', err);
-      const errorMessage = err.response?.data?.message || err.message || 'Login failed';
+      console.error("Login error in context:", err);
+      const errorMessage =
+        err.response?.data?.message || err.message || "Login failed";
       setError(errorMessage);
       throw err;
-  } finally {
-    setLoading(false);
-  }
-};
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const register = async (registrationData: registrationData) => {
-  setLoading(true);
-  setError(null);
-  try {
-    const response = await api.post('/auth/register', registrationData);
+  const register = async (registrationData: registrationData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.post("/auth/register", registrationData);
 
       if (response.status === 201) {
         // Registration successful, don't redirect automatically
         // Let the component handle the redirect
         return response.data;
       } else {
-        throw new Error('Registration failed');
+        throw new Error("Registration failed");
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Registration failed';
+      const errorMessage =
+        error.response?.data?.message || "Registration failed";
       setError(errorMessage);
       throw error;
-  } finally {
-    setLoading(false);
-  }
-};
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const logout = () => {
     setTeacher(null);
-    localStorage.removeItem('teacher');
-    localStorage.removeItem('teacherToken');
-    window.location.href = '/login';
+    localStorage.removeItem("teacher");
+    localStorage.removeItem("teacherToken");
+    window.location.href = "/login";
   };
 
   const verifyTeacher = async (teacherId: string) => {
-    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    if (!teacher?.isAdmin) throw new Error("Unauthorized");
     try {
       await api.patch(`/admin/teachers/${teacherId}/verify`);
     } catch {
-      throw new Error('Failed to verify teacher');
+      throw new Error("Failed to verify teacher");
     }
   };
 
   const getUnverifiedTeachers = async (): Promise<Teacher[]> => {
-    if (!teacher?.isAdmin) throw new Error('Unauthorized');
+    if (!teacher?.isAdmin) throw new Error("Unauthorized");
     try {
-      const response = await api.get('/admin/teachers/unverified');
+      const response = await api.get("/admin/teachers/unverified");
       return response.data.teachers;
     } catch {
-      throw new Error('Failed to fetch unverified teachers');
+      throw new Error("Failed to fetch unverified teachers");
     }
   };
 
   const updateTeacherProfile = (profileData: Partial<Teacher>) => {
     if (teacher) {
-      setTeacher({ ...teacher, ...profileData });
+      const updatedTeacher = { ...teacher, ...profileData };
+      setTeacher(updatedTeacher);
+      // Update localStorage as well
+      localStorage.setItem("teacher", JSON.stringify(updatedTeacher));
     }
   };
 
   return (
-    <TeacherAuthContext.Provider value={{
+    <TeacherAuthContext.Provider
+      value={{
         teacher,
         isLoading,
         loading,
@@ -161,8 +173,9 @@ const register = async (registrationData: registrationData) => {
         register,
         verifyTeacher,
         getUnverifiedTeachers,
-        updateTeacherProfile
-    }}>
+        updateTeacherProfile,
+      }}
+    >
       {children}
     </TeacherAuthContext.Provider>
   );
@@ -171,7 +184,7 @@ const register = async (registrationData: registrationData) => {
 export const useTeacherAuth = () => {
   const context = useContext(TeacherAuthContext);
   if (context === undefined) {
-    throw new Error('useTeacherAuth must be used within a TeacherAuthProvider');
+    throw new Error("useTeacherAuth must be used within a TeacherAuthProvider");
   }
   return context;
 };

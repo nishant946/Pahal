@@ -3,6 +3,24 @@ import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://localhost:3000';
 const API_URL = `${BASE_URL}/api/v1`;
 
+// Utility function to get full avatar URL
+export const getAvatarUrl = (avatarPath: string | null | undefined): string | null => {
+    if (!avatarPath) return null;
+    
+    // If it's already a full URL (starts with http), return as is
+    if (avatarPath.startsWith('http') || avatarPath.startsWith('data:')) {
+        return avatarPath;
+    }
+    
+    // If it's a relative path, prepend the base URL
+    if (avatarPath.startsWith('/')) {
+        return `${BASE_URL}${avatarPath}`;
+    }
+    
+    // If it doesn't start with /, add it
+    return `${BASE_URL}/${avatarPath}`;
+};
+
 export const API_URLS = {
     LOGIN: `${API_URL}/auth/login`,
     REGISTER: `${API_URL}/auth/register`,
