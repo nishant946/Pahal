@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 import { useTheme } from "@/contexts/themeContext";
+import { getAvatarUrl } from "@/services/api";
 import pahalLogo from "../../assets/pahalLogo.png";
 
 interface NavbarProps {
@@ -118,9 +119,16 @@ function Navbar({ onMenuClick }: NavbarProps) {
             >
               {teacher?.avatar ? (
                 <img
-                  src={teacher.avatar}
+                  src={getAvatarUrl(teacher.avatar) || teacher.avatar}
                   alt="Profile"
                   className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover"
+                  onError={(e) => {
+                    console.error(
+                      "Avatar failed to load:",
+                      getAvatarUrl(teacher.avatar)
+                    );
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               ) : (
                 <User className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -137,9 +145,16 @@ function Navbar({ onMenuClick }: NavbarProps) {
                       <div className="flex items-center gap-3">
                         {teacher.avatar ? (
                           <img
-                            src={teacher.avatar}
+                            src={getAvatarUrl(teacher.avatar) || teacher.avatar}
                             alt="Profile"
                             className="h-10 w-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+                            onError={(e) => {
+                              console.error(
+                                "Avatar failed to load in dropdown:",
+                                getAvatarUrl(teacher.avatar)
+                              );
+                              e.currentTarget.style.display = "none";
+                            }}
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">

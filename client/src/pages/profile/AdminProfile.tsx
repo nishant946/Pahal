@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 import { Camera, User, Save, ArrowLeft, Upload, X, Shield } from "lucide-react";
 import adminProfileService from "@/services/adminProfileService";
+import { getAvatarUrl } from "@/services/api";
 
 interface AdminProfileFormData {
   name: string;
@@ -186,7 +187,7 @@ const AdminProfile: React.FC = () => {
                   <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border-4 border-blue-200">
                     {avatar ? (
                       <img
-                        src={avatar}
+                        src={getAvatarUrl(avatar) || avatar}
                         alt="Avatar"
                         className="w-full h-full object-cover"
                       />
