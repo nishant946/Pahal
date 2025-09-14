@@ -331,20 +331,20 @@ const TeacherManagement: React.FC = () => {
         <div className="flex gap-4">
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-2xl font-bold text-primary">{stats.total}</div>
+              <div className="text-sm text-muted-foreground">Total</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.verified}</div>
-              <div className="text-sm text-gray-600">Verified</div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.verified}</div>
+              <div className="text-sm text-muted-foreground">Verified</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.unverified}</div>
-              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.unverified}</div>
+              <div className="text-sm text-muted-foreground">Pending</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
@@ -455,19 +455,19 @@ const TeacherManagement: React.FC = () => {
 
       {/* Messages */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+        <div className="bg-destructive/10 border-l-4 border-destructive p-4 rounded-md">
           <div className="flex">
-            <XCircle className="h-5 w-5 text-red-400 mr-2" />
-            <div className="text-red-800">{error}</div>
+            <XCircle className="h-5 w-5 text-destructive mr-2" />
+            <div className="text-destructive">{error}</div>
           </div>
         </div>
       )}
 
       {success && (
-        <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-md">
+        <div className="bg-green-50 dark:bg-green-950/20 border-l-4 border-green-400 dark:border-green-600 p-4 rounded-md">
           <div className="flex">
-            <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-            <div className="text-green-800">{success}</div>
+            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mr-2" />
+            <div className="text-green-800 dark:text-green-200">{success}</div>
           </div>
         </div>
       )}
@@ -601,7 +601,7 @@ const TeacherManagement: React.FC = () => {
                             Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
                             <EyeOff className="h-3 w-3 mr-1" />
                             Inactive
                           </span>
@@ -615,7 +615,7 @@ const TeacherManagement: React.FC = () => {
                               size="sm"
                               onClick={() => handleVerify(teacher._id, teacher.name)}
                               disabled={verifying === teacher._id}
-                              className="h-8 text-green-600 hover:text-green-700"
+                              className="h-8 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
                             >
                               {verifying === teacher._id ? (
                                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -731,7 +731,7 @@ const TeacherManagement: React.FC = () => {
                           Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
                           <EyeOff className="h-3 w-3 mr-1" />
                           Inactive
                         </span>
