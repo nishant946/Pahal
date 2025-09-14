@@ -149,11 +149,11 @@ const AdminSettings: React.FC = () => {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="font-medium">Database Status</p>
-              <p className="text-green-600">Connected</p>
+              <p className="text-green-600 dark:text-green-400">Connected</p>
             </div>
             <div>
               <p className="font-medium">Server Status</p>
-              <p className="text-green-600">Running</p>
+              <p className="text-green-600 dark:text-green-400">Running</p>
             </div>
             <div>
               <p className="font-medium">Last Backup</p>

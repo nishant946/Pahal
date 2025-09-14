@@ -517,8 +517,8 @@ const AttendanceOverview: React.FC = () => {
                   {(attendanceType === 'students' ? overview.monthlyAttendancePercentage : teacherOverview.monthlyAttendancePercentage).toFixed(1)}%
                 </div>
                 <p className="text-xs text-gray-600">
-                  {overview.monthlyAttendancePercentage >= 80 ? 'Excellent' : 
-                   overview.monthlyAttendancePercentage >= 60 ? 'Good' : 'Needs attention'}
+                  {(attendanceType === 'students' ? overview.monthlyAttendancePercentage : teacherOverview.monthlyAttendancePercentage) >= 80 ? 'Excellent' : 
+                   (attendanceType === 'students' ? overview.monthlyAttendancePercentage : teacherOverview.monthlyAttendancePercentage) >= 60 ? 'Good' : 'Needs attention'}
                 </p>
               </CardContent>
             </Card>
@@ -606,22 +606,22 @@ const AttendanceOverview: React.FC = () => {
               <CardTitle>Weekly Attendance Trend</CardTitle>
             </CardHeader>
             <CardContent>
-              {overview.weeklyAttendance.length > 0 ? (
+              {(attendanceType === 'students' ? overview.weeklyAttendance : teacherOverview.weeklyAttendance).length > 0 ? (
                 <div className="space-y-3">
-                  {overview.weeklyAttendance.map((day) => (
+                  {(attendanceType === 'students' ? overview.weeklyAttendance : teacherOverview.weeklyAttendance).map((day) => (
                     <div key={day._id} className="flex items-center justify-between">
                       <span className="text-sm font-medium">{day._id}</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-32 bg-gray-200 rounded-full h-2">
+                        <div className="w-32 bg-muted rounded-full h-2">
                           <div 
-                            className="bg-blue-500 h-2 rounded-full"
+                            className="bg-primary h-2 rounded-full"
                             style={{ 
-                              width: `${Math.min((day.count / overview.totalStudents) * 100, 100)}%` 
+                              width: `${Math.min((day.count / (attendanceType === 'students' ? overview.totalStudents : teacherOverview.totalTeachers)) * 100, 100)}%` 
                             }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-600 w-16 text-right">
-                          {day.count} students
+                        <span className="text-sm text-muted-foreground w-16 text-right">
+                          {day.count} {attendanceType === 'students' ? 'students' : 'teachers'}
                         </span>
                       </div>
                     </div>
