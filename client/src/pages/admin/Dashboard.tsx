@@ -134,9 +134,17 @@ const AdminDashboard: React.FC = () => {
         bg: "bg-green-50 dark:bg-green-950/50",
       };
     if (percentage >= 75)
-      return { status: "Good", color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950/50" };
+      return {
+        status: "Good",
+        color: "text-blue-600 dark:text-blue-400",
+        bg: "bg-blue-50 dark:bg-blue-950/50",
+      };
     if (percentage >= 60)
-      return { status: "Fair", color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-950/50" };
+      return {
+        status: "Fair",
+        color: "text-yellow-600 dark:text-yellow-400",
+        bg: "bg-yellow-50 dark:bg-yellow-950/50",
+      };
     return {
       status: "Needs Attention",
       color: "text-red-600 dark:text-red-400",
