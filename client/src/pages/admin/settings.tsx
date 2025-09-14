@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Save,  Shield, Database } from "lucide-react";
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
+import { Save, Shield, Database } from "lucide-react";
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 
 const AdminSettings: React.FC = () => {
   const { teacher } = useTeacherAuth();
@@ -14,24 +14,24 @@ const AdminSettings: React.FC = () => {
     emailNotifications: true,
     autoVerifyTeachers: false,
     requireApproval: true,
-    systemMaintenance: false
+    systemMaintenance: false,
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   const handleSettingChange = (key: string, value: boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = async () => {
     setLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setMessage('Settings saved successfully!');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setMessage("Settings saved successfully!");
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      setMessage('Failed to save settings');
+      setMessage("Failed to save settings");
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,9 @@ const AdminSettings: React.FC = () => {
       <h1 className="text-3xl font-bold text-foreground">Admin Settings</h1>
 
       {message && (
-        <Alert variant={message.includes('success') ? "default" : "destructive"}>
+        <Alert
+          variant={message.includes("success") ? "default" : "destructive"}
+        >
           <AlertDescription>{message}</AlertDescription>
         </Alert>
       )}
@@ -65,7 +67,9 @@ const AdminSettings: React.FC = () => {
             </div>
             <Switch
               checked={settings.emailNotifications}
-              onCheckedChange={(checked) => handleSettingChange('emailNotifications', checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange("emailNotifications", checked)
+              }
             />
           </div>
 
@@ -78,7 +82,9 @@ const AdminSettings: React.FC = () => {
             </div>
             <Switch
               checked={settings.autoVerifyTeachers}
-              onCheckedChange={(checked) => handleSettingChange('autoVerifyTeachers', checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange("autoVerifyTeachers", checked)
+              }
             />
           </div>
 
@@ -91,7 +97,9 @@ const AdminSettings: React.FC = () => {
             </div>
             <Switch
               checked={settings.requireApproval}
-              onCheckedChange={(checked) => handleSettingChange('requireApproval', checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange("requireApproval", checked)
+              }
             />
           </div>
 
@@ -104,7 +112,9 @@ const AdminSettings: React.FC = () => {
             </div>
             <Switch
               checked={settings.systemMaintenance}
-              onCheckedChange={(checked) => handleSettingChange('systemMaintenance', checked)}
+              onCheckedChange={(checked) =>
+                handleSettingChange("systemMaintenance", checked)
+              }
             />
           </div>
         </CardContent>
@@ -119,19 +129,23 @@ const AdminSettings: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" value={teacher?.name || ''} disabled />
+              <Input id="name" value={teacher?.name || ""} disabled />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" value={teacher?.email || ''} disabled />
+              <Input id="email" value={teacher?.email || ""} disabled />
             </div>
             <div className="space-y-2">
               <Label htmlFor="department">Department</Label>
-              <Input id="department" value={teacher?.department || ''} disabled />
+              <Input
+                id="department"
+                value={teacher?.department || ""}
+                disabled
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="rollNo">Roll Number</Label>
-              <Input id="rollNo" value={teacher?.rollNo || ''} disabled />
+              <Input id="rollNo" value={teacher?.rollNo || ""} disabled />
             </div>
           </div>
         </CardContent>
@@ -149,11 +163,11 @@ const AdminSettings: React.FC = () => {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="font-medium">Database Status</p>
-              <p className="text-green-600">Connected</p>
+              <p className="text-green-600 dark:text-green-400">Connected</p>
             </div>
             <div>
               <p className="font-medium">Server Status</p>
-              <p className="text-green-600">Running</p>
+              <p className="text-green-600 dark:text-green-400">Running</p>
             </div>
             <div>
               <p className="font-medium">Last Backup</p>
@@ -171,7 +185,7 @@ const AdminSettings: React.FC = () => {
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={loading}>
           <Save className="mr-2 h-4 w-4" />
-          {loading ? 'Saving...' : 'Save Settings'}
+          {loading ? "Saving..." : "Save Settings"}
         </Button>
       </div>
     </div>
