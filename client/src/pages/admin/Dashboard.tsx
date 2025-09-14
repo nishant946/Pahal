@@ -134,9 +134,17 @@ const AdminDashboard: React.FC = () => {
         bg: "bg-green-50 dark:bg-green-950/50",
       };
     if (percentage >= 75)
-      return { status: "Good", color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950/50" };
+      return {
+        status: "Good",
+        color: "text-blue-600 dark:text-blue-400",
+        bg: "bg-blue-50 dark:bg-blue-950/50",
+      };
     if (percentage >= 60)
-      return { status: "Fair", color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-950/50" };
+      return {
+        status: "Fair",
+        color: "text-yellow-600 dark:text-yellow-400",
+        bg: "bg-yellow-50 dark:bg-yellow-950/50",
+      };
     return {
       status: "Needs Attention",
       color: "text-red-600 dark:text-red-400",
@@ -482,7 +490,7 @@ const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`p-4 rounded-lg ${attendanceStatus.bg} border`}>
+            <div className={`p-4 rounded-lg border`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Today's Status</span>
                 <span className={`text-sm font-bold ${attendanceStatus.color}`}>

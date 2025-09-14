@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -21,10 +21,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { 
-  CheckCircle2, 
-  Trash2, 
-  Search, 
+import {
+  CheckCircle2,
+  Trash2,
+  Search,
   ArrowUpDown,
   Users,
   UserCheck,
@@ -39,10 +39,10 @@ import {
   Eye,
   EyeOff,
   XCircle,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
-import { useTeacherAuth } from '@/contexts/teacherAuthContext';
-import api from '@/services/api';
+import { useTeacherAuth } from "@/contexts/teacherAuthContext";
+import api from "@/services/api";
 import { SkeletonCard, SkeletonTable } from "@/components/ui/skeleton";
 
 interface Teacher {
@@ -64,26 +64,34 @@ interface Teacher {
   updatedAt: string;
 }
 
-type ViewMode = 'grid' | 'table';
-type SortField = 'name' | 'email' | 'department' | 'createdAt' | 'isVerified' | 'isActive';
-type SortOrder = 'asc' | 'desc';
-type FilterStatus = 'all' | 'verified' | 'unverified' | 'active' | 'inactive';
+type ViewMode = "grid" | "table";
+type SortField =
+  | "name"
+  | "email"
+  | "department"
+  | "createdAt"
+  | "isVerified"
+  | "isActive";
+type SortOrder = "asc" | "desc";
+type FilterStatus = "all" | "verified" | "unverified" | "active" | "inactive";
 
 const TeacherManagement: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  
+
   // Enhanced UI state
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
-  const [sortField, setSortField] = useState<SortField>('createdAt');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [selectedTeachers, setSelectedTeachers] = useState<Set<string>>(new Set());
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
+  const [sortField, setSortField] = useState<SortField>("createdAt");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [selectedTeachers, setSelectedTeachers] = useState<Set<string>>(
+    new Set()
+  );
   const [verifying, setVerifying] = useState<string | null>(null);
-  
+
   const { verifyTeacher } = useTeacherAuth();
 
   useEffect(() => {
@@ -103,18 +111,20 @@ const TeacherManagement: React.FC = () => {
 
   // Filtered and sorted teachers
   const filteredAndSortedTeachers = useMemo(() => {
-    let filtered = teachers.filter(teacher => {
-      const matchesSearch = teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          teacher.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          teacher.rollNo.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesFilter = filterStatus === 'all' || 
-                           (filterStatus === 'verified' && teacher.isVerified) ||
-                           (filterStatus === 'unverified' && !teacher.isVerified) ||
-                           (filterStatus === 'active' && teacher.isActive) ||
-                           (filterStatus === 'inactive' && !teacher.isActive);
-      
+    let filtered = teachers.filter((teacher) => {
+      const matchesSearch =
+        teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.rollNo.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesFilter =
+        filterStatus === "all" ||
+        (filterStatus === "verified" && teacher.isVerified) ||
+        (filterStatus === "unverified" && !teacher.isVerified) ||
+        (filterStatus === "active" && teacher.isActive) ||
+        (filterStatus === "inactive" && !teacher.isActive);
+
       return matchesSearch && matchesFilter;
     });
 
@@ -122,18 +132,18 @@ const TeacherManagement: React.FC = () => {
     filtered.sort((a, b) => {
       let aValue: any = a[sortField];
       let bValue: any = b[sortField];
-      
-      if (sortField === 'createdAt') {
+
+      if (sortField === "createdAt") {
         aValue = new Date(aValue).getTime();
         bValue = new Date(bValue).getTime();
       }
-      
-      if (typeof aValue === 'string') {
+
+      if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
-      
-      if (sortOrder === 'asc') {
+
+      if (sortOrder === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
@@ -146,9 +156,9 @@ const TeacherManagement: React.FC = () => {
   // Statistics
   const stats = useMemo(() => {
     const total = teachers.length;
-    const verified = teachers.filter(t => t.isVerified).length;
+    const verified = teachers.filter((t) => t.isVerified).length;
     const unverified = total - verified;
-    const active = teachers.filter(t => t.isActive).length;
+    const active = teachers.filter((t) => t.isActive).length;
     const inactive = total - active;
     return { total, verified, unverified, active, inactive };
   }, [teachers]);
@@ -156,12 +166,12 @@ const TeacherManagement: React.FC = () => {
   const fetchTeachers = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/admin/teachers');
+      const response = await api.get("/admin/teachers");
       setTeachers(response.data.teachers || []);
       setError(null);
     } catch (err: any) {
-      console.error('Error fetching teachers:', err);
-      setError(err.response?.data?.message || 'Failed to fetch teachers');
+      console.error("Error fetching teachers:", err);
+      setError(err.response?.data?.message || "Failed to fetch teachers");
     } finally {
       setLoading(false);
     }
@@ -173,14 +183,14 @@ const TeacherManagement: React.FC = () => {
       await verifyTeacher(teacherId);
       setSuccess(`Teacher "${teacherName}" verified successfully!`);
       // Update the local state
-      setTeachers(prev => prev.map(teacher => 
-        teacher._id === teacherId 
-          ? { ...teacher, isVerified: true }
-          : teacher
-      ));
+      setTeachers((prev) =>
+        prev.map((teacher) =>
+          teacher._id === teacherId ? { ...teacher, isVerified: true } : teacher
+        )
+      );
     } catch (err: any) {
-      console.error('Error verifying teacher:', err);
-      setError(err.response?.data?.message || 'Failed to verify teacher');
+      console.error("Error verifying teacher:", err);
+      setError(err.response?.data?.message || "Failed to verify teacher");
     } finally {
       setVerifying(null);
     }
@@ -191,14 +201,14 @@ const TeacherManagement: React.FC = () => {
       await api.patch(`/admin/teachers/${teacherId}/deactivate`);
       setSuccess(`Teacher "${teacherName}" deactivated successfully!`);
       // Update the local state
-      setTeachers(prev => prev.map(teacher => 
-        teacher._id === teacherId 
-          ? { ...teacher, isActive: false }
-          : teacher
-      ));
+      setTeachers((prev) =>
+        prev.map((teacher) =>
+          teacher._id === teacherId ? { ...teacher, isActive: false } : teacher
+        )
+      );
     } catch (err: any) {
-      console.error('Error deactivating teacher:', err);
-      setError(err.response?.data?.message || 'Failed to deactivate teacher');
+      console.error("Error deactivating teacher:", err);
+      setError(err.response?.data?.message || "Failed to deactivate teacher");
     }
   };
 
@@ -206,57 +216,57 @@ const TeacherManagement: React.FC = () => {
   const handleBulkVerify = async () => {
     try {
       const promises = Array.from(selectedTeachers)
-        .filter(id => {
-          const teacher = teachers.find(t => t._id === id);
+        .filter((id) => {
+          const teacher = teachers.find((t) => t._id === id);
           return teacher && !teacher.isVerified;
         })
-        .map(id => verifyTeacher(id));
-      
+        .map((id) => verifyTeacher(id));
+
       await Promise.all(promises);
       const count = promises.length;
       setSuccess(`${count} teacher(s) verified successfully!`);
       setSelectedTeachers(new Set());
       await fetchTeachers();
     } catch (err: any) {
-      console.error('Error in bulk verify:', err);
-      setError('Failed to verify some teachers');
+      console.error("Error in bulk verify:", err);
+      setError("Failed to verify some teachers");
     }
   };
 
   const handleBulkDeactivate = async () => {
     try {
       const promises = Array.from(selectedTeachers)
-        .filter(id => {
-          const teacher = teachers.find(t => t._id === id);
+        .filter((id) => {
+          const teacher = teachers.find((t) => t._id === id);
           return teacher && teacher.isActive;
         })
-        .map(id => api.patch(`/admin/teachers/${id}/deactivate`));
-      
+        .map((id) => api.patch(`/admin/teachers/${id}/deactivate`));
+
       await Promise.all(promises);
       const count = promises.length;
       setSuccess(`${count} teacher(s) deactivated successfully!`);
       setSelectedTeachers(new Set());
       await fetchTeachers();
     } catch (err: any) {
-      console.error('Error in bulk deactivate:', err);
-      setError('Failed to deactivate some teachers');
+      console.error("Error in bulk deactivate:", err);
+      setError("Failed to deactivate some teachers");
     }
   };
 
   // Handle sorting
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortOrder('asc');
+      setSortOrder("asc");
     }
   };
 
   // Handle selection
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedTeachers(new Set(filteredAndSortedTeachers.map(t => t._id)));
+      setSelectedTeachers(new Set(filteredAndSortedTeachers.map((t) => t._id)));
     } else {
       setSelectedTeachers(new Set());
     }
@@ -323,33 +333,45 @@ const TeacherManagement: React.FC = () => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Teacher Management</h1>
-          <p className="text-gray-600 mt-1">Manage teachers, verification, and access control</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Teacher Management
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Manage teachers, verification, and access control
+          </p>
         </div>
-        
+
         {/* Stats Cards */}
         <div className="flex gap-4">
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-primary">{stats.total}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.total}
+              </div>
               <div className="text-sm text-muted-foreground">Total</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.verified}</div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {stats.verified}
+              </div>
               <div className="text-sm text-muted-foreground">Verified</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.unverified}</div>
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                {stats.unverified}
+              </div>
               <div className="text-sm text-muted-foreground">Pending</div>
             </CardContent>
           </Card>
           <Card className="min-w-[80px]">
             <CardContent className="p-3 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.inactive}</div>
+              <div className="text-2xl font-bold text-red-600">
+                {stats.inactive}
+              </div>
               <div className="text-sm text-gray-600">Inactive</div>
             </CardContent>
           </Card>
@@ -369,10 +391,10 @@ const TeacherManagement: React.FC = () => {
               className="pl-10"
             />
           </div>
-          
+
           {/* Filter */}
-          <select 
-            value={filterStatus} 
+          <select
+            value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value as FilterStatus)}
             className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -386,17 +408,17 @@ const TeacherManagement: React.FC = () => {
           {/* View Mode Toggle */}
           <div className="flex border rounded-md">
             <Button
-              variant={viewMode === 'table' ? 'default' : 'outline'}
+              variant={viewMode === "table" ? "default" : "outline"}
               size="sm"
-              onClick={() => setViewMode('table')}
+              onClick={() => setViewMode("table")}
               className="rounded-r-none"
             >
               <List className="h-4 w-4" />
             </Button>
             <Button
-              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              variant={viewMode === "grid" ? "default" : "outline"}
               size="sm"
-              onClick={() => setViewMode('grid')}
+              onClick={() => setViewMode("grid")}
               className="rounded-l-none"
             >
               <Grid className="h-4 w-4" />
@@ -413,8 +435,8 @@ const TeacherManagement: React.FC = () => {
                 size="sm"
                 onClick={handleBulkVerify}
                 className="text-green-600"
-                disabled={Array.from(selectedTeachers).every(id => {
-                  const teacher = teachers.find(t => t._id === id);
+                disabled={Array.from(selectedTeachers).every((id) => {
+                  const teacher = teachers.find((t) => t._id === id);
                   return teacher?.isVerified;
                 })}
               >
@@ -432,12 +454,17 @@ const TeacherManagement: React.FC = () => {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Deactivate Teachers</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to deactivate {selectedTeachers.size} teacher(s)? They will lose access to the platform.
+                      Are you sure you want to deactivate{" "}
+                      {selectedTeachers.size} teacher(s)? They will lose access
+                      to the platform.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleBulkDeactivate} className="bg-red-600 hover:bg-red-700">
+                    <AlertDialogAction
+                      onClick={handleBulkDeactivate}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
                       Deactivate
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -445,7 +472,7 @@ const TeacherManagement: React.FC = () => {
               </AlertDialog>
             </>
           )}
-          
+
           <Button onClick={fetchTeachers} variant="outline" size="sm">
             <RefreshCw className="h-4 w-4 mr-1" />
             Refresh
@@ -478,19 +505,21 @@ const TeacherManagement: React.FC = () => {
           <CardContent>
             <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {searchTerm || filterStatus !== 'all' ? 'No teachers found' : 'No teachers yet'}
+              {searchTerm || filterStatus !== "all"
+                ? "No teachers found"
+                : "No teachers yet"}
             </h3>
             <p className="text-gray-600 mb-4">
-              {searchTerm || filterStatus !== 'all' 
-                ? 'Try adjusting your search or filter criteria.' 
-                : 'Teachers will appear here after they register.'}
+              {searchTerm || filterStatus !== "all"
+                ? "Try adjusting your search or filter criteria."
+                : "Teachers will appear here after they register."}
             </p>
           </CardContent>
         </Card>
       ) : (
         <>
           {/* Table View */}
-          {viewMode === 'table' && (
+          {viewMode === "table" && (
             <Card>
               <Table>
                 <TableHeader>
@@ -498,32 +527,36 @@ const TeacherManagement: React.FC = () => {
                     <TableHead className="w-12">
                       <input
                         type="checkbox"
-                        checked={selectedTeachers.size === filteredAndSortedTeachers.length && filteredAndSortedTeachers.length > 0}
+                        checked={
+                          selectedTeachers.size ===
+                            filteredAndSortedTeachers.length &&
+                          filteredAndSortedTeachers.length > 0
+                        }
                         onChange={(e) => handleSelectAll(e.target.checked)}
                         className="rounded"
                       />
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort('name')}
+                      onClick={() => handleSort("name")}
                     >
                       <div className="flex items-center">
                         Name
                         <ArrowUpDown className="ml-1 h-3 w-3" />
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort('email')}
+                      onClick={() => handleSort("email")}
                     >
                       <div className="flex items-center">
                         Email
                         <ArrowUpDown className="ml-1 h-3 w-3" />
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort('department')}
+                      onClick={() => handleSort("department")}
                     >
                       <div className="flex items-center">
                         Department
@@ -538,12 +571,17 @@ const TeacherManagement: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredAndSortedTeachers.map((teacher) => (
-                    <TableRow key={teacher._id} className={!teacher.isActive ? 'opacity-50' : ''}>
+                    <TableRow
+                      key={teacher._id}
+                      className={!teacher.isActive ? "opacity-50" : ""}
+                    >
                       <TableCell>
                         <input
                           type="checkbox"
                           checked={selectedTeachers.has(teacher._id)}
-                          onChange={(e) => handleSelectTeacher(teacher._id, e.target.checked)}
+                          onChange={(e) =>
+                            handleSelectTeacher(teacher._id, e.target.checked)
+                          }
                           className="rounded"
                         />
                       </TableCell>
@@ -557,8 +595,12 @@ const TeacherManagement: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-gray-500">{teacher.designation}</div>
-                          <div className="text-xs text-gray-400">Roll: {teacher.rollNo}</div>
+                          <div className="text-sm text-gray-500">
+                            {teacher.designation}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            Roll: {teacher.rollNo}
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -613,7 +655,9 @@ const TeacherManagement: React.FC = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleVerify(teacher._id, teacher.name)}
+                              onClick={() =>
+                                handleVerify(teacher._id, teacher.name)
+                              }
                               disabled={verifying === teacher._id}
                               className="h-8 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
                             >
@@ -637,15 +681,24 @@ const TeacherManagement: React.FC = () => {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Deactivate Teacher</AlertDialogTitle>
+                                  <AlertDialogTitle>
+                                    Deactivate Teacher
+                                  </AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Are you sure you want to deactivate <strong>{teacher.name}</strong>? They will lose access to the platform.
+                                    Are you sure you want to deactivate{" "}
+                                    <strong>{teacher.name}</strong>? They will
+                                    lose access to the platform.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction 
-                                    onClick={() => handleDeactivate(teacher._id, teacher.name)}
+                                  <AlertDialogAction
+                                    onClick={() =>
+                                      handleDeactivate(
+                                        teacher._id,
+                                        teacher.name
+                                      )
+                                    }
                                     className="bg-red-600 hover:bg-red-700"
                                   >
                                     Deactivate
@@ -664,17 +717,24 @@ const TeacherManagement: React.FC = () => {
           )}
 
           {/* Grid View */}
-          {viewMode === 'grid' && (
+          {viewMode === "grid" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredAndSortedTeachers.map((teacher) => (
-                <Card key={teacher._id} className={`transition-all hover:shadow-lg ${!teacher.isActive ? 'opacity-50' : ''}`}>
+                <Card
+                  key={teacher._id}
+                  className={`transition-all hover:shadow-lg ${
+                    !teacher.isActive ? "opacity-50" : ""
+                  }`}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
                           checked={selectedTeachers.has(teacher._id)}
-                          onChange={(e) => handleSelectTeacher(teacher._id, e.target.checked)}
+                          onChange={(e) =>
+                            handleSelectTeacher(teacher._id, e.target.checked)
+                          }
                           className="rounded"
                         />
                         <div className="flex-1">
@@ -686,7 +746,9 @@ const TeacherManagement: React.FC = () => {
                               </span>
                             )}
                           </CardTitle>
-                          <p className="text-sm text-gray-600">{teacher.designation}</p>
+                          <p className="text-sm text-gray-600">
+                            {teacher.designation}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -708,7 +770,8 @@ const TeacherManagement: React.FC = () => {
                         </div>
                       )}
                       <div className="text-xs text-gray-400">
-                        Roll: {teacher.rollNo} • Joined: {new Date(teacher.createdAt).toLocaleDateString()}
+                        Roll: {teacher.rollNo} • Joined:{" "}
+                        {new Date(teacher.createdAt).toLocaleDateString()}
                       </div>
                     </div>
 
@@ -724,7 +787,7 @@ const TeacherManagement: React.FC = () => {
                           Pending
                         </span>
                       )}
-                      
+
                       {teacher.isActive ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           <Eye className="h-3 w-3 mr-1" />
@@ -742,7 +805,9 @@ const TeacherManagement: React.FC = () => {
                       {!teacher.isVerified && (
                         <Button
                           size="sm"
-                          onClick={() => handleVerify(teacher._id, teacher.name)}
+                          onClick={() =>
+                            handleVerify(teacher._id, teacher.name)
+                          }
                           disabled={verifying === teacher._id}
                           className="flex-1 text-xs"
                         >
@@ -773,15 +838,21 @@ const TeacherManagement: React.FC = () => {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Deactivate Teacher</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Deactivate Teacher
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to deactivate <strong>{teacher.name}</strong>? They will lose access to the platform.
+                                Are you sure you want to deactivate{" "}
+                                <strong>{teacher.name}</strong>? They will lose
+                                access to the platform.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction 
-                                onClick={() => handleDeactivate(teacher._id, teacher.name)}
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDeactivate(teacher._id, teacher.name)
+                                }
                                 className="bg-red-600 hover:bg-red-700"
                               >
                                 Deactivate
@@ -799,22 +870,24 @@ const TeacherManagement: React.FC = () => {
         </>
       )}
 
-      {!loading && filteredAndSortedTeachers.length === 0 && (searchTerm || filterStatus !== 'all') && (
-        <div className="text-center py-8">
-          <div className="text-gray-500 mb-4">
-            No teachers match your search criteria.
+      {!loading &&
+        filteredAndSortedTeachers.length === 0 &&
+        (searchTerm || filterStatus !== "all") && (
+          <div className="text-center py-8">
+            <div className="text-gray-500 mb-4">
+              No teachers match your search criteria.
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm("");
+                setFilterStatus("all");
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              setSearchTerm('');
-              setFilterStatus('all');
-            }}
-          >
-            Clear Filters
-          </Button>
-        </div>
-      )}
+        )}
     </div>
   );
 };
