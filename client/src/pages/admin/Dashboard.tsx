@@ -490,7 +490,7 @@ const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`p-4 rounded-lg ${attendanceStatus.bg} border`}>
+            <div className={`p-4 rounded-lg border`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Today's Status</span>
                 <span className={`text-sm font-bold ${attendanceStatus.color}`}>
