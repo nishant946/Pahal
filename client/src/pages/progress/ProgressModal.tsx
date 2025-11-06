@@ -117,7 +117,10 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
             </div>
           ) : (
             logs.map((log) => (
-              <div key={log._id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700">
+              <div
+                key={log._id}
+                className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700"
+              >
                 <div className="text-base text-gray-900 dark:text-gray-100 mb-1">
                   {log.progress}
                 </div>

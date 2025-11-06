@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTeacherAuth } from "@/contexts/teacherAuthContext";
 import { Camera, User, Save, ArrowLeft, Upload, X } from "lucide-react";
 import teacherProfileService from "@/services/teacherProfileService";
+import { getAvatarUrl } from "@/services/api";
 
 // Predefined options (same as registration)
 const DAYS_OF_WEEK = [
@@ -115,7 +116,7 @@ const TeacherProfile: React.FC = () => {
     subjectChoices: teacher?.subjectChoices || [],
   });
 
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(teacher?.avatar || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -128,6 +129,31 @@ const TeacherProfile: React.FC = () => {
     useState<string[]>(DEPARTMENTS);
   const [availableSubjects, setAvailableSubjects] =
     useState<string[]>(SUBJECTS);
+
+  // Update avatar when teacher data changes
+  useEffect(() => {
+    if (teacher?.avatar && !avatarFile) {
+      // Use the full URL for existing avatars from the server
+      const fullAvatarUrl = getAvatarUrl(teacher.avatar);
+      setAvatar(fullAvatarUrl);
+    }
+  }, [teacher?.avatar, avatarFile]);
+
+  // Update form data when teacher data changes
+  useEffect(() => {
+    if (teacher) {
+      setFormData({
+        name: teacher.name || "",
+        email: teacher.email || "",
+        mobileNo: teacher.mobileNo || "",
+        department: teacher.department || "",
+        designation: teacher.designation || "",
+        qualification: teacher.qualification || "",
+        preferredDays: teacher.preferredDays || [],
+        subjectChoices: teacher.subjectChoices || [],
+      });
+    }
+  }, [teacher]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -263,19 +289,36 @@ const TeacherProfile: React.FC = () => {
       let avatarUrl = null;
       if (avatarFile) {
         avatarUrl = await teacherProfileService.uploadAvatar(avatarFile);
+        // Update local avatar state with the full URL for display
+        const fullAvatarUrl = getAvatarUrl(avatarUrl);
+        setAvatar(fullAvatarUrl);
       }
 
-      // Update profile
+      // Update profile with current avatar URL (either uploaded or existing)
       const updateData = {
         ...formData,
-        ...(avatarUrl && { avatar: avatarUrl }),
+        ...(avatarUrl ? { avatar: avatarUrl } : {}),
       };
 
-      await teacherProfileService.updateProfile(updateData);
+      const response = await teacherProfileService.updateProfile(updateData);
 
-      // Update context if needed
-      if (updateTeacherProfile) {
-        updateTeacherProfile(updateData);
+      // Service returns { success, message, data: teacher }
+      const updated = response as {
+        success?: boolean;
+        message?: string;
+        data?: { avatar?: string } & typeof formData;
+      };
+      if (updateTeacherProfile && updated?.data) {
+        updateTeacherProfile(updated.data);
+        if (updated.data.avatar) {
+          setAvatar(getAvatarUrl(updated.data.avatar));
+        }
+      }
+
+      // Clear the avatar file after successful upload
+      setAvatarFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
       }
 
       setMessage({ type: "success", text: "Profile updated successfully!" });
@@ -339,12 +382,12 @@ const TeacherProfile: React.FC = () => {
                     <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                       {avatar ? (
                         <img
-                          src={avatar}
+                          src={getAvatarUrl(avatar) || avatar}
                           alt="Avatar"
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <User className="h-12 w-12 text-gray-400" />
+                        <User className="h-12 w-12 text-gray-400 dark:text-gray-500" />
                       )}
                     </div>
                     {avatar && (
@@ -515,15 +558,17 @@ const TeacherProfile: React.FC = () => {
                   {DAYS_OF_WEEK.map((day) => (
                     <label
                       key={day}
-                      className="flex items-center space-x-2 cursor-pointer"
+                      className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors"
                     >
                       <input
                         type="checkbox"
                         checked={formData.preferredDays.includes(day)}
                         onChange={() => handleDayToggle(day)}
-                        className="w-4 h-4 text-blue-600 border-border rounded focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
                       />
-                      <span className="text-sm text-foreground">{day}</span>
+                      <span className="text-sm text-gray-900 dark:text-gray-100 select-none">
+                        {day}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -552,13 +597,13 @@ const TeacherProfile: React.FC = () => {
                     {availableSubjects.slice(0, 6).map((subject) => (
                       <label
                         key={subject}
-                        className="flex items-center space-x-2 cursor-pointer"
+                        className="flex items-center space-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <input
                           type="checkbox"
                           checked={formData.subjectChoices.includes(subject)}
                           onChange={() => handleSubjectToggle(subject)}
-                          className="w-4 h-4 text-blue-600 border-border rounded focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <span className="text-sm text-foreground">
                           {subject}
@@ -577,13 +622,13 @@ const TeacherProfile: React.FC = () => {
                     {availableSubjects.slice(6, 9).map((subject) => (
                       <label
                         key={subject}
-                        className="flex items-center space-x-2 cursor-pointer"
+                        className="flex items-center space-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <input
                           type="checkbox"
                           checked={formData.subjectChoices.includes(subject)}
                           onChange={() => handleSubjectToggle(subject)}
-                          className="w-4 h-4 text-blue-600 border-border rounded focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <span className="text-sm text-foreground">
                           {subject}
@@ -602,13 +647,13 @@ const TeacherProfile: React.FC = () => {
                     {availableSubjects.slice(9, -1).map((subject) => (
                       <label
                         key={subject}
-                        className="flex items-center space-x-2 cursor-pointer"
+                        className="flex items-center space-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <input
                           type="checkbox"
                           checked={formData.subjectChoices.includes(subject)}
                           onChange={() => handleSubjectToggle(subject)}
-                          className="w-4 h-4 text-blue-600 border-border rounded focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
                         />
                         <span className="text-sm text-foreground">
                           {subject}
@@ -620,7 +665,7 @@ const TeacherProfile: React.FC = () => {
 
                 {/* Custom Subject Addition */}
                 <div className="space-y-2">
-                  <h4 className="font-medium text-sm text-gray-700">
+                  <h4 className="font-medium text-sm text-foreground">
                     Add Custom Subject
                   </h4>
                   <div className="flex gap-2">
